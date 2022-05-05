@@ -1,4 +1,5 @@
-﻿using Core.Services.Contracts;
+﻿using Common;
+using Core.Services.Contracts;
 using Core.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,20 @@ namespace Web.Controllers
             return View(genres);
         }
 
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                await genreService.DeleteGenre(id);
+            }
+            catch (Exception)
+            {
+                return Ok();
+            }
+
+            return RedirectToAction(nameof(All));
+        }
+
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -35,9 +50,13 @@ namespace Web.Controllers
             {
                 await genreService.CreateGenre(model);
             }
+            catch (ArgumentException ae)
+            {
+                return Ok(string.Format(ae.Message, model.Name));
+            }
             catch (Exception)
             {
-
+                return Ok(ErrorMessageConstants.CREATE_GENRE_UNEXPECTED);
             }
 
             return RedirectToAction(nameof(All));
