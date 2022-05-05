@@ -84,11 +84,17 @@ namespace Web.Controllers
             }
             catch (ArgumentException ae)
             {
-                return Ok(string.Format(ae.Message, model.Name));
+                ViewData[MessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+
+                EditGenreModel originalModel = await genreService.GetEditModel(model.Id);
+                return View(originalModel);
             }
             catch(Exception)
             {
-                return Ok(ErrorMessageConstants.EDIT_GENRE_UNEXPECTED);
+                ViewData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
+
+                EditGenreModel originalModel = await genreService.GetEditModel(model.Id);
+                return View(originalModel);
             }
 
             return RedirectToAction(nameof(All));
