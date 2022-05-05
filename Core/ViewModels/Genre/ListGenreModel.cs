@@ -6,8 +6,8 @@ namespace Core.ViewModels.Genre
 {
     public class ListGenreModel
     {
-        [Required]
-        [StringLength(GenreConstants.NAME_MAX_LENGTH, MinimumLength = GenreConstants.NAME_MIN_LENGTH, ErrorMessage = ErrorMessageConstants.GENRE_LENGTH)]
+        public string Id { get; set; }
+
         public string Name { get; set; }
     }
 }

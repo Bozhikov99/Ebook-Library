@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Core.Services.Contracts;
 using Core.ViewModels.Genre;
 using Infrastructure.Common;
 using Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +42,13 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ListGenreModel>> GetAllGenres()
+        public async Task<IEnumerable<ListGenreModel>> GetAllGenres()
         {
-            throw new NotImplementedException();
+            IEnumerable<ListGenreModel> genres = await repository.All<Genre>()
+                .ProjectTo<ListGenreModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return genres;
         }
     }
 }
