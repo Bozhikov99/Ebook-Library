@@ -1,4 +1,5 @@
-﻿using Core.Services;
+﻿using Core.Mapping;
+using Core.Services;
 using Core.Services.Contracts;
 using Infrastructure;
 using Infrastructure.Common;
@@ -23,6 +24,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddDbContext<EbookDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAutomapperProfiles(this IServiceCollection services)
+        {
+            services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());
 
             return services;
         }

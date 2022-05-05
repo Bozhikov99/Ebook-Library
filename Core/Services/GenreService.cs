@@ -1,6 +1,8 @@
-﻿using Core.Services.Contracts;
+﻿using AutoMapper;
+using Core.Services.Contracts;
 using Core.ViewModels.Genre;
 using Infrastructure.Common;
+using Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +14,20 @@ namespace Core.Services
     public class GenreService : IGenreService
     {
         private readonly IRepository repository;
+        private readonly IMapper mapper;
 
-        public GenreService(IRepository repository)
+        public GenreService(IRepository repository, IMapper mapper)
         {
             this.repository = repository;
+            this.mapper = mapper;
         }
 
-        public Task CreateGenre(CreateGenreModel model)
+        public async Task CreateGenre(CreateGenreModel model)
         {
-            throw new NotImplementedException();
+            Genre genre = mapper.Map<Genre>(model);
+
+            await repository.AddAsync(genre);
+            await repository.SaveChangesAsync();
         }
 
         public Task DeleteGenre(string id)

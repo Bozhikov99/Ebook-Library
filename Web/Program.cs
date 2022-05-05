@@ -12,6 +12,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<EbookDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAutomapperProfiles();
 builder.Services.AddApplicationServices();
 
 var app = builder.Build();
