@@ -27,13 +27,7 @@ namespace Core.Services
 
         public async Task CreateGenre(CreateGenreModel model)
         {
-            bool isExisting = await repository.All<Genre>()
-                .AnyAsync(t => t.Name == model.Name);
-
-            if (isExisting)
-            {
-                throw new ArgumentException(ErrorMessageConstants.GENRE_EXISTS);
-            }
+            await ValidateGenreName(model.Name);
 
             Genre genre = mapper.Map<Genre>(model);
 
@@ -47,9 +41,14 @@ namespace Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public Task EditGenre(EditGenreModel model)
+        public async Task EditGenre(EditGenreModel model)
         {
-            throw new NotImplementedException();
+            await ValidateGenreName(model.Name);
+
+            Genre genre = mapper.Map<Genre>(model);
+
+            repository.Update(genre);
+            await repository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ListGenreModel>> GetAllGenres()
@@ -59,6 +58,31 @@ namespace Core.Services
                 .ToArrayAsync();
 
             return genres;
+        }
+
+        public async Task<EditGenreModel> GetEditModel(string id)
+        {
+            Genre genre = await repository.GetByIdAsync<Genre>(id);
+
+            if (genre == null)
+            {
+                throw new ArgumentNullException(ErrorMessageConstants.INVALID_GENRE);
+            }
+
+            EditGenreModel model = mapper.Map<EditGenreModel>(genre);
+
+            return model;
+        }
+
+        private async Task ValidateGenreName(string name)
+        {
+            bool isExisting = await repository.All<Genre>()
+               .AnyAsync(t => t.Name == name);
+
+            if (isExisting)
+            {
+                throw new ArgumentException(ErrorMessageConstants.GENRE_EXISTS);
+            }
         }
     }
 }

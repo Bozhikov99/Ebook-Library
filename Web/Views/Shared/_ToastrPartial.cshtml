@@ -1,0 +1,28 @@
+﻿@using Common
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <script>
+        $(function() {
+            toastr.error('@ViewData["ErrorMessage"]?.ToString()');
+        });
+    </script>
+}
+
+@if (ViewData["WarningMessage"] != null)
+{
+    <script>
+        $(function() {
+            toastr.warning('@ViewData["WarningMessage"]?.ToString()');
+        });
+    </script>
+}
+
+@if (ViewData["SuccessMessage"] != null)
+{
+    <script>
+        $(function() {
+            toastr.success('@ViewData["SuccessMessage"]?.ToString()');
+        });
+    </script>
+}

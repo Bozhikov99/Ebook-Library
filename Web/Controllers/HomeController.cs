@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Web.Models;
 
@@ -15,6 +16,7 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
+            ViewData[MessageConstants.SuccessMessage] = "Подкарахме тостера";
             return View();
         }
 

@@ -11,6 +11,8 @@ namespace Core.Services.Contracts
     {
         Task CreateGenre(CreateGenreModel model);
 
+        Task<EditGenreModel> GetEditModel(string id);
+
         Task EditGenre(EditGenreModel model);
 
         Task DeleteGenre(string id);
