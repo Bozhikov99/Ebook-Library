@@ -31,6 +31,8 @@ namespace Infrastructure
 
         public DbSet<Review> Reviews { get; set; }
 
+        public DbSet<Subscription> Subscriptions { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)
