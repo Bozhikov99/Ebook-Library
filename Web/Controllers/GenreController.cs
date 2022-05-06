@@ -52,18 +52,21 @@ namespace Web.Controllers
                 return View();
             }
 
-            //TODO: Add Toastr
             try
             {
                 await genreService.CreateGenre(model);
             }
             catch (ArgumentException ae)
             {
-                return Ok(string.Format(ae.Message, model.Name));
+                ViewData[MessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+
+                return View();
             }
             catch (Exception)
             {
-                return Ok(ErrorMessageConstants.CREATE_GENRE_UNEXPECTED);
+                ViewData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_GENRE_UNEXPECTED;
+
+                return View();
             }
 
             return RedirectToAction(nameof(All));
@@ -89,7 +92,7 @@ namespace Web.Controllers
                 EditGenreModel originalModel = await genreService.GetEditModel(model.Id);
                 return View(originalModel);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ViewData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
 
