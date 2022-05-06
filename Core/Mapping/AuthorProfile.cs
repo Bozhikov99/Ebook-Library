@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.ViewModels.Genre;
+using Core.ViewModels.Author;
 using Infrastructure.Models;
 using System;
 using System.Collections.Generic;
@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace Core.Mapping
 {
-    public class GenreProfile : Profile
+    public class AuthorProfile : Profile
     {
-        public GenreProfile()
+        public AuthorProfile()
         {
-            CreateMap<CreateGenreModel, Genre>();
+            CreateMap<CreateAuthorModel, Author>();
 
-            CreateMap<EditGenreModel, Genre>()
+            CreateMap<EditAuthorModel, Author>()
                 .ReverseMap();
 
-            CreateMap<Genre, ListGenreModel>();
+            CreateMap<ListAuthorModel, Author>();
         }
     }
 }

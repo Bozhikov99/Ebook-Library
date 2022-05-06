@@ -32,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAutomapperProfiles(this IServiceCollection services)
         {
             services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());
+            services.AddAutoMapper(cfg => cfg.AddProfile<AuthorProfile>());
 
             return services;
         }
