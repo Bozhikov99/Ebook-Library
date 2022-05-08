@@ -6,6 +6,8 @@ namespace Core.Services.Contracts
     {
         Task CreateAuthor(CreateAuthorModel model);
 
+        Task<EditAuthorModel> GetEditModel(string id);
+
         Task EditAuthor(EditAuthorModel model);
 
         Task Delete(string id);

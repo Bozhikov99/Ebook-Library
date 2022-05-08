@@ -53,6 +53,8 @@ namespace Core.Services
         {
             Author author = mapper.Map<Author>(model);
 
+            await ValidateAuthorName(author.FirstName, author.LastName);
+
             repository.Update(author);
             await repository.SaveChangesAsync();
         }

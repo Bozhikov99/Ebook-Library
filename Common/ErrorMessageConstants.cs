@@ -11,7 +11,10 @@
         public const string DELETE_GENRE_UNEXPECTED = "Unexpected error deleting a genre";
 
 
-        public const string AUTHOR_EXISTS = "Author '{0}' already exists";
+        public const string AUTHOR_EXISTS = "Author \"{0}\" already exists";
+        public const string CREATE_AUTHOR_UNEXPECTED = "Unexpected error creating an author";
+        public const string DELETE_AUTHOR_UNEXPECTED = "Unexpected error deleting an author";
+        public const string EDIT_AUTHOR_UNEXPECTED = "Unexpected error editing an author";
 
     }
 }

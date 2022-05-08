@@ -18,7 +18,7 @@ namespace Core.Mapping
             CreateMap<EditAuthorModel, Author>()
                 .ReverseMap();
 
-            CreateMap<ListAuthorModel, Author>();
+            CreateMap<Author, ListAuthorModel>();
         }
     }
 }
