@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common;
 using Core.Services.Contracts;
 using Core.ViewModels.Author;
@@ -36,17 +37,33 @@ namespace Core.Services
 
         public async Task Delete(string id)
         {
-            throw new NotImplementedException();
+            await repository.DeleteAsync<Author>(id);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<EditAuthorModel> GetEditModel(string id)
+        {
+            Author author = await repository.GetByIdAsync<Author>(id);
+            EditAuthorModel model = mapper.Map<EditAuthorModel>(author);
+
+            return model;
         }
 
         public async Task EditAuthor(EditAuthorModel model)
         {
-            throw new NotImplementedException();
+            Author author = mapper.Map<Author>(model);
+
+            repository.Update(author);
+            await repository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ListAuthorModel>> GetAllAuthors()
         {
-            throw new NotImplementedException();
+            IEnumerable<ListAuthorModel> authors = await repository.All<Author>()
+                .ProjectTo<ListAuthorModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return authors;
         }
 
         private async Task ValidateAuthorName(string firstName, string lastName)
