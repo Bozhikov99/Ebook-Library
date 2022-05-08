@@ -16,7 +16,7 @@ builder.Services.AddControllersWithViews()
     .AddMvcOptions(options =>
     {
         options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
-        options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider(FormattingConstants.Format));
+        options.ModelBinderProviders.Insert(1, new DateTimeModelBinderProvider(FormattingConstants.Format));
     });
 
 builder.Services.AddAutomapperProfiles();

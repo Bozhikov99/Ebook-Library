@@ -25,7 +25,6 @@ namespace Core.ViewModels.Book
 
         public int Pages { get; set; }
 
-        [ForeignKey(nameof(Author))]
         public string AuthorId { get; set; }
     }
 }

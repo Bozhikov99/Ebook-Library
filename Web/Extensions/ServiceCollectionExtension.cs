@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IBookService, BookService>();
 
             return services;
         }
@@ -33,6 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthorProfile>());
+            services.AddAutoMapper(cfg => cfg.AddProfile<BookProfile>());
 
             return services;
         }
