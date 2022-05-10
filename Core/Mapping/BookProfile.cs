@@ -24,6 +24,10 @@ namespace Core.Mapping
 
             CreateMap<Book, EditBookModel>()
                 .ReverseMap();
+
+            CreateMap<Book, BookDetailsModel>()
+                .ForMember(d => d.Genres, s => s.MapFrom(b => b.Genres.Select(r => r.Name)))
+                .ForMember(d => d.Author, s => s.MapFrom(b => $"{b.Author.FirstName} {b.Author.LastName}"));
         }
     }
 }

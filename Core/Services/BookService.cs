@@ -67,8 +67,8 @@ namespace Core.Services.Contracts
 
         public async Task Edit(EditBookModel model)
         {
-            Book book = await repository.All<Book>(b=>b.Id==model.Id)
-                .Include(b=>b.Genres)
+            Book book = await repository.All<Book>(b => b.Id == model.Id)
+                .Include(b => b.Genres)
                 .FirstAsync();
 
             book.Genres.Clear();
@@ -97,6 +97,18 @@ namespace Core.Services.Contracts
             }
 
             return isExisting;
+        }
+
+        public async Task<BookDetailsModel> Details(string id)
+        {
+            Book book = repository.All<Book>(b=>b.Id==id)
+                .Include(b=>b.Genres)
+                .Include(b=>b.Author)
+                .First();
+
+            BookDetailsModel model = mapper.Map<BookDetailsModel>(book);
+
+            return model;
         }
     }
 }

@@ -28,6 +28,13 @@ namespace Web.Controllers
             return View(books);
         }
 
+        public async Task<IActionResult> Details(string id)
+        {
+            BookDetailsModel model = await bookService.Details(id);
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Edit(string id)
         {
             EditBookModel model = await bookService.GetEditModel(id);

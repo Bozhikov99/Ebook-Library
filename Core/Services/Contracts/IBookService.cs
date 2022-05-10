@@ -17,6 +17,8 @@ namespace Core.Services.Contracts
 
         Task Edit(EditBookModel model);
 
+        Task<BookDetailsModel> Details(string id);
+
         Task Delete(string id);
 
     }
