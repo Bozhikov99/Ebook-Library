@@ -25,6 +25,15 @@ namespace Web.Controllers
             return View(books);
         }
 
+        public async Task<IActionResult> Edit(string id)
+        {
+            EditBookModel model = await bookService.GetEditModel(id);
+            IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+            ViewBag.Authors = authors;
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Create()
         {
             IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
@@ -66,12 +75,91 @@ namespace Web.Controllers
             {
                 await bookService.Create(model);
             }
+            catch (ArgumentException ex)
+            {
+                TempData[MessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
+            }
             catch (Exception)
             {
                 TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
             }
 
             return RedirectToAction("All");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookModel model, IFormFile cover)
+        {
+            string coverContentType = cover.ContentType;
+
+            if (cover == null || cover.Length == 0)
+            {
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
+
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
+            }
+            if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
+            {
+                TempData[MessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
+
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
+            }
+
+            using MemoryStream stream = new MemoryStream();
+            await cover.CopyToAsync(stream);
+            model.Cover = stream.ToArray();
+
+            try
+            {
+                await bookService.Edit(model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[MessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_BOOK_UNEXPECTED;
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                ViewBag.Authors = authors;
+
+                return View();
+            }
+
+            return RedirectToAction("All");
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                await bookService.Delete(id);
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_BOOK_UNEXPECTED;
+            }
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

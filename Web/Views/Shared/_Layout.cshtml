@@ -26,8 +26,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Genre" asp-action="All">Genres</a>
+                        <li class="nav-item nav-headline dropdown">
+                            <a class="dropdown-toggle text-standard" href="#" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Genres
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="genreDropdown">
+                                <li><a class="dropdown-item" asp-controller="Genre" asp-action="Create">Create</a></li>
+                                <li><a class="dropdown-item" asp-controller="Genre" asp-action="All">All</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item nav-headline dropdown">
+                            <a class="dropdown-toggle text-standard" href="#" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Books
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="bookDropdown">
+                                <li><a class="dropdown-item" asp-controller="Book" asp-action="Create">Create</a></li>
+                                <li><a class="dropdown-item" asp-controller="Book" asp-action="All">All</a></li>
+                            </ul>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common;
 using Core.ViewModels.Book;
 using Infrastructure.Common;
 using Infrastructure.Models;
@@ -33,10 +34,47 @@ namespace Core.Services.Contracts
 
         public async Task Create(CreateBookModel model)
         {
+            await ValidateTitle(model.Title);
+
             Book book = mapper.Map<Book>(model);
 
             await repository.AddAsync(book);
             await repository.SaveChangesAsync();
+        }
+
+        public async Task Delete(string id)
+        {
+            await repository.DeleteAsync<Book>(id);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<EditBookModel> GetEditModel(string id)
+        {
+            Book book = await repository.GetByIdAsync<Book>(id);
+            EditBookModel model = mapper.Map<EditBookModel>(book);
+
+            return model;
+        }
+
+        public async Task Edit(EditBookModel model)
+        {
+            Book book = mapper.Map<Book>(model);
+
+            repository.Update(book);
+            await repository.SaveChangesAsync();
+        }
+
+        private async Task<bool> ValidateTitle(string title)
+        {
+            bool isExisting = await repository.All<Book>()
+               .AnyAsync(b => b.Title == title);
+
+            if (isExisting)
+            {
+                throw new ArgumentException(ErrorMessageConstants.BOOK_EXISTS);
+            }
+
+            return isExisting;
         }
     }
 }

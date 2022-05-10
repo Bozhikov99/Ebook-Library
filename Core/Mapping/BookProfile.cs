@@ -16,6 +16,9 @@ namespace Core.Mapping
             CreateMap<CreateBookModel, Book>();
 
             CreateMap<Book, ListBookModel>();
+
+            CreateMap<Book, EditBookModel>()
+                .ReverseMap();
         }
     }
 }
