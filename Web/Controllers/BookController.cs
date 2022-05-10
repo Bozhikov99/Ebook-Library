@@ -3,6 +3,7 @@ using Common.ValidationConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Author;
 using Core.ViewModels.Book;
+using Core.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -11,11 +12,13 @@ namespace Web.Controllers
     {
         private readonly IAuthorService authorService;
         private readonly IBookService bookService;
+        private readonly IGenreService genreService;
 
-        public BookController(IAuthorService authorService, IBookService bookService)
+        public BookController(IAuthorService authorService, IBookService bookService, IGenreService genreService)
         {
             this.authorService = authorService;
             this.bookService = bookService;
+            this.genreService = genreService;
         }
 
         public async Task<IActionResult> All()
@@ -29,7 +32,9 @@ namespace Web.Controllers
         {
             EditBookModel model = await bookService.GetEditModel(id);
             IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+            IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
             ViewBag.Authors = authors;
+            ViewBag.Genres = genres;
 
             return View(model);
         }
@@ -37,7 +42,9 @@ namespace Web.Controllers
         public async Task<IActionResult> Create()
         {
             IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+            IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
             ViewBag.Authors = authors;
+            ViewBag.Genres = genres;
 
             return View();
         }
@@ -52,7 +59,9 @@ namespace Web.Controllers
                 TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
 
                 return View();
             }
@@ -62,7 +71,9 @@ namespace Web.Controllers
                 TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
 
                 return View();
             }
@@ -79,7 +90,9 @@ namespace Web.Controllers
             {
                 TempData[MessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
 
                 return View();
             }
@@ -87,12 +100,14 @@ namespace Web.Controllers
             {
                 TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
 
                 return View();
             }
 
-            return RedirectToAction("All");
+            return RedirectToAction(nameof(All));
         }
 
         [HttpPost]
@@ -140,7 +155,9 @@ namespace Web.Controllers
             {
                 TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_BOOK_UNEXPECTED;
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
 
                 return View();
             }

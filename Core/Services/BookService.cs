@@ -37,6 +37,15 @@ namespace Core.Services.Contracts
             await ValidateTitle(model.Title);
 
             Book book = mapper.Map<Book>(model);
+            List<Genre> genres = new List<Genre>();
+
+            foreach (var g in model.GenreIds)
+            {
+                Genre currentGenre = await repository.GetByIdAsync<Genre>(g);
+                genres.Add(currentGenre);
+            }
+
+            book.Genres = genres;
 
             await repository.AddAsync(book);
             await repository.SaveChangesAsync();
@@ -58,9 +67,22 @@ namespace Core.Services.Contracts
 
         public async Task Edit(EditBookModel model)
         {
-            Book book = mapper.Map<Book>(model);
+            Book book = await repository.All<Book>(b=>b.Id==model.Id)
+                .Include(b=>b.Genres)
+                .FirstAsync();
 
-            repository.Update(book);
+            book.Genres.Clear();
+
+            List<Genre> genres = new List<Genre>();
+
+            foreach (string id in model.GenreIds)
+            {
+                Genre currentGenre = await repository.GetByIdAsync<Genre>(id);
+                genres.Add(currentGenre);
+            }
+
+            book.Genres = genres;
+
             await repository.SaveChangesAsync();
         }
 

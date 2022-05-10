@@ -31,5 +31,7 @@ namespace Core.ViewModels.Book
 
         [Required]
         public string AuthorId { get; set; }
+
+        public string[] GenreIds { get; set; }
     }
 }

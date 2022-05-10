@@ -17,18 +17,14 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Cover)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReleaseYear)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pages)
+                @Html.DisplayNameFor(model => model.Genres)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -41,15 +37,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
+                <td>@string.Join(", ", item.Genres)</td>
                 <img src=@imgUrl />
                 <td>
                     @Html.DisplayFor(modelItem => item.ReleaseYear)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Pages)
+                    @Html.DisplayFor(modelItem => item.ReleaseYear)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
