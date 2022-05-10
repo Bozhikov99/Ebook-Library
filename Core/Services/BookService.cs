@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Core.ViewModels.Book;
 using Infrastructure.Common;
 using Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,15 @@ namespace Core.Services.Contracts
         {
             this.repository = repository;
             this.mapper = mapper;
+        }
+
+        public async Task<IEnumerable<ListBookModel>> GetAll()
+        {
+            IEnumerable<ListBookModel> books = await repository.All<Book>()
+                .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return books;
         }
 
         public async Task Create(CreateBookModel model)

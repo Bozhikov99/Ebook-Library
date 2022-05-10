@@ -14,6 +14,8 @@ namespace Core.Mapping
         public BookProfile()
         {
             CreateMap<CreateBookModel, Book>();
+
+            CreateMap<Book, ListBookModel>();
         }
     }
 }

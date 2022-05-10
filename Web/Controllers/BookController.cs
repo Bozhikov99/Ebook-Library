@@ -18,6 +18,13 @@ namespace Web.Controllers
             this.bookService = bookService;
         }
 
+        public async Task<IActionResult> All()
+        {
+            IEnumerable<ListBookModel> books = await bookService.GetAll();
+
+            return View(books);
+        }
+
         public async Task<IActionResult> Create()
         {
             IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
@@ -55,25 +62,14 @@ namespace Web.Controllers
             await cover.CopyToAsync(stream);
             model.Cover = stream.ToArray();
 
-
-            if (!ModelState.IsValid)
-            {
-                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
-                ViewBag.Authors = authors;
-
-                return View();
-            }
-
             try
             {
                 await bookService.Create(model);
             }
             catch (Exception)
             {
-
-                throw;
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
             }
-
 
             return RedirectToAction("All");
         }

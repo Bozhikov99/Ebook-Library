@@ -9,12 +9,9 @@ namespace Core.Services.Contracts
 {
     public interface IBookService
     {
-        //Create
+        Task<IEnumerable<ListBookModel>> GetAll();
+
         Task Create(CreateBookModel model);
-        //Edit
 
-        //Delete
-
-        //List
     }
 }

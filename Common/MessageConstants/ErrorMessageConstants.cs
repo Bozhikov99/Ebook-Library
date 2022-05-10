@@ -20,5 +20,7 @@
         public const string CONTENT_ISNULL = "You must upload the book's content";
         public const string COVER_INVALID_FORMAT = "Invalid cover image format";
         public const string COVER_ALLOWED_FORMATS = "The cover should be .PNG or .JPEG/JPG image";
+
+        public const string CREATE_BOOK_UNEXPECTED = "Unexpected error creating a book";
     }
 }
