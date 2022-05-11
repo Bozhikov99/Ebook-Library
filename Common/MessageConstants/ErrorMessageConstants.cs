@@ -26,5 +26,8 @@
         public const string EDIT_BOOK_UNEXPECTED = "Unexpected error editing a book";
         public const string DELETE_BOOK_UNEXPECTED = "Unexpected error deleting a book";
         public const string BOOK_EXISTS = "Book \"{0}\" already exists";
+
+        public const string PASSWORDS_MUST_MATCH = "Passwords must match";
+        public const string INVALID_USER = "Invalid user";
     }
 }
