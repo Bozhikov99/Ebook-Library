@@ -1,4 +1,5 @@
 ﻿using Common.ValidationConstants;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         public User()
         {
@@ -23,17 +24,6 @@ namespace Infrastructure.Models
 
         [Key]
         public string Id { get; set; }
-
-        [Required]
-        [MaxLength(UserConstants.USERNAME_MAXLENGTH)]
-        public string Username { get; set; }
-
-        [Required]
-        [MaxLength(UserConstants.EMAIL_MAXLENGTH)]
-        public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
 
         public DateTime RegisterDate { get; set; }
 

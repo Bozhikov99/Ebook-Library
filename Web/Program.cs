@@ -1,6 +1,7 @@
 using Common;
 using Infrastructure;
 using Infrastructure.Common;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Web.ModelBinders.Providers;
@@ -10,8 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContexts(builder.Configuration);
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+})
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EbookDbContext>();
+
 builder.Services.AddControllersWithViews()
     .AddMvcOptions(options =>
     {

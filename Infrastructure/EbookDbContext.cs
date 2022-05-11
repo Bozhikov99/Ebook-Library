@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public class EbookDbContext : DbContext
+    public class EbookDbContext : IdentityDbContext<User>
     {
         public EbookDbContext()
         {
