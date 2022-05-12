@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,9 +37,18 @@ namespace Core.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public string GetUserId()
+        public Task GetProfile()
         {
             throw new NotImplementedException();
+        }
+
+        public string GetUserId()
+        {
+            string userId = httpContextAccessor.HttpContext
+                .User
+                .FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return userId;
         }
 
         public async Task Login(LoginUserModel model)

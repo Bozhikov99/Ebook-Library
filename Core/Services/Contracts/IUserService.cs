@@ -14,6 +14,8 @@ namespace Core.Services.Contracts
 
         Task Login(LoginUserModel model);
 
+        Task GetProfile();
+
         string GetUserId();
     }
 }

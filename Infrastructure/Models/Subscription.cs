@@ -19,7 +19,7 @@ namespace Infrastructure.Models
 
         public decimal Price { get; set; }
 
-        public SubscriptionType Type { get; set; }
+        public DateTime Start { get; set; }
 
         public DateTime Deadline { get; set; }
 
