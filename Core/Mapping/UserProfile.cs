@@ -18,6 +18,8 @@ namespace Core.Mapping
             CreateMap<LoginUserModel, User>();
 
             CreateMap<RegisterUserModel, LoginUserModel>();
+
+            CreateMap<User, UserProfileModel>();
         }
     }
 }

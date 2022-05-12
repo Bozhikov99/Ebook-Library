@@ -37,9 +37,13 @@ namespace Core.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public Task GetProfile()
+        public async Task<UserProfileModel> GetProfile()
         {
-            throw new NotImplementedException();
+            string id = GetUserId();
+            User user = await repository.GetByIdAsync<User>(id);
+            UserProfileModel profile = mapper.Map<UserProfileModel>(user);
+
+            return profile;
         }
 
         public string GetUserId()
@@ -47,6 +51,9 @@ namespace Core.Services
             string userId = httpContextAccessor.HttpContext
                 .User
                 .FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<User> users = repository.All<User>()
+                .ToList();
 
             return userId;
         }
@@ -75,7 +82,6 @@ namespace Core.Services
         public async Task<IdentityResult?> Register(RegisterUserModel model)
         {
             User user = mapper.Map<User>(model);
-            user.UserName = model.UserName;
             user.RegisterDate = DateTime.Now;
 
             IdentityResult? result = await userManager.CreateAsync(user, model.Password);

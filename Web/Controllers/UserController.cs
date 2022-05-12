@@ -19,6 +19,13 @@ namespace Web.Controllers
 
         public IActionResult Register() => View();
 
+        public async Task<IActionResult> Profile()
+        {
+            UserProfileModel model = await userService.GetProfile();
+
+            return View(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterUserModel model)
         {

@@ -15,9 +15,6 @@ namespace Infrastructure.Models
             Subscriptions = new HashSet<Subscription>();
         }
 
-        [Key]
-        public string Id { get; set; }
-
         public DateTime RegisterDate { get; set; }
 
         public virtual ICollection<Subscription> Subscriptions { get; set; }
