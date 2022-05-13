@@ -6,6 +6,7 @@ using Infrastructure.Common;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +53,6 @@ namespace Core.Services
                 .User
                 .FindFirstValue(ClaimTypes.NameIdentifier);
 
-            List<User> users = repository.All<User>()
-                .ToList();
-
             return userId;
         }
 
@@ -87,6 +85,47 @@ namespace Core.Services
             IdentityResult? result = await userManager.CreateAsync(user, model.Password);
 
             return result;
+        }
+
+        public async Task AddBookToFavourites(string id)
+        {
+            string userId = GetUserId();
+            User user = await repository.GetByIdAsync<User>(userId);
+            Book book = await repository.GetByIdAsync<Book>(id);
+
+            user.FavouriteBooks.Add(book);
+
+            repository.Update(user);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task RemoveBookFromFavourites(string id)
+        {
+            string userId = GetUserId();
+            User user = repository.All<User>()
+                .Include(u => u.FavouriteBooks)
+                .First(u => u.Id == userId);
+
+            Book book = await repository.GetByIdAsync<Book>(id);
+
+            user.FavouriteBooks.Remove(book);
+
+            repository.Update(user);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsBookFavourite(string id)
+        {
+            string userId = GetUserId();
+            User user = repository.All<User>()
+                .Include(u => u.FavouriteBooks)
+                .First(u => u.Id == userId);
+
+            bool isBookFavourite = user
+                .FavouriteBooks
+                .Any(b => b.Id == id);
+
+            return isBookFavourite;
         }
     }
 }

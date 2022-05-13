@@ -16,6 +16,12 @@ namespace Core.Services.Contracts
 
         Task<UserProfileModel> GetProfile();
 
+        Task AddBookToFavourites(string id);
+
+        Task RemoveBookFromFavourites(string id);
+
+        Task<bool> IsBookFavourite(string id);
+
         string GetUserId();
     }
 }

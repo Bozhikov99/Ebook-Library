@@ -4,6 +4,7 @@ using Core.Services.Contracts;
 using Core.ViewModels.Author;
 using Core.ViewModels.Book;
 using Core.ViewModels.Genre;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -13,12 +14,18 @@ namespace Web.Controllers
         private readonly IAuthorService authorService;
         private readonly IBookService bookService;
         private readonly IGenreService genreService;
+        private readonly IUserService userService;
 
-        public BookController(IAuthorService authorService, IBookService bookService, IGenreService genreService)
+        public BookController(
+            IAuthorService authorService,
+            IBookService bookService,
+            IGenreService genreService,
+            IUserService userService)
         {
             this.authorService = authorService;
             this.bookService = bookService;
             this.genreService = genreService;
+            this.userService = userService;
         }
 
         public async Task<IActionResult> All()
@@ -30,7 +37,16 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
+            bool isLoggedIn = userService.GetUserId() != null;
             BookDetailsModel model = await bookService.Details(id);
+
+            ViewBag.IsLoggedIn = isLoggedIn;
+
+            if (isLoggedIn)
+            {
+                bool isFavouriteBook = await userService.IsBookFavourite(id);
+                ViewBag.IsFavourite = isFavouriteBook;
+            }
 
             return View(model);
         }
@@ -184,6 +200,38 @@ namespace Web.Controllers
             }
 
             return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddToFavourites(string id)
+        {
+            try
+            {
+                await userService.AddBookToFavourites(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromFavourites(string id)
+        {
+            try
+            {
+                await userService.RemoveBookFromFavourites(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return Ok();
         }
     }
 }

@@ -7,7 +7,7 @@
 
         public const string GENRE_EXISTS = "Genre \"{0}\" already exists";
         public const string CREATE_GENRE_UNEXPECTED = "Unexpected error creating a genre";
-        public const string INVALID_GENRE = "Genre '{0}' does not exist";
+        public const string INVALID_GENRE = "Genre \"{0}\" does not exist";
         public const string EDIT_GENRE_UNEXPECTED = "Unexpected error editing a genre";
         public const string DELETE_GENRE_UNEXPECTED = "Unexpected error deleting a genre";
 
@@ -29,5 +29,7 @@
 
         public const string PASSWORDS_MUST_MATCH = "Passwords must match";
         public const string INVALID_USER = "Invalid user";
+        public const string LOGIN_UNEXPECTED = "Unexpected error loging in";
+        public const string REGISTER_UNEXPECTED = "Unexpected error registering";
     }
 }

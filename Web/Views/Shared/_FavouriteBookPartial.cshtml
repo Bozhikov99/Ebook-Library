@@ -1,0 +1,40 @@
+﻿@if (ViewBag.IsLoggedIn)
+{
+    @if (ViewBag.IsFavourite)
+    {
+        <div>
+            <button id="favButton" class="btn-danger">Unfav</button>
+        </div>
+    }
+    else
+    {
+        <div>
+            <button id="favButton" class="btn-warning">Fav</button>
+        </div>
+    }
+}
+
+<script type="text/javascript">
+    let buttonElement = document.querySelector('#favButton');
+    let id = document.querySelector('#book-id')
+        .textContent;
+
+    buttonElement.addEventListener('click', ()=>{
+        if(buttonElement.textContent=='Fav'){
+
+     $.ajax({
+         type: "POST",
+         url: "@Url.Action("AddToFavourites")",
+         data: { id }
+     })
+        } else{
+            $.ajax({
+            type: "POST",
+            url: "@Url.Action("RemoveFromFavourites")",
+            data: { id }
+            })
+        }
+    })
+</script>
+
+<script src="~/js/favMovie.js" type="module"></script>

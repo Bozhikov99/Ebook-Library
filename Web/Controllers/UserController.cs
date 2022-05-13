@@ -38,7 +38,7 @@ namespace Web.Controllers
 
             if (!isRegistered.Succeeded)
             {
-                TempData[MessageConstants.ErrorMessage] = "ERROR BE";
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
                 return View();
             }
 
@@ -53,7 +53,18 @@ namespace Web.Controllers
                 return View();
             }
 
-            await userService.Login(model);
+            try
+            {
+                await userService.Login(model);
+            }
+            catch (ArgumentException ae)
+            {
+                TempData[MessageConstants.ErrorMessage] = ae.Message;
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.LOGIN_UNEXPECTED;
+            }
 
             return RedirectToAction("Index", "Home");
         }
