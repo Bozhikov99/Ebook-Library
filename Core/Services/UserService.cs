@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Common;
 using Core.Services.Contracts;
 using Core.ViewModels.Book;
+using Core.ViewModels.Subscription;
 using Core.ViewModels.User;
 using Infrastructure.Common;
 using Infrastructure.Models;
@@ -140,6 +141,17 @@ namespace Core.Services
                 .ToArrayAsync();
 
             return favouriteBooks;
+        }
+
+        public async Task<ListSubscriptionModel> GetActiveSubscription()
+        {
+            string userId = GetUserId();
+            Subscription subscription = await repository.All<Subscription>(s => s.UserId == userId && s.Deadline > DateTime.Now)
+                .FirstOrDefaultAsync();
+
+            ListSubscriptionModel model = mapper.Map<ListSubscriptionModel>(subscription);
+
+            return model;
         }
     }
 }

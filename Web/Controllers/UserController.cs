@@ -25,6 +25,7 @@ namespace Web.Controllers
             UserProfileModel model = await userService.GetProfile();
             IEnumerable<ListBookModel> books = await userService.GetFavouriteBooks();
             ViewBag.Books = books;
+            ViewBag.Subscription = await userService.GetActiveSubscription();
 
             return View(model);
         }

@@ -11,3 +11,8 @@
         <h3>@b.Title</h3>
     }
 </div>
+
+@if (ViewBag.Subscription != null)
+{
+    <partial name="_RemainingSubscriptionPartial" />
+}

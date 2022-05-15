@@ -1,11 +1,7 @@
 ﻿using Core.ViewModels.Book;
+using Core.ViewModels.Subscription;
 using Core.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Services.Contracts
 {
@@ -24,6 +20,8 @@ namespace Core.Services.Contracts
         Task<bool> IsBookFavourite(string id);
 
         Task<IEnumerable<ListBookModel>> GetFavouriteBooks();
+
+        Task<ListSubscriptionModel> GetActiveSubscription();
 
         string GetUserId();
     }
