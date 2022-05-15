@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common;
 using Core.Services.Contracts;
+using Core.ViewModels.Book;
 using Core.ViewModels.User;
 using Infrastructure.Common;
 using Infrastructure.Models;
@@ -126,6 +128,18 @@ namespace Core.Services
                 .Any(b => b.Id == id);
 
             return isBookFavourite;
+        }
+
+        public async Task<IEnumerable<ListBookModel>> GetFavouriteBooks()
+        {
+            string userId = GetUserId();
+            User user = await repository.GetByIdAsync<User>(userId);
+
+            IEnumerable<ListBookModel> favouriteBooks = await repository.All<Book>(b => b.UsersFavourited.Contains(user))
+                .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return favouriteBooks;
         }
     }
 }

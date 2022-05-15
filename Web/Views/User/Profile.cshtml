@@ -4,3 +4,10 @@
 <h2>@Model.UserName</h2>
 <h2>@Model.Email</h2>
 <h2>@Model.RegisterDate</h2>
+
+<div>
+    @foreach (var b in ViewBag.Books)
+    {
+        <h3>@b.Title</h3>
+    }
+</div>

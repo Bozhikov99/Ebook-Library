@@ -1,4 +1,5 @@
-﻿using Core.ViewModels.User;
+﻿using Core.ViewModels.Book;
+using Core.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace Core.Services.Contracts
         Task RemoveBookFromFavourites(string id);
 
         Task<bool> IsBookFavourite(string id);
+
+        Task<IEnumerable<ListBookModel>> GetFavouriteBooks();
 
         string GetUserId();
     }

@@ -1,5 +1,6 @@
 ﻿using Common;
 using Core.Services.Contracts;
+using Core.ViewModels.Book;
 using Core.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Profile()
         {
             UserProfileModel model = await userService.GetProfile();
+            IEnumerable<ListBookModel> books = await userService.GetFavouriteBooks();
+            ViewBag.Books = books;
 
             return View(model);
         }
