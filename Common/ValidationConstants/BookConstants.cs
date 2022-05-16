@@ -16,5 +16,7 @@ namespace Common.ValidationConstants
         public const int DESCRIPTION_MINLENGTH = 20;
 
         public static string[] AllowedImageTypes = { "image/jpeg", "image/jpg", "image/png" };
+
+        public const string AllowedContentType = "application/pdf";
     }
 }

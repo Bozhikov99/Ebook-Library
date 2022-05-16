@@ -31,8 +31,10 @@ namespace Infrastructure.Models
 
         [MaxLength(BookConstants.DESCRIPTION_MAXLENGTH)]
         public string Description { get; set; }
-
+        
         public byte[] Cover { get; set; }
+
+        public byte[] Content { get; set; }
 
         [Range(0, BookConstants.RELEASEYEAR_MAX)]
         public int ReleaseYear { get; set; }

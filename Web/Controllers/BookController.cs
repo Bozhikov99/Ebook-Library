@@ -73,9 +73,10 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBookModel model, IFormFile cover)
+        public async Task<IActionResult> Create(CreateBookModel model, IFormFile cover, IFormFile content)
         {
             string coverContentType = cover.ContentType;
+            string contentType = content.ContentType;
 
             if (cover == null || cover.Length == 0)
             {
@@ -101,9 +102,39 @@ namespace Web.Controllers
                 return View();
             }
 
-            using MemoryStream stream = new MemoryStream();
-            await cover.CopyToAsync(stream);
-            model.Cover = stream.ToArray();
+            if (content == null || content.Length == 0)
+            {
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_ISNULL;
+
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
+                ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
+
+                return View();
+            }
+            if (contentType != BookConstants.AllowedContentType)
+            {
+                TempData[MessageConstants.WarningMessage] = ErrorMessageConstants.CONTENT_ALLOWED_FORMATS;
+                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_INVALID_FORMAT;
+
+                IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
+                IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
+                ViewBag.Authors = authors;
+                ViewBag.Genres = genres;
+
+                return View();
+            }
+
+            //Converting the cover to byte[]
+            using MemoryStream coverStream = new MemoryStream();
+            await cover.CopyToAsync(coverStream);
+            model.Cover = coverStream.ToArray();
+
+            //Converting the content to byte[] 
+            using MemoryStream contentStream = new MemoryStream();
+            await content.CopyToAsync(contentStream);
+            model.Content = contentStream.ToArray();
 
             try
             {
@@ -134,7 +165,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditBookModel model, IFormFile cover)
+        public async Task<IActionResult> Edit(EditBookModel model, IFormFile cover, IFormFile content)
         {
             string coverContentType = cover.ContentType;
 
@@ -158,9 +189,15 @@ namespace Web.Controllers
                 return View();
             }
 
-            using MemoryStream stream = new MemoryStream();
-            await cover.CopyToAsync(stream);
-            model.Cover = stream.ToArray();
+            //Converting the cover to byte[]
+            using MemoryStream coverStream = new MemoryStream();
+            await cover.CopyToAsync(coverStream);
+            model.Cover = coverStream.ToArray();
+
+            //Converting the content to byte[] 
+            using MemoryStream contentStream = new MemoryStream();
+            await content.CopyToAsync(contentStream);
+            model.Content = contentStream.ToArray();
 
             try
             {

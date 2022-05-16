@@ -101,9 +101,9 @@ namespace Core.Services.Contracts
 
         public async Task<BookDetailsModel> Details(string id)
         {
-            Book book = repository.All<Book>(b=>b.Id==id)
-                .Include(b=>b.Genres)
-                .Include(b=>b.Author)
+            Book book = repository.All<Book>(b => b.Id == id)
+                .Include(b => b.Genres)
+                .Include(b => b.Author)
                 .First();
 
             BookDetailsModel model = mapper.Map<BookDetailsModel>(book);
