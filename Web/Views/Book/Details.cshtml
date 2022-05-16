@@ -54,4 +54,25 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<a asp-action="Read"
+   asp-controller="Book"
+   asp-route-id=@Model.Id
+   asp-route-FileName="Book.pdf" class="btn btn-primary" id="btnOpenDocument">
+    <i class="fa fa-receipt"></i> Read book
+</a>
+
 <partial name="_FavouriteBookPartial" />
+
+@section Scripts
+{
+    <script>
+        $('#btnOpenDocument').click(function (e) {
+            e.preventDefault();
+            window.open('@Url.Action("Read"
+                             ,"Book"
+                             ,new {id=@Model.Id
+                                  ,fileName="MailingLabel.pdf" })'
+                        ,"_blank");
+        });
+    </script>
+}

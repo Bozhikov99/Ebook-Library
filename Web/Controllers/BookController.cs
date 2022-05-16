@@ -35,6 +35,13 @@ namespace Web.Controllers
             return View(books);
         }
 
+        public async Task<IActionResult> Read(string id)
+        {
+            byte[] content = await bookService.GetContent(id);
+
+            return File(content, BookConstants.AllowedContentType);
+        }
+
         public async Task<IActionResult> Details(string id)
         {
             bool isLoggedIn = userService.GetUserId() != null;

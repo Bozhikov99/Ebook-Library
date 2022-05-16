@@ -25,6 +25,7 @@
         public const string CONTENT_ALLOWED_FORMATS = "The book's content must be .pdf";
 
         public const string CREATE_BOOK_UNEXPECTED = "Unexpected error creating a book";
+        public const string BOOK_DOES_NOT_EXIST = "Book does not exist";
         public const string EDIT_BOOK_UNEXPECTED = "Unexpected error editing a book";
         public const string DELETE_BOOK_UNEXPECTED = "Unexpected error deleting a book";
         public const string BOOK_EXISTS = "Book \"{0}\" already exists";

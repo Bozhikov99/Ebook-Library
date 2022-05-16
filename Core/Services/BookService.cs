@@ -86,6 +86,15 @@ namespace Core.Services.Contracts
             await repository.SaveChangesAsync();
         }
 
+        public async Task<byte[]> GetContent(string id)
+        {
+            Book book = await repository.GetByIdAsync<Book>(id);
+
+            ArgumentNullException.ThrowIfNull(book, ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+
+            return book.Content;
+        }
+
         private async Task<bool> ValidateTitle(string title)
         {
             bool isExisting = await repository.All<Book>()

@@ -19,6 +19,8 @@ namespace Core.Services.Contracts
 
         Task<BookDetailsModel> Details(string id);
 
+        Task<byte[]> GetContent(string id);
+
         Task Delete(string id);
 
     }
