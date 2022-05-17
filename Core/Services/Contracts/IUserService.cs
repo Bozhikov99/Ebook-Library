@@ -23,6 +23,8 @@ namespace Core.Services.Contracts
 
         Task<ListSubscriptionModel> GetActiveSubscription();
 
+        Task<bool> isSubscribed();
+
         string GetUserId();
     }
 }

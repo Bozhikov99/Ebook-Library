@@ -153,5 +153,14 @@ namespace Core.Services
 
             return model;
         }
+
+        public async Task<bool> isSubscribed()
+        {
+            string userId = GetUserId();
+            Subscription subscription = await repository.All<Subscription>(s => s.UserId == userId)
+                .FirstOrDefaultAsync(s => s.Deadline < DateTime.Now);
+
+            return subscription != null;
+        }
     }
 }

@@ -35,8 +35,17 @@ namespace Web.Controllers
             return View(books);
         }
 
+        [Authorize]
         public async Task<IActionResult> Read(string id)
         {
+            bool isSubscribed = await userService.isSubscribed();
+
+            if (!isSubscribed)
+            {
+                TempData[MessageConstants.WarningMessage] = "Please subscribe";
+                return RedirectToAction("Subscribe", "Subscription");
+            }
+
             byte[] content = await bookService.GetContent(id);
 
             return File(content, BookConstants.AllowedContentType);

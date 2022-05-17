@@ -11,13 +11,17 @@
         <i class="fa fa-receipt"></i> Read book
     </a>
 
+    <a asp-controller="Book" asp-action="TestRead" asp-route-id=@Model.Id >
+        Read it
+    </a>
+
     <script>
         $('#btnOpenDocument').click(function (e) {
             e.preventDefault();
             window.open('@Url.Action("Read"
-                         ,"Book"
-                         ,new {id=@Model.Id
-                              ,fileName="Read.pdf" })'
+                     ,"Book"
+                     ,new {id=@Model.Id
+                          ,fileName=@$"{Model.Title}.pdf" })'
                         ,"_blank");
         });
     </script>

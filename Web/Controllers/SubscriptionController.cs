@@ -17,7 +17,10 @@ namespace Web.Controllers
 
         public IActionResult Subscribe()
         {
-            string userId = User.Claims.First().Value;
+            string userId = User.Claims
+                .First()
+                .Value;
+            
             ViewBag.UserId = userId;
 
             return View();
