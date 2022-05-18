@@ -1,4 +1,4 @@
-﻿@if (ViewBag.IsLoggedIn)
+﻿@if (ViewBag.UserId!=null)
 {
     @if (ViewBag.IsFavourite)
     {
@@ -16,8 +16,7 @@
 
 <script type="text/javascript">
     let buttonElement = document.querySelector('#favButton');
-    let id = document.querySelector('#book-id')
-        .textContent;
+    let id = @ViewBag.UserId;
 
     buttonElement.addEventListener('click', ()=>{
         if(buttonElement.textContent=='Fav'){

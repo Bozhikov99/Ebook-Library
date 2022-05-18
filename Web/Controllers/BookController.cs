@@ -4,6 +4,7 @@ using Core.Services.Contracts;
 using Core.ViewModels.Author;
 using Core.ViewModels.Book;
 using Core.ViewModels.Genre;
+using Core.ViewModels.Review;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +16,20 @@ namespace Web.Controllers
         private readonly IBookService bookService;
         private readonly IGenreService genreService;
         private readonly IUserService userService;
+        private readonly IReviewService reviewService;
 
         public BookController(
             IAuthorService authorService,
             IBookService bookService,
             IGenreService genreService,
-            IUserService userService)
+            IUserService userService,
+            IReviewService reviewService)
         {
             this.authorService = authorService;
             this.bookService = bookService;
             this.genreService = genreService;
             this.userService = userService;
+            this.reviewService = reviewService;
         }
 
         public async Task<IActionResult> All()
@@ -53,15 +57,20 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            bool isLoggedIn = userService.GetUserId() != null;
+            string userId = userService.GetUserId();
             BookDetailsModel model = await bookService.Details(id);
+            IEnumerable<ListReviewModel> reviews = await reviewService.GetAll(userService.GetUserId(), id);
 
-            ViewBag.IsLoggedIn = isLoggedIn;
+            ViewBag.UserId = userId;
+            ViewBag.Reviews = reviews;
 
-            if (isLoggedIn)
+            if (userId != null)
             {
                 bool isFavouriteBook = await userService.IsBookFavourite(id);
                 ViewBag.IsFavourite = isFavouriteBook;
+
+                UserReviewModel userReview = await reviewService.GetUserReview(userService.GetUserId(), id);
+                ViewBag.UserReview = userReview;
             }
 
             return View(model);
@@ -285,6 +294,23 @@ namespace Web.Controllers
             }
 
             return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateReview(CreateReviewModel model)
+        {
+            try
+            {
+                await reviewService.CreateReview(model);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return RedirectToAction(nameof(Details), model.BookId);
         }
     }
 }

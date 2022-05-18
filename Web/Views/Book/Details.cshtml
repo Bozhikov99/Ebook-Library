@@ -49,6 +49,15 @@
 </div>
 <div id="book-id" hidden>@Model.Id</div>
 
+@foreach (var r in ViewBag.Reviews)
+{
+    <div style="background-color: orchid">
+        <h5>@r.UserName</h5>
+        <h5>@r.Value</h5>
+        <p>@r.Comment</p>
+    </div>
+}
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
@@ -56,3 +65,4 @@
 
 <partial name="_ReadPartial" />
 <partial name="_FavouriteBookPartial" />
+<partial name="_ReviewPartial" />

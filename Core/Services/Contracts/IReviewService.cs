@@ -11,6 +11,6 @@ namespace Core.Services.Contracts
 
         Task DeleteReview(string id);
 
-        Task<IEnumerable<ListReviewModel>> GetAll(string bookId);
+        Task<IEnumerable<ListReviewModel>> GetAll(string userId, string bookId);
     }
 }

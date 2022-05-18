@@ -1,0 +1,25 @@
+﻿@using Core.ViewModels.Review
+
+@if (ViewBag.UserId != null)
+{
+    if (ViewBag.UserReview != null)
+    {
+        <p>@ViewBag.UserReview.Comment</p>
+        <p>@ViewBag.UserReview.Value</p>
+    }
+    else
+    {
+        <form asp-action="CreateReview">
+            <select name="Value">
+                @for (var i = 1; i < 6; i++)
+                {
+                    <option value=@i>@i</option>
+                }
+            </select>
+            <input type="text" name="Comment" />
+            <input hidden name="UserId" value=@ViewBag.UserId />
+            <input hidden name="BookId" value=@Model.Id />
+            <button type="submit">Submit</button>
+        </form>
+    }
+}

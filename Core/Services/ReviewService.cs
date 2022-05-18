@@ -44,9 +44,9 @@ namespace Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ListReviewModel>> GetAll(string bookId)
+        public async Task<IEnumerable<ListReviewModel>> GetAll(string userId, string bookId)
         {
-            IEnumerable<ListReviewModel> reviews = await repository.All<Review>()
+            IEnumerable<ListReviewModel> reviews = await repository.All<Review>(r => r.UserId != userId)
                 .ProjectTo<ListReviewModel>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
