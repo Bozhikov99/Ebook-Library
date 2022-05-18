@@ -2,24 +2,91 @@
 
 @if (ViewBag.UserId != null)
 {
-    if (ViewBag.UserReview != null)
-    {
-        <p>@ViewBag.UserReview.Comment</p>
-        <p>@ViewBag.UserReview.Value</p>
-    }
-    else
-    {
-        <form asp-action="CreateReview">
-            <select name="Value">
-                @for (var i = 1; i < 6; i++)
-                {
-                    <option value=@i>@i</option>
-                }
-            </select>
-            <input type="text" name="Comment" />
-            <input hidden name="UserId" value=@ViewBag.UserId />
-            <input hidden name="BookId" value=@Model.Id />
-            <button type="submit">Submit</button>
-        </form>
-    }
+    <div id="partial">
+        @if (ViewBag.UserReview != null)
+        {
+            <div id="comment">
+                <p>@ViewBag.UserReview.Comment</p>
+                <p>@ViewBag.UserReview.Value</p>
+                <button id="edit">Edit</button>
+                <button>Delete</button>
+            </div>
+        }
+        else
+        {
+            <form asp-action="CreateReview">
+                <select name="Value">
+                    @for (var i = 1; i < 6; i++)
+                    {
+                        <option value=@i>@i</option>
+                    }
+                </select>
+                <input type="text" name="Comment" />
+                <input hidden name="UserId" value=@ViewBag.UserId />
+                <input hidden name="BookId" value=@Model.Id />
+                <button type="submit">Submit</button>
+            </form>
+        }
+    </div>
+
 }
+
+<script type="text/javascript">
+    let editButtonElement=document.querySelector('#edit');
+    let divElement=document.querySelector('#partial');
+
+    editButtonElement.addEventListener('click', ()=>{
+        let formElement=document.createElement('form');
+        let selectElement=document.createElement('select');
+
+        for(var i=1; i<6;i++){
+            let optionElement=document.createElement('option');
+            optionElement.value=i;
+            optionElement.textContent=i;
+            selectElement.appendChild(optionElement);
+        }
+
+        let commentInputElement=document.createElement('input');
+        commentInputElement.name='Value';
+        commentInputElement.type='text';
+
+        let bookIdInputElement=document.createElement('input')
+        bookIdInputElement.hidden='true';
+        bookIdInputElement.value='@Model.Id';
+        bookIdInputElement.name='BookId';
+        //<input hidden name="UserId" value=@ViewBag.UserId />
+
+        let userIdInputElement=document.createElement('input')
+        userIdInputElement.hidden='true';
+        userIdInputElement.name='UserId';
+        userIdInputElement.value='@ViewBag.UserId';
+
+        let submitElement=document.createElement('button');
+        submitElement.type='submit';
+        submitElement.textContent='Submit';
+
+        formElement.appendChild(selectElement);
+        formElement.appendChild(commentInputElement);
+        formElement.appendChild(bookIdInputElement);
+        formElement.appendChild(userIdInputElement);
+        formElement.appendChild(submitElement);
+        divElement.appendChild(formElement);
+
+        submitElement.addEventListener('click', (e)=>{
+            e.preventDefault();
+
+            let Value=selectElement.value;
+            let Comment=commentInputElement.value;
+            let BookId=bookIdInputElement.value;
+            let UserId=userIdInputElement.value;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateReview")",
+                data: {model: {
+                    Value, Comment, BookId, UserId}}
+            })
+        })
+    })
+
+</script>
