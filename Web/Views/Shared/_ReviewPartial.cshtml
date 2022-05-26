@@ -5,11 +5,12 @@
     <div id="partial">
         @if (ViewBag.UserReview != null)
         {
-            <div id="comment">
-                <p>@ViewBag.UserReview.Comment</p>
+            <div id="commentDiv">
+                <p id="comment">@ViewBag.UserReview.Comment</p>
                 <p>@ViewBag.UserReview.Value</p>
                 <button id="edit">Edit</button>
-                <button>Delete</button>
+                <button id="delete">Delete</button>
+                <p id="review-id" hidden>@ViewBag.UserReview.Id</p>
             </div>
         }
         else
@@ -33,9 +34,84 @@
 
 <script type="text/javascript">
     let editButtonElement=document.querySelector('#edit');
+    let deleteButtonElement=document.querySelector('#delete');
     let divElement=document.querySelector('#partial');
 
+    deleteButtonElement.addEventListener('click', ()=>{
+        let id=document.querySelector('#review-id')
+            .textContent;
+        let commentDivElement=document.querySelector('#commentDiv');
+        commentDivElement.remove();
+
+        CreateReviewForm();
+
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteReview")",
+                data: {id}
+            })
+    })
+
     editButtonElement.addEventListener('click', ()=>{
+
+        let commentDivElement=document.querySelector('#commentDiv');
+        let text=commentDivElement.querySelector('#comment')
+            .textContent;
+
+        CreateReviewForm(text);
+        //let formElement=document.createElement('form');
+        //let selectElement=document.createElement('select');
+
+        //for(var i=1; i<6;i++){
+        //    let optionElement=document.createElement('option');
+        //    optionElement.value=i;
+        //    optionElement.textContent=i;
+        //    selectElement.appendChild(optionElement);
+        //}
+
+        //let commentInputElement=document.createElement('input');
+        //commentInputElement.name='Value';
+        //commentInputElement.type='text';
+
+        //let bookIdInputElement=document.createElement('input')
+        //bookIdInputElement.hidden='true';
+        //bookIdInputElement.value='@Model.Id';
+        //bookIdInputElement.name='BookId';
+
+        //let userIdInputElement=document.createElement('input')
+        //userIdInputElement.hidden='true';
+        //userIdInputElement.name='UserId';
+        //userIdInputElement.value='@ViewBag.UserId';
+
+        //let submitElement=document.createElement('button');
+        //submitElement.type='submit';
+        //submitElement.textContent='Submit';
+
+        //formElement.appendChild(selectElement);
+        //formElement.appendChild(commentInputElement);
+        //formElement.appendChild(bookIdInputElement);
+        //formElement.appendChild(userIdInputElement);
+        //formElement.appendChild(submitElement);
+        //divElement.appendChild(formElement);
+
+        //submitElement.addEventListener('click', (e)=>{
+        //    e.preventDefault();
+
+        //    let Value=selectElement.value;
+        //    let Comment=commentInputElement.value;
+        //    let BookId=bookIdInputElement.value;
+        //    let UserId=userIdInputElement.value;
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "@Url.Action("CreateReview")",
+        //        data: {model: {
+        //            Value, Comment, BookId, UserId}}
+        //    })
+        //})
+    })
+
+    function CreateReviewForm(text){
         let formElement=document.createElement('form');
         let selectElement=document.createElement('select');
 
@@ -50,12 +126,15 @@
         commentInputElement.name='Value';
         commentInputElement.type='text';
 
+        if(text){
+            commentInputElement.value=text;
+        }
+
         let bookIdInputElement=document.createElement('input')
         bookIdInputElement.hidden='true';
         bookIdInputElement.value='@Model.Id';
         bookIdInputElement.name='BookId';
         //<input hidden name="UserId" value=@ViewBag.UserId />
-
         let userIdInputElement=document.createElement('input')
         userIdInputElement.hidden='true';
         userIdInputElement.name='UserId';
@@ -87,6 +166,6 @@
                     Value, Comment, BookId, UserId}}
             })
         })
-    })
+    }
 
 </script>

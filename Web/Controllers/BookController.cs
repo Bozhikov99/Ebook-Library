@@ -312,5 +312,22 @@ namespace Web.Controllers
 
             return RedirectToAction(nameof(Details), model.BookId);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteReview(string id)
+        {
+            try
+            {
+                await reviewService.DeleteReview(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return Ok();
+        }
     }
 }
