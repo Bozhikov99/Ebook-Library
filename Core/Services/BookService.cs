@@ -82,6 +82,12 @@ namespace Core.Services.Contracts
             }
 
             book.Genres = genres;
+            book.Title = model.Title;
+            book.Content = model.Content;
+            book.Cover = model.Cover;
+            book.AuthorId = book.AuthorId;
+            book.ReleaseYear = book.ReleaseYear;
+            book.Pages = book.Pages;
 
             await repository.SaveChangesAsync();
         }
