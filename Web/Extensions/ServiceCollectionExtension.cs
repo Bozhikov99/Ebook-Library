@@ -5,7 +5,7 @@ using Infrastructure;
 using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Web.Extensions
 {
     public static class ServiceCollectionExtension
     {

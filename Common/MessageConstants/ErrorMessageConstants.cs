@@ -1,4 +1,4 @@
-﻿namespace Common
+﻿namespace Common.MessageConstants
 {
     public class ErrorMessageConstants
     {

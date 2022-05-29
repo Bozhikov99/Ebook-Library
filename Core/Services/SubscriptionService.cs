@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common;
+using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Subscription;
 using Infrastructure.Common;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Common;
+using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Book;
 using Core.ViewModels.Subscription;
@@ -26,19 +26,31 @@ namespace Core.Services
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public UserService(
             IRepository repository,
             IMapper mapper,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, 
+            RoleManager<IdentityRole> roleManager)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.httpContextAccessor = httpContextAccessor;
+            this.roleManager = roleManager;
+        }
+
+        public async Task<IEnumerable<ListUserModel>> GetAll()
+        {
+            IEnumerable<ListUserModel> users = await repository.All<User>()
+                .ProjectTo<ListUserModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return users;
         }
 
         public async Task<UserProfileModel> GetProfile()

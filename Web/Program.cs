@@ -4,6 +4,7 @@ using Infrastructure.Common;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Web.Extensions;
 using Web.ModelBinders.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +52,10 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "Area",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

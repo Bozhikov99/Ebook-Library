@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.MessageConstants;
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 

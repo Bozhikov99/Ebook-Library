@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Common;
+using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Genre;
 using Infrastructure.Common;

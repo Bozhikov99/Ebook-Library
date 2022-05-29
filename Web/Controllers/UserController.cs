@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Book;
 using Core.ViewModels.User;
@@ -42,7 +42,7 @@ namespace Web.Controllers
 
             if (!isRegistered.Succeeded)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
                 return View();
             }
 
@@ -63,11 +63,11 @@ namespace Web.Controllers
             }
             catch (ArgumentException ae)
             {
-                TempData[MessageConstants.ErrorMessage] = ae.Message;
+                TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.LOGIN_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.LOGIN_UNEXPECTED;
             }
 
             return RedirectToAction("Index", "Home");

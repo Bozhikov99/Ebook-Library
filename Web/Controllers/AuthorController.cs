@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Author;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,7 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_AUTHOR_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_AUTHOR_UNEXPECTED;
             }
 
             return RedirectToAction(nameof(All));
@@ -58,7 +58,7 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_AUTHOR_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_AUTHOR_UNEXPECTED;
                 return View();
             }
 
@@ -74,11 +74,11 @@ namespace Web.Controllers
             }
             catch (ArgumentException ae)
             {
-                TempData[MessageConstants.ErrorMessage] = string.Format(ae.Message, $"{model.FirstName} {model.LastName}");
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, $"{model.FirstName} {model.LastName}");
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_AUTHOR_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_AUTHOR_UNEXPECTED;
                 return RedirectToAction(nameof(Edit));
             }
 

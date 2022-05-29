@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Common.MessageConstants;
 using Common.ValidationConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Author;
@@ -46,7 +46,7 @@ namespace Web.Controllers
 
             if (!isSubscribed)
             {
-                TempData[MessageConstants.WarningMessage] = "Please subscribe";
+                TempData[ToastrMessageConstants.WarningMessage] = "Please subscribe";
                 return RedirectToAction("Subscribe", "Subscription");
             }
 
@@ -105,7 +105,7 @@ namespace Web.Controllers
 
             if (cover == null || cover.Length == 0)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
@@ -116,8 +116,8 @@ namespace Web.Controllers
             }
             if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
             {
-                TempData[MessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
+                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
@@ -129,7 +129,7 @@ namespace Web.Controllers
 
             if (content == null || content.Length == 0)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_ISNULL;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_ISNULL;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
@@ -140,8 +140,8 @@ namespace Web.Controllers
             }
             if (contentType != BookConstants.AllowedContentType)
             {
-                TempData[MessageConstants.WarningMessage] = ErrorMessageConstants.CONTENT_ALLOWED_FORMATS;
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_INVALID_FORMAT;
+                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.CONTENT_ALLOWED_FORMATS;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_INVALID_FORMAT;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
@@ -167,7 +167,7 @@ namespace Web.Controllers
             }
             catch (ArgumentException ex)
             {
-                TempData[MessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
@@ -177,7 +177,7 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
@@ -196,7 +196,7 @@ namespace Web.Controllers
 
             if (cover == null || cover.Length == 0)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 ViewBag.Authors = authors;
@@ -205,8 +205,8 @@ namespace Web.Controllers
             }
             if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
             {
-                TempData[MessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
+                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
 
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 ViewBag.Authors = authors;
@@ -230,7 +230,7 @@ namespace Web.Controllers
             }
             catch (ArgumentException ex)
             {
-                TempData[MessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 ViewBag.Authors = authors;
 
@@ -238,7 +238,7 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_BOOK_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_BOOK_UNEXPECTED;
                 IEnumerable<ListAuthorModel> authors = await authorService.GetAllAuthors();
                 IEnumerable<ListGenreModel> genres = await genreService.GetAllGenres();
                 ViewBag.Authors = authors;
@@ -258,7 +258,7 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_BOOK_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_BOOK_UNEXPECTED;
             }
 
             return RedirectToAction(nameof(All));

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Infrastructure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Infrastructure.Models
+namespace Infrastructure
 {
     public class DbConfiguration : IdentityDbContext<User>
     {

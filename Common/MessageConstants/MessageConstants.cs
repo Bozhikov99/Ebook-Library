@@ -1,6 +1,6 @@
-﻿namespace Common
+﻿namespace Common.MessageConstants
 {
-    public class MessageConstants
+    public class ToastrMessageConstants
     {
         public const string ErrorMessage = "ErrorMessage";
         public const string SuccessMessage = "SuccessMessage";

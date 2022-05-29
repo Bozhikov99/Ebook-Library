@@ -7,6 +7,8 @@ namespace Core.Services.Contracts
 {
     public interface IUserService
     {
+        Task<IEnumerable<ListUserModel>> GetAll();
+
         Task<IdentityResult?> Register(RegisterUserModel model);
 
         Task Login(LoginUserModel model);

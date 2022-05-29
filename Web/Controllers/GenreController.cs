@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Common.MessageConstants;
+using Common.MessageConstants.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +27,11 @@ namespace Web.Controllers
             try
             {
                 await genreService.DeleteGenre(id);
-                TempData[MessageConstants.SuccessMessage] = SuccessMessageConstants.GENRE_DELETED;
+                TempData[ToastrMessageConstants.SuccessMessage] = SuccessMessageConstants.GENRE_DELETED;
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_GENRE_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.DELETE_GENRE_UNEXPECTED;
                 return new EmptyResult();
             }
 
@@ -57,17 +58,17 @@ namespace Web.Controllers
             try
             {
                 await genreService.CreateGenre(model);
-                TempData[MessageConstants.SuccessMessage] = string.Format(SuccessMessageConstants.GENRE_CREATED, model.Name);
+                TempData[ToastrMessageConstants.SuccessMessage] = string.Format(SuccessMessageConstants.GENRE_CREATED, model.Name);
             }
             catch (ArgumentException ae)
             {
-                TempData[MessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
 
                 return View();
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_GENRE_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_GENRE_UNEXPECTED;
 
                 return View();
             }
@@ -90,14 +91,14 @@ namespace Web.Controllers
             }
             catch (ArgumentException ae)
             {
-                TempData[MessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
 
                 EditGenreModel originalModel = await genreService.GetEditModel(model.Id);
                 return View(originalModel);
             }
             catch (Exception)
             {
-                TempData[MessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
+                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
 
                 EditGenreModel originalModel = await genreService.GetEditModel(model.Id);
                 return View(originalModel);

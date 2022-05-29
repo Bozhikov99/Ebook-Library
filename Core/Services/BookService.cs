@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Common;
+using Common.MessageConstants;
+using Core.Services.Contracts;
 using Core.ViewModels.Book;
 using Infrastructure.Common;
 using Infrastructure.Models;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Services.Contracts
+namespace Core.Services
 {
     public class BookService : IBookService
     {
