@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common;
 using Common.MessageConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Book;
@@ -33,7 +34,7 @@ namespace Core.Services
             IMapper mapper,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IHttpContextAccessor httpContextAccessor, 
+            IHttpContextAccessor httpContextAccessor,
             RoleManager<IdentityRole> roleManager)
         {
             this.repository = repository;
@@ -173,6 +174,16 @@ namespace Core.Services
                 .FirstOrDefaultAsync(s => s.Deadline < DateTime.Now);
 
             return subscription != null;
+        }
+
+        public async Task<bool> IsAdmin()
+        {
+            string userId = GetUserId();
+
+            User user = await repository.GetByIdAsync<User>(userId);
+            bool isAdmin = await userManager.IsInRoleAsync(user, RoleConstants.Administrator);
+
+            return isAdmin;
         }
     }
 }

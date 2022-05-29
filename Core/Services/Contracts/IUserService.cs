@@ -27,6 +27,8 @@ namespace Core.Services.Contracts
 
         Task<bool> isSubscribed();
 
+        Task<bool> IsAdmin();
+
         string GetUserId();
     }
 }
