@@ -6,73 +6,75 @@
     <title>@ViewData["Title"] - Web</title>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
           crossorigin="anonymous" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark py-3"
-             style="background-color: white">
-            <div class="container">
-                <!-- Navbar Logo -->
-                <a asp-controller="Home"
-                               asp-action="Index">
-                    <img class="w-100 h-100"
-                         src="/img/ebooklogo.svg"
-                         style="max-width: 90%" />
-                </a>
 
-                <!-- Collapse Button Mobile  -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3"
+         style="background-color: white">
+        <div class="container">
+            <!-- Navbar Logo -->
 
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navmenu">
-                    <span class="navbar-toggler-icon" id="dropdown-icon"></span>
-                </button>
+            <a asp-controller="Home"
+               asp-action="Index">
+                <img class="w-100 h-100"
+                     src="/img/ebooklogo.svg"
+                     style="max-width: 90%" />
+            </a>
 
-                <div class="collapse navbar-collapse" id="navmenu">
-                    <!-- Hover Buttons -->
 
-                    <ul class="navbar-nav">
-                        <li class="nav-item px-2 py-1">
-                            <a asp-controller="Book"
-                               asp-action="All"
-                               class="nav-link collapse-button hovbutton">Browse</a>
-                        </li>
-                        <li class="nav-item px-2 py-1">
-                            <a asp-controller="Subscription"
-                               asp-action="Subscribe"
-                               class="nav-link collapse-button hovbutton">
-                                Subscriptions
-                            </a>
-                        </li>
 
-                        <!-- Search Bar -->
+            <!-- Collapse Button Mobile  -->
 
-                        <li class="nav-item px-2 py-1 d-flex justify-content-center">
-                            <input type="text"
-                                   class="form-control"
-                                   style="border-color: #f15a24"
-                                   placeholder="Search for a book.." />
-                        </li>
-                    </ul>
-                </div>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon" id="dropdown-icon"></span>
+            </button>
 
-                 <!-- Login/Register Buttons -->
-                 <partial name="_LoginPartial" />
-                
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <!-- Hover Buttons -->
+
+                <ul class="navbar-nav">
+                    <li class="nav-item px-2 py-1">
+                        <a asp-controller="Book"
+                           asp-action="All"
+                           class="nav-link collapse-button hovbutton">Browse</a>
+                    </li>
+                    <li class="nav-item px-2 py-1">
+                        <a asp-controller="Subscription"
+                           asp-action="Subscribe"
+                           class="nav-link collapse-button hovbutton">
+                            Subscriptions
+                        </a>
+                    </li>
+
+                    <!-- Search Bar -->
+
+                    <li class="nav-item px-2 py-1 d-flex justify-content-center">
+                        <input type="text"
+                               class="form-control"
+                               style="border-color: #f15a24"
+                               placeholder="Search for a book.." />
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
-    
+
+            <!-- Login/Register Buttons -->
+            <partial name="_LoginPartial" />
+
+        </div>
+    </nav>
+
+
 
     <!-- Mobile Login/Register Buttons -->
 
@@ -80,9 +82,9 @@
 
     <!-- RenderBody -->
 
-        <main role="main">
-            @RenderBody()
-        </main>
+    <main role="main">
+        @RenderBody()
+    </main>
 
     <!-- Footer -->
 
@@ -95,13 +97,11 @@
         </div>
     </footer>
 
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-      crossorigin="anonymous"
-    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)

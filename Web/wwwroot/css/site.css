@@ -106,7 +106,7 @@ li {
 
 /* Navbar Buttons */
 .navbutton {
-    border: none;
+    border: none !important;
     color: white !important;
 }
 
@@ -155,3 +155,7 @@ li {
     .adminbutton:hover {
         background-color: #f12446 !important;
     }
+
+navbar-toggler {
+    justify-content: space-between !important;
+}
