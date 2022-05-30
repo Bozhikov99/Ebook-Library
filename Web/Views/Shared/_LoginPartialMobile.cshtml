@@ -1,0 +1,45 @@
+﻿@using Infrastructure.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <div class="container" style="margin-top: 0px">
+            <div class="row d-lg-none" style="margin-bottom: 1rem">
+                <div class="col">
+                    <a class="btn navbutton" style="width: 100%" asp-controller="User"
+                   asp-action="Profile">Profile</a>
+                </div>
+                <div class="col">
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" style="width: 100%" class="btn navbutton">Logout</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        @await Component.InvokeAsync("AdminCheck")
+    }
+    else
+    {
+
+        <div class="container" style="margin-top: 0px">
+            <div class="row d-lg-none" style="margin-bottom: 1rem">
+                <div class="col">
+                    <a class="btn navbutton" style="width: 100%" asp-controller="User"
+                   asp-action="Login">Login</a>
+                </div>
+                <div class="col">
+                    <a class="btn navbutton"
+                   style="width: 100%"
+                   asp-controller="User"
+                   asp-action="Register">Register</a>
+                </div>
+            </div>
+        </div>
+    }
+</ul>
