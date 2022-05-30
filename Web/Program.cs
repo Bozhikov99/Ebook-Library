@@ -2,6 +2,7 @@ using Common;
 using Infrastructure;
 using Infrastructure.Common;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Web.Extensions;
@@ -20,6 +21,17 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EbookDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.Cookie.Name = "UserAccess";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.LoginPath = "/User/Login";
+    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddControllersWithViews()
     .AddMvcOptions(options =>

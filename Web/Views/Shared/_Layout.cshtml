@@ -4,63 +4,121 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        <nav class="navbar navbar-expand-lg navbar-dark py-3"
+             style="background-color: white">
+            <div class="container">
+                <!-- Navbar Logo -->
+                <a asp-controller="Home"
+                               asp-action="Index">
+                    <img class="w-100 h-100"
+                         src="/img/ebooklogo.svg"
+                         style="max-width: 90%" />
+                </a>
+
+                <!-- Collapse Button Mobile  -->
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navmenu">
+                    <span class="navbar-toggler-icon" id="dropdown-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                <div class="collapse navbar-collapse" id="navmenu">
+                    <!-- Hover Buttons -->
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item px-2 py-1">
+                            <a asp-controller="Book"
+                               asp-action="All"
+                               class="nav-link collapse-button hovbutton">Browse</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item nav-headline dropdown">
-                            <a class="dropdown-toggle text-standard" href="#" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Genres
+                        <li class="nav-item px-2 py-1">
+                            <a asp-controller="Subscription"
+                               asp-action="Subscribe"
+                               class="nav-link collapse-button hovbutton">
+                                Subscriptions
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="genreDropdown">
-                                <li><a class="dropdown-item" asp-controller="Genre" asp-action="Create">Create</a></li>
-                                <li><a class="dropdown-item" asp-controller="Genre" asp-action="All">All</a></li>
-                            </ul>
                         </li>
-                        <li class="nav-item nav-headline dropdown">
-                            <a class="dropdown-toggle text-standard" href="#" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Books
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="bookDropdown">
-                                <li><a class="dropdown-item" asp-controller="Book" asp-action="Create">Create</a></li>
-                                <li><a class="dropdown-item" asp-controller="Book" asp-action="All">All</a></li>
-                            </ul>
+
+                        <!-- Search Bar -->
+
+                        <li class="nav-item px-2 py-1 d-flex justify-content-center">
+                            <input type="text"
+                                   class="form-control"
+                                   style="border-color: #f15a24"
+                                   placeholder="Search for a book.." />
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
-                    @await Component.InvokeAsync("AdminCheck")
+                </div>
+
+                <!-- Login/Register Buttons -->
+
+                <div class="nav-item px-2 d-none d-lg-block">
+                    <a class="btn navbutton"
+                       asp-controller="User"
+                       asp-action="Login">Login</a>
+                </div>
+                <div class="nav-item px-2 d-none d-lg-block">
+                    <a class="btn navbutton" asp-controller="User"
+                       asp-action="Register">Register</a>
                 </div>
             </div>
         </nav>
     </header>
+    
+
+    <!-- Mobile Login/Register Buttons -->
+
+    <div class="container" style="margin-top: 0px">
+        <div class="row d-lg-none" style="margin-bottom: 1rem">
+            <div class="col">
+                <a class="btn navbutton" style="width: 100%" asp-controller="User"
+                   asp-action="Login">Login</a>
+            </div>
+            <div class="col">
+                <a class="btn navbutton"
+                   style="width: 100%"
+                   asp-controller="User"
+                   asp-action="Register">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- RenderBody -->
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer -->
+
+    <footer class="p-1 bg-dark text-white text-center fixed-bottom">
         <div class="container">
-            &copy; 2022 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="lead">
+                Copyright &copy; 2022 eBook /////
+                <a href="/html/admin_area/users_page.html">Admin Page</a>
+            </div>
         </div>
     </footer>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
