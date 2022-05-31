@@ -34,5 +34,8 @@
         public const string INVALID_USER = "Invalid user";
         public const string LOGIN_UNEXPECTED = "Unexpected error loging in";
         public const string REGISTER_UNEXPECTED = "Unexpected error registering";
+        public const string USER_EXISTS = "Username is already taken.";
+
+
     }
 }

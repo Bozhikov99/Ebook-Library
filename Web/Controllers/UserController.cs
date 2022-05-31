@@ -38,13 +38,21 @@ namespace Web.Controllers
                 return View();
             }
 
-            IdentityResult isRegistered = await userService.Register(model);
-
-            if (!isRegistered.Succeeded)
+            try
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
+                IdentityResult isRegistered = await userService.Register(model);
+                if (!isRegistered.Succeeded)
+                {
+                    TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
+                    return View();
+                }
+            }
+            catch (ArgumentException ae)
+            {
+                TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
                 return View();
             }
+           
 
             return RedirectToAction("Index", "Home");
         }
@@ -70,7 +78,7 @@ namespace Web.Controllers
                 TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.LOGIN_UNEXPECTED;
             }
 
-            return RedirectToAction("Index", "Home");
+            return View();
         }
     }
 }
