@@ -24,6 +24,8 @@ li {
     background-color: #f15a24 !important;
 }
 
+
+
 #dropdown-icon {
     border-radius: 0.2rem;
 }
@@ -126,9 +128,9 @@ li {
 }
 
 .subscriptions-big {
-    border: none;
-    font-size: 1.4vw;
-    width: 100%;
+    border: none !important;
+    font-size: 1.4vw !important;
+    width: 100% !important;
 }
 
     .subscriptions-big:hover {
@@ -136,9 +138,9 @@ li {
     }
 
 .sub-button-mobile {
-    border: none;
-    font-size: 30px;
-    width: 400px;
+    border: none !important;
+    font-size: 30px !important;
+    width: 400px !important;
 }
 
     .sub-button-mobile:hover {
@@ -159,3 +161,8 @@ li {
 navbar-toggler {
     justify-content: space-between !important;
 }
+
+.sub-form-width {
+    width: 100%
+}
+

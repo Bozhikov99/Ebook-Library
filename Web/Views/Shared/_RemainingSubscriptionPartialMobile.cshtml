@@ -1,4 +1,6 @@
-﻿@{
+﻿
+
+@{
     DateTime SubscriptionDeadline = @ViewBag.Subscription
                         .Deadline;
 
@@ -8,9 +10,10 @@
 
 @if (ViewBag.Subscription != null)
 {
-    <h1>
+    <h1 class="text-center d-xxl-none" style="margin-top: 6rem">
         Remaining Subscription:
         <div class="orange-txt">@remaining</div>
     </h1>
 
 }
+
