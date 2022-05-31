@@ -97,10 +97,15 @@ namespace Core.Services
         {
             User user = mapper.Map<User>(model);
             user.RegisterDate = DateTime.Now;
-            User existing = await repository.All<User>().FirstOrDefaultAsync(u => u.UserName == model.UserName);
-            if (existing != null)
+            User existingUser = await repository.All<User>().FirstOrDefaultAsync(u => u.UserName == model.UserName);
+            User existingEmail = await repository.All<User>().FirstOrDefaultAsync(u =>  u.Email==model.Email);
+            if (existingUser != null)
             {
                 throw new ArgumentException(ErrorMessageConstants.USER_EXISTS);
+            }
+            if (existingEmail != null)
+            {
+                throw new ArgumentException(ErrorMessageConstants.EMAIL_EXISTS);
             }
             IdentityResult? result = await userManager.CreateAsync(user, model.Password);
 
