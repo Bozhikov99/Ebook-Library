@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,33 @@ namespace Core.Services
         public async Task<IEnumerable<ListBookModel>> GetAll()
         {
             IEnumerable<ListBookModel> books = await repository.All<Book>()
+                .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return books;
+        }
+
+        public async Task<IEnumerable<ListBookModel>> GetAll(string[] genres)
+        {
+            IEnumerable<ListBookModel> books = await repository.All(Search(genres))
+                .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return books;
+        }
+
+        public async Task<IEnumerable<ListBookModel>> GetAll(string search)
+        {
+            IEnumerable<ListBookModel> books = await repository.All(Search(search))
+                .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return books;
+        }
+
+        public async Task<IEnumerable<ListBookModel>> GetAll(string search, string[] genres)
+        {
+            IEnumerable<ListBookModel> books = await repository.All(Search(search, genres))
                 .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
@@ -125,6 +153,44 @@ namespace Core.Services
             BookDetailsModel model = mapper.Map<BookDetailsModel>(book);
 
             return model;
+        }
+
+        private Expression<Func<Book, bool>> Search(string search)
+        {
+            Expression<Func<Book, bool>> searchExpression = b =>
+                   b.Title.ToLower().Contains(search.ToLower()) ||
+                   b.Genres.Any(g => g.Name.ToLower()
+                                .Contains(search.ToLower())) ||
+                   b.Author.FirstName.ToLower()
+                                .Contains(search.ToLower()) ||
+                   b.Author.LastName.ToLower()
+                                .Contains(search.ToLower());
+
+            return searchExpression;
+        }
+
+        private Expression<Func<Book, bool>> Search(string[] genres)
+        {
+            Expression<Func<Book, bool>> searchExpression = b =>
+              b.Genres.Any(g => genres.Contains(g.Name));
+
+            return searchExpression;
+        }
+
+        private Expression<Func<Book, bool>> Search(string search, string[] genres)
+        {
+            Expression<Func<Book, bool>> searchExpression = b =>
+              b.Genres.Any(g => genres.Contains(g.Name)) && 
+              (
+                   b.Title.ToLower().Contains(search.ToLower()) ||
+                   b.Genres.Any(g => g.Name.ToLower()
+                                .Contains(search.ToLower())) ||
+                   b.Author.FirstName.ToLower()
+                                .Contains(search.ToLower()) ||
+                   b.Author.LastName.ToLower()
+                                .Contains(search.ToLower()));
+
+            return searchExpression;
         }
     }
 }

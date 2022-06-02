@@ -32,9 +32,26 @@ namespace Web.Controllers
             this.reviewService = reviewService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string search = null, string[] genres = null)
         {
-            IEnumerable<ListBookModel> books = await bookService.GetAll();
+            IEnumerable<ListBookModel> books;
+
+            if (search == null && genres.Length==0)
+            {
+                books = await bookService.GetAll();
+            }
+            else if (search == null)
+            {
+                books = await bookService.GetAll(genres);
+            }
+            else if (genres.Length == 0)
+            {
+                books = await bookService.GetAll(search);
+            }
+            else
+            {
+                books = await bookService.GetAll(search, genres);
+            }
 
             return View(books);
         }

@@ -11,8 +11,21 @@
 
 <div class="m-space orange-bg"></div>
 
-<div class="container">
-    @await Component.InvokeAsync("BrowseGenres")
+<div class="container phx-5" style="height: 2rem">
+    <!-- Search Bar -->
+
+    <li class="nav-item px-2 py-1 d-flex justify-content-center">
+        <form asp-action="All">
+            <input name="search" type="search"
+                   class="form-control input-button"
+                   style="border-color: #f15a24"
+                   placeholder="Search for a book.." />
+
+            <button class="btn" type="submit">Search</button>
+            @await Component.InvokeAsync("BrowseGenres")
+        </form>
+    </li>
+
     @if (books.Length != 0)
     {
         @for (int i = 0; i < rows; i++)
