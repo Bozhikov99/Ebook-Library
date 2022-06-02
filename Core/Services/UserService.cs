@@ -11,12 +11,7 @@ using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Services
 {
@@ -98,7 +93,7 @@ namespace Core.Services
             User user = mapper.Map<User>(model);
             user.RegisterDate = DateTime.Now;
             User existingUser = await repository.All<User>().FirstOrDefaultAsync(u => u.UserName == model.UserName);
-            User existingEmail = await repository.All<User>().FirstOrDefaultAsync(u =>  u.Email==model.Email);
+            User existingEmail = await repository.All<User>().FirstOrDefaultAsync(u => u.Email == model.Email);
             if (existingUser != null)
             {
                 throw new ArgumentException(ErrorMessageConstants.USER_EXISTS);

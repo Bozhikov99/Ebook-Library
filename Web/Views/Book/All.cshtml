@@ -2,55 +2,73 @@
 @model IEnumerable<ListBookModel>
 
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "Browse";
+    int rows = Model.Count() < 3 ? 1 : 2;
+    int bookCounter = 0;
+    bool isEnd = false;
+    ListBookModel[] books = Model.ToArray();
 }
 
-<h1>All</h1>
+<div class="m-space orange-bg"></div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cover)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReleaseYear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genres)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+<div class="container">
+    @if (books.Length != 0)
+    {
+        @for (int i = 0; i < rows; i++)
         {
-            byte[] cover = item.Cover;
-            string imreBase64Data = Convert.ToBase64String(cover);
-            string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>@string.Join(", ", item.Genres)</td>
-                <img src=@imgUrl />
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReleaseYear)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReleaseYear)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+            <div class="row my-2">
+
+                @for (int j = 0; j < 2; j++)
+
+                {
+                    ListBookModel currentBook = books[bookCounter];
+                    byte[] cover = currentBook.Cover;
+                    string imreBase64Data = Convert.ToBase64String(cover);
+                    string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                    <div class="col">
+                        <div class="card" style="max-width: 540px; max-height: 170px;">
+                            <div class="row g-0">
+                                <div class="col-lg-4">
+                                    <a asp-action="Details" asp-route-id=@currentBook.Id>
+
+                                        <img src=@imgUrl
+                                 class="img-fluid rounded-start"
+                                 style="max-height: 500px!important; max-height: 170px!important"
+                                 alt="..." />
+
+
+                                    </a>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@currentBook.Title</h5>
+                                        <p class="card-text">
+                                            @currentBook.Author <br />
+                                            Genres: @string.Join(", ", currentBook.Genres) <br />
+                                            Release Year: @currentBook.ReleaseYear <br />
+                                            Rating: @currentBook.Rating/5 <i class="bi bi-star-fill orange-txt"></i> <br />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    bookCounter++;
+                    if (bookCounter == Model.Count())
+                    {
+                        isEnd = true;
+                        break;
+                    }
+                }
+
+            </div>
+            if (isEnd)
+            {
+                break;
+            }
         }
-    </tbody>
-</table>
+
+    }
+</div>
+
+

@@ -19,5 +19,7 @@ namespace Core.ViewModels.Book
         public double Rating { get; set; }
 
         public string[] Genres { get; set; }
+
+        public string Author { get; set; }
     }
 }
