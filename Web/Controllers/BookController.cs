@@ -31,27 +31,39 @@ namespace Web.Controllers
             this.userService = userService;
             this.reviewService = reviewService;
         }
-
-        public async Task<IActionResult> All(string search = null, string[] genres = null)
+        
+        public async Task<IActionResult> All(
+            int p = 1,
+            int s = BookConstants.PAGE_SIZE,
+            string search = null,
+            string[] genres = null)
         {
             IEnumerable<ListBookModel> books;
 
-            if (search == null && genres.Length==0)
+            if (search == null && genres.Length == 0)
             {
-                books = await bookService.GetAll();
+                books = await bookService.GetAll(p);
             }
             else if (search == null)
             {
-                books = await bookService.GetAll(genres);
+                books = await bookService.GetAll(p, genres);
             }
             else if (genres.Length == 0)
             {
-                books = await bookService.GetAll(search);
+                books = await bookService.GetAll(p, search);
             }
             else
             {
-                books = await bookService.GetAll(search, genres);
+                books = await bookService.GetAll(p, search, genres);
             }
+
+            ViewBag.PageNo = p;
+            ViewBag.PageSize = s;
+            ViewBag.Genres = genres;
+            TempData["Search"] = search;
+
+            int starterBook = (p - 1) * s;
+            ViewBag.StarterBook = starterBook;
 
             return View(books);
         }

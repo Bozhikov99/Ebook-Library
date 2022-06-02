@@ -24,7 +24,7 @@ namespace Web.Extensions
 
         public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration config)
         {
-            string connectionString = config.GetConnectionString("ContributorConnection");
+            string connectionString = config.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<EbookDbContext>(options =>
                 options.UseSqlServer(connectionString));

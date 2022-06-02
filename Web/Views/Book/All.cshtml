@@ -4,9 +4,23 @@
 @{
     ViewData["Title"] = "Browse";
     int rows = Model.Count() < 3 ? 1 : 2;
-    int bookCounter = 0;
+    int bookCounter = ViewBag.StarterBook;
     bool isEnd = false;
     ListBookModel[] books = Model.ToArray();
+    string queryGenres=string.Empty;
+
+    if (ViewBag.Genres != null)
+    {
+        string[] genres = ViewBag.Genres;
+        queryGenres = $"&genres=";
+
+        foreach (string g in genres)
+        {
+            queryGenres += $"{g}&genres=";
+        }
+
+        queryGenres = queryGenres.Substring(0, queryGenres.Length - 8);
+    }
 }
 
 <div class="m-space orange-bg"></div>
@@ -19,8 +33,8 @@
             <input name="search" type="search"
                    class="form-control input-button"
                    style="border-color: #f15a24"
-                   placeholder="Search for a book.." />
-
+                   placeholder="Search for a book.."
+                   value=@TempData["Search"] />
             <button class="btn" type="submit">Search</button>
             @await Component.InvokeAsync("BrowseGenres")
         </form>
@@ -84,5 +98,8 @@
 
     }
 </div>
-
-
+@*All?p=2&s=4*@
+@*list_a=1&list_a=2*@
+<paging url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
+        page-size=@ViewBag.PageSize
+        total-records=@Model.Count()></paging>

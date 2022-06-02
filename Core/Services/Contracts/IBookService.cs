@@ -4,13 +4,13 @@ namespace Core.Services.Contracts
 {
     public interface IBookService
     {
-        Task<IEnumerable<ListBookModel>> GetAll();
+        Task<IEnumerable<ListBookModel>> GetAll(int p);
 
-        Task<IEnumerable<ListBookModel>> GetAll(string search);
+        Task<IEnumerable<ListBookModel>> GetAll(int p, string search);
 
-        Task<IEnumerable<ListBookModel>> GetAll(string[] genres);
+        Task<IEnumerable<ListBookModel>> GetAll(int p, string[] genres);
 
-        Task<IEnumerable<ListBookModel>> GetAll(string search, string[] genres);
+        Task<IEnumerable<ListBookModel>> GetAll(int p, string search, string[] genres);
 
         Task Create(CreateBookModel model);
 

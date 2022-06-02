@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Common.MessageConstants;
+using Common.ValidationConstants;
 using Core.Services.Contracts;
 using Core.ViewModels.Book;
 using Infrastructure.Common;
@@ -25,7 +26,7 @@ namespace Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<ListBookModel>> GetAll()
+        public async Task<IEnumerable<ListBookModel>> GetAll(int p)
         {
             IEnumerable<ListBookModel> books = await repository.All<Book>()
                 .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
@@ -34,7 +35,7 @@ namespace Core.Services
             return books;
         }
 
-        public async Task<IEnumerable<ListBookModel>> GetAll(string[] genres)
+        public async Task<IEnumerable<ListBookModel>> GetAll(int p, string[] genres)
         {
             IEnumerable<ListBookModel> books = await repository.All(Search(genres))
                 .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
@@ -43,7 +44,7 @@ namespace Core.Services
             return books;
         }
 
-        public async Task<IEnumerable<ListBookModel>> GetAll(string search)
+        public async Task<IEnumerable<ListBookModel>> GetAll(int p, string search)
         {
             IEnumerable<ListBookModel> books = await repository.All(Search(search))
                 .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
@@ -52,7 +53,7 @@ namespace Core.Services
             return books;
         }
 
-        public async Task<IEnumerable<ListBookModel>> GetAll(string search, string[] genres)
+        public async Task<IEnumerable<ListBookModel>> GetAll(int p, string search, string[] genres)
         {
             IEnumerable<ListBookModel> books = await repository.All(Search(search, genres))
                 .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
