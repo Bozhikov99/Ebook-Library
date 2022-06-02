@@ -1,11 +1,6 @@
 ﻿using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure
 {
@@ -38,7 +33,7 @@ namespace Infrastructure
         {
             if (!builder.IsConfigured)
             {
-                builder.UseSqlServer(DbConfiguration.ConnectionString);
+                builder.UseSqlServer(DbConfiguration.ContributorConnectionString);
             }
 
             base.OnConfiguring(builder);

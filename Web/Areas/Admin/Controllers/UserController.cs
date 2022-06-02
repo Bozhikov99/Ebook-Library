@@ -1,9 +1,7 @@
 ﻿using Core.Services.Contracts;
 using Core.ViewModels.User;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Web.Areas.Admin.Controllers
 {

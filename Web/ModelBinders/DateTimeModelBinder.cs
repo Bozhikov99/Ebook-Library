@@ -1,5 +1,4 @@
-﻿using Common;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
 
 namespace Web.ModelBinders

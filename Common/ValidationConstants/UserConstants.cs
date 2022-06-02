@@ -1,5 +1,4 @@
-﻿
-namespace Common.ValidationConstants
+﻿namespace Common.ValidationConstants
 {
     public class UserConstants
     {

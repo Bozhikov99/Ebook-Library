@@ -7,7 +7,6 @@ namespace Core.ViewModels.Review
     {
         [Range(ReviewConstants.VALUE_MIN, ReviewConstants.VALUE_MAX)]
         public double Value { get; set; }
-
         public string Comment { get; set; }
 
         [Required]
