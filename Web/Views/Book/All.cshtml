@@ -12,6 +12,7 @@
 <div class="m-space orange-bg"></div>
 
 <div class="container">
+    @await Component.InvokeAsync("BrowseGenres")
     @if (books.Length != 0)
     {
         @for (int i = 0; i < rows; i++)
