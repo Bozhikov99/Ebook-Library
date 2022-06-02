@@ -7,7 +7,7 @@
     int bookCounter = ViewBag.StarterBook;
     bool isEnd = false;
     ListBookModel[] books = Model.ToArray();
-    string queryGenres=string.Empty;
+    string queryGenres = string.Empty;
 
     if (ViewBag.Genres != null)
     {
@@ -25,20 +25,24 @@
 
 <div class="m-space orange-bg"></div>
 
-<div class="container phx-5" style="height: 2rem">
+<div class="container">
     <!-- Search Bar -->
 
-    <li class="nav-item px-2 py-1 d-flex justify-content-center">
-        <form asp-action="All">
+    <form asp-action="All" class="d-flex" style="padding-top: 2rem">
+
+        <div class="col-2 d-flex justify-content-end" style="min-width:15rem">
             <input name="search" type="search"
                    class="form-control input-button"
                    style="border-color: #f15a24"
                    placeholder="Search for a book.."
                    value=@TempData["Search"] />
-            <button class="btn" type="submit">Search</button>
-            @await Component.InvokeAsync("BrowseGenres")
-        </form>
-    </li>
+        </div>
+        <div class="col d-flex justify-content-start" style="margin-left: 0.5rem; margin-right: 0.5rem"><button class="btn navbutton" type="submit">Search</button></div>
+
+        <div class="col d-flex justify-content-end"> @await Component.InvokeAsync("BrowseGenres")</div>
+
+    </form>
+
 
     @if (books.Length != 0)
     {
@@ -53,9 +57,9 @@
                     byte[] cover = currentBook.Cover;
                     string imreBase64Data = Convert.ToBase64String(cover);
                     string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
-                    <div class="col">
-                        <div class="card" style="max-width: 540px; max-height: 170px;">
-                            <div class="row g-0">
+                    <div class="col" style="max-width:50%; max-height:50%">
+                        <div class="card">
+                            <div class="row g-0 d-flex justify-content-center">
                                 <div class="col-lg-4">
                                     <a asp-action="Details" asp-route-id=@currentBook.Id>
 
@@ -98,8 +102,18 @@
 
     }
 </div>
-@*All?p=2&s=4*@
-@*list_a=1&list_a=2*@
-<paging url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
-        page-size=@ViewBag.PageSize
-        total-records=@Model.Count()></paging>
+
+<div style="height:5rem"></div>
+
+<div class="container fixed-bottom py-5 d-flex justify-content-center">
+    <paging show-prev-next="false"
+    show-first-last="false"
+            show-total-pages="false"
+            show-total-records="false"
+            show-page-size-nav="false"
+            show-gap="false"
+            url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
+            page-size=@ViewBag.PageSize
+            total-records=@Model.Count()
+   ></paging>
+</div>
