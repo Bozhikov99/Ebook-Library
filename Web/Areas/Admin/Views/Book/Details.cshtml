@@ -43,6 +43,18 @@
             style="font-size: 1.5rem; width: 80%; margin-top: 10%"
             >Read</a
           >
+          <a
+            class="btn navbutton"
+            asp-action="Edit"
+            asp-route-id=@Model.Id
+            style="font-size: 1.5rem; width: 80%; margin-top: 5%"
+            >Edit</a>
+          <a
+            class="btn navbutton"
+            asp-action="Delete"
+            asp-route-id=@Model.Id
+            style="font-size: 1.5rem; width: 80%; margin-top: 5%"
+            >Delete</a>
         </div>
       </div>
 

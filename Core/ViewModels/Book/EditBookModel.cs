@@ -16,9 +16,9 @@ namespace Core.ViewModels.Book
         [StringLength(BookConstants.DESCRIPTION_MAXLENGTH, MinimumLength = BookConstants.DESCRIPTION_MINLENGTH, ErrorMessage = ErrorMessageConstants.INVALID_LENGTH)]
         public string Description { get; set; }
 
-        public byte[] Cover { get; set; }
+        public byte[]? Cover { get; set; }
 
-        public byte[] Content { get; set; }
+        public byte[]? Content { get; set; }
 
         [Range(0, BookConstants.RELEASEYEAR_MAX)]
         public int ReleaseYear { get; set; }

@@ -107,8 +107,8 @@ namespace Core.Services
 
             book.Genres = genres;
             book.Title = model.Title;
-            book.Content = model.Content;
-            book.Cover = model.Cover;
+            book.Content = model.Content == null ? book.Content : model.Content;
+            book.Cover = model.Cover == null ? book.Cover : model.Cover;
             book.AuthorId = book.AuthorId;
             book.ReleaseYear = book.ReleaseYear;
             book.Pages = book.Pages;
@@ -175,7 +175,7 @@ namespace Core.Services
         private Expression<Func<Book, bool>> Search(string search, string[] genres)
         {
             Expression<Func<Book, bool>> searchExpression = b =>
-              b.Genres.Any(g => genres.Contains(g.Name)) && 
+              b.Genres.Any(g => genres.Contains(g.Name)) &&
               (
                    b.Title.ToLower().Contains(search.ToLower()) ||
                    b.Genres.Any(g => g.Name.ToLower()
