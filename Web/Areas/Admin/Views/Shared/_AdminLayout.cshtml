@@ -77,10 +77,19 @@
 
         </div>
     </nav>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
 
+    <footer class="p-1 bg-dark text-white text-center fixed-bottom">
+        <div class="container">
+            <div class="lead">
+                Copyright &copy; 2022 eBook
+            </div>
+        </div>
+    </footer>
+
+    <partial name="_ToastrPartial" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
