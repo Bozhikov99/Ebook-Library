@@ -18,16 +18,14 @@ li {
     background-color: #f15a24 !important;
 }
 
-<<<<<<< HEAD
-.dropdown{
+.dropdown {
     display: none;
 }
-=======
+
 .pagination {
     color: #f15a24;
 }
 
->>>>>>> 2b1e328eb3720120b39fd8a36fdb9e5d896b74d5
 
 #dropdown-icon {
     border-radius: 0.2rem;
@@ -167,4 +165,23 @@ navbar-toggler {
 
 .sub-form-width {
     width: 100%
+}
+
+.page-item a {
+    background-color: #f15a24 !important;
+    color: white;
+    border: none;
+}
+
+    .page-item a:hover {
+        background-color: #f12446 !important;
+        color: white;
+    }
+
+.page-item .active {
+    background-color: #f12446 !important;
+}
+
+.page-item a:focus {
+    color: white;
 }
