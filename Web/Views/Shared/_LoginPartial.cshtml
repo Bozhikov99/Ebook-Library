@@ -26,10 +26,7 @@
                 <a class="btn navbutton" style="width: 100%" asp-controller="User"
                asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
             </div>
-            <div class="col">
-                <a class="btn navbutton" style="width: 100%" asp-area="Admin" asp-controller="Home"
-               asp-action="Index"><i class="bi bi-tools"></i> Admin</a>
-            </div>
+           @await Component.InvokeAsync("AdminCheck")
             <div class="col">
                 <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" style="width: 100%" class="btn navbutton"><i class="bi bi-door-closed-fill"></i> Logout</button>
@@ -55,8 +52,8 @@ else
 
     <!-- Mobile Login/Register Buttons -->
 
-    @*<div class="container" style="margin-top: 0px">
-        <div class="row d-lg-none" style="margin-bottom: 1rem">
+    <div class="container d-lg-none" style="margin-top: 2rem">
+        <div class="row d-lg-none">
             <div class="col">
                 <a class="btn navbutton" style="width: 100%" asp-controller="User"
                asp-action="Login"><i class="bi bi-door-open-fill"></i> Login</a>
@@ -68,6 +65,6 @@ else
                asp-action="Register"><i class="bi bi-pencil-square"></i> Register</a>
             </div>
         </div>
-    </div>*@
+    </div>
 }
 

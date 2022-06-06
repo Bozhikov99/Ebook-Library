@@ -25,6 +25,8 @@ namespace Core.Services.Contracts
 
         Task<ListSubscriptionModel> GetActiveSubscription();
 
+        Task EditRoles(string id, string[] roles);
+
         Task<bool> isSubscribed();
 
         Task<bool> IsAdmin();

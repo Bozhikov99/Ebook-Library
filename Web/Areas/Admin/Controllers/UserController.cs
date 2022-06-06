@@ -25,12 +25,20 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> CreateRole()
         {
-            await roleManager.CreateAsync(new IdentityRole()
-            {
-                Name = "Administrator"
-            });
+            //await roleManager.CreateAsync(new IdentityRole()
+            //{
+            //    Name = "Administrator"
+            //});
 
             return Ok();
+        }
+
+        public async Task<IActionResult> EditRoles(string id, string[] roles)
+        {
+            await userService.EditRoles(id, roles);
+            bool isUserAdmin = await userService.IsAdmin();
+
+            return Ok(isUserAdmin);
         }
     }
 }

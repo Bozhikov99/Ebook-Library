@@ -171,6 +171,19 @@ namespace Core.Services
             return model;
         }
 
+        public async Task EditRoles(string id, string[] roles)
+        {
+            User user = await repository.GetByIdAsync<User>(id);
+            IEnumerable<string> userRoles = await userManager.GetRolesAsync(user);
+
+            await userManager.RemoveFromRolesAsync(user, userRoles);
+
+            if (roles.Length > 0)
+            {
+                await userManager.AddToRolesAsync(user, roles);
+            }
+        }
+
         public async Task<bool> isSubscribed()
         {
             string userId = GetUserId();

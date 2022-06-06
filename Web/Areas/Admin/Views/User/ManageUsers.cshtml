@@ -12,28 +12,18 @@
         <h1 style="font-size: 4rem">Users:</h1>
 
         <ul>
-            @*<li>
-                Heathen @email.database
-                <button type="submit" class="btn navbutton float-end">
-                Add Admin
-                </button>
-                </li>*@
             @foreach (ListUserModel u in Model)
             {
                 <li>
                     @u.UserName
-                    <button type="submit" class="btn navbutton float-end">
-                        Add Admin
-                    </button>
+                    <a asp-action="EditRoles" asp-route-id=@u.Id asp-route-roles=@("Administrator")>
+                        <button type="submit" class="btn navbutton float-end">
+                            Add Admin
+                        </button>
+                    </a>
                 </li>
             }
         </ul>
-        <div class="text-center">
-            <a href="users_page.html">Users</a> -
-            <a href="books_page.html">Books</a> -
-            <a href="genres_page.html">Genres</a> -
-            <a href="authors_page.html">Authors</a>
-        </div>
     </div>
 
     <!-- Bootstrap JavaScript -->
@@ -41,4 +31,3 @@
             integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
             crossorigin="anonymous"></script>
 </body>
-</html>
