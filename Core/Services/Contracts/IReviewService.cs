@@ -1,5 +1,4 @@
 ﻿using Core.ViewModels.Review;
-using Infrastructure.Models;
 
 namespace Core.Services.Contracts
 {

@@ -1,13 +1,8 @@
-﻿using Common;
-using Common.ValidationConstants;
-using System.ComponentModel.DataAnnotations;
-
-namespace Core.ViewModels.Genre
+﻿namespace Core.ViewModels.Genre
 {
     public class ListGenreModel
     {
         public string Id { get; set; }
-
         public string Name { get; set; }
     }
 }

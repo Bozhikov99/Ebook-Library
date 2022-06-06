@@ -1,10 +1,8 @@
 using Common;
 using Infrastructure;
-using Infrastructure.Common;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Web.Extensions;
 using Web.ModelBinders.Providers;
 

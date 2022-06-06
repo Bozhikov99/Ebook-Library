@@ -1,9 +1,3 @@
-@media (min-width: 768px) {
-    .news-input {
-        min-width: 250px;
-        max-width: 30%;
-    }
-}
 
 img {
     user-select: none;
@@ -24,9 +18,16 @@ li {
     background-color: #f15a24 !important;
 }
 
+<<<<<<< HEAD
 .dropdown{
     display: none;
 }
+=======
+.pagination {
+    color: #f15a24;
+}
+
+>>>>>>> 2b1e328eb3720120b39fd8a36fdb9e5d896b74d5
 
 #dropdown-icon {
     border-radius: 0.2rem;
@@ -167,4 +168,3 @@ navbar-toggler {
 .sub-form-width {
     width: 100%
 }
-

@@ -2,7 +2,6 @@
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace Core.ViewModels.User
 {
     public class RegisterUserModel

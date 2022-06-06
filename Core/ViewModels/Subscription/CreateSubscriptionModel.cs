@@ -1,5 +1,4 @@
-﻿using System;
-namespace Core.ViewModels.Subscription
+﻿namespace Core.ViewModels.Subscription
 {
     public class CreateSubscriptionModel
     {
