@@ -3,9 +3,9 @@ using Core.Services.Contracts;
 using Core.ViewModels.Author;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers
+namespace Web.Areas.Admin.Controllers
 {
-    public class AuthorController : Controller
+    public class AuthorController : BaseController
     {
         private readonly IAuthorService authorService;
 
