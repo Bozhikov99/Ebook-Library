@@ -15,8 +15,8 @@
                    asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
                 </div>
                 <div class="col">
-                    <a class="btn navbutton" style="width: 100%" asp-controller="User"
-                   asp-action="Profile"><i class="bi bi-tools"></i> Admin</a>
+                    <a class="btn navbutton" style="width: 100%" asp-area="Admin" asp-controller="Home"
+                   asp-action="Index"><i class="bi bi-tools"></i> Admin</a>
                 </div>
                 <div class="col">
                     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
