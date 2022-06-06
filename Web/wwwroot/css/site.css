@@ -185,3 +185,10 @@ navbar-toggler {
 .page-item a:focus {
     color: white;
 }
+
+.image-sizing {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    max-height: 225px !important;
+}

@@ -57,21 +57,20 @@
                     byte[] cover = currentBook.Cover;
                     string imreBase64Data = Convert.ToBase64String(cover);
                     string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
-                    <div class="col" style="max-width:50%; max-height:50%">
+                    <div class="col">
                         <div class="card">
                             <div class="row g-0 d-flex justify-content-center">
                                 <div class="col-lg-4">
                                     <a asp-action="Details" asp-route-id=@currentBook.Id>
 
                                         <img src=@imgUrl
-                                 class="img-fluid rounded-start"
-                                 style="max-height: 500px!important; max-height: 170px!important;"
+                                 class="image-sizing rounded-start"
                                  alt="..." />
 
 
                                     </a>
                                 </div>
-                                <div class="col-lg-8">
+                                <div class="col-lg-8" style="height:14rem;">
                                     <div class="card-body">
                                         <h5 class="card-title">@currentBook.Title</h5>
                                         <p class="card-text">
@@ -107,12 +106,11 @@
 
 <div class="container fixed-bottom py-5 d-flex justify-content-center pagination-div">
     <paging show-prev-next="false"
-    show-first-last="false"
+            show-first-last="false"
             show-total-pages="false"
             show-total-records="false"
             show-page-size-nav="false"
             url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
             page-size=@ViewBag.PageSize
-            total-records=@Model.Count()
-   ></paging>
+            total-records=@Model.Count()></paging>
 </div>
