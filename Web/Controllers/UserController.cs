@@ -4,6 +4,8 @@ using Core.ViewModels.Book;
 using Core.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Mail;
 
 namespace Web.Controllers
 {
@@ -72,13 +74,15 @@ namespace Web.Controllers
             catch (ArgumentException ae)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
+                return View();
             }
             catch (Exception)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.LOGIN_UNEXPECTED;
+                return View();
             }
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

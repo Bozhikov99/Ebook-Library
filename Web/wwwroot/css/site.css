@@ -24,7 +24,9 @@ li {
     background-color: #f15a24 !important;
 }
 
-
+.dropdown{
+    display: none;
+}
 
 #dropdown-icon {
     border-radius: 0.2rem;
