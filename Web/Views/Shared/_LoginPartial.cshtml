@@ -14,16 +14,13 @@
        asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
     </div>
 
-    <div class="nav-item px-2 d-none d-lg-block">
-        <a href="/html/admin_area/users_page.html" class="btn navbutton"><i class="bi bi-tools"></i> Admin</a>
-    </div>
+    @await Component.InvokeAsync("AdminCheck")
 
     <form class="nav-item px-2 d-none d-lg-block" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
         <button type="submit" class="btn navbutton"><i class="bi bi-door-closed-fill"></i> Logout</button>
     </form>
 
 
-    @await Component.InvokeAsync("AdminCheck")
 }
 else
 {
