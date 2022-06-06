@@ -17,5 +17,7 @@
         public string Author { get; set; }
 
         public string[] Genres { get; set; }
+
+        public double Rating { get; set; }
     }
 }

@@ -1,0 +1,116 @@
+﻿@using Core.ViewModels.Book
+@model IEnumerable<ListBookModel>
+
+@{
+    ViewData["Title"] = "Browse";
+    int rows = Model.Count() < 3 ? 1 : 2;
+    int bookCounter = ViewBag.StarterBook;
+    bool isEnd = false;
+    ListBookModel[] books = Model.ToArray();
+    string queryGenres = string.Empty;
+
+    if (ViewBag.Genres != null)
+    {
+        string[] genres = ViewBag.Genres;
+        queryGenres = $"&genres=";
+
+        foreach (string g in genres)
+        {
+            queryGenres += $"{g}&genres=";
+        }
+
+        queryGenres = queryGenres.Substring(0, queryGenres.Length - 8);
+    }
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="container">
+    <!-- Search Bar -->
+
+    <form asp-action="All" class="d-flex" style="padding-top: 2rem">
+
+        <div class="col-2 d-flex justify-content-end" style="min-width:15rem">
+            <input name="search" type="search"
+                   class="form-control input-button"
+                   style="border-color: #f15a24"
+                   placeholder="Search for a book.."
+                   value=@TempData["Search"] />
+        </div>
+        <div class="col d-flex justify-content-start" style="margin-left: 0.5rem; margin-right: 0.5rem"><button class="btn navbutton" type="submit">Search</button></div>
+
+        <div class="col d-flex justify-content-end"> @await Component.InvokeAsync("BrowseGenres")</div>
+
+    </form>
+
+
+    @if (books.Length != 0)
+    {
+        @for (int i = 0; i < rows; i++)
+        {
+            <div class="row my-2">
+
+                @for (int j = 0; j < 2; j++)
+
+                {
+                    ListBookModel currentBook = books[bookCounter];
+                    byte[] cover = currentBook.Cover;
+                    string imreBase64Data = Convert.ToBase64String(cover);
+                    string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                    <div class="col">
+                        <div class="card">
+                            <div class="row g-0 d-flex justify-content-center">
+                                <div class="col-lg-4">
+                                    <a asp-action="Details" asp-route-id=@currentBook.Id>
+
+                                        <img src=@imgUrl
+                                 class="image-sizing rounded-start"
+                                 alt="..." />
+
+
+                                    </a>
+                                </div>
+                                <div class="col-lg-8" style="height:14rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@currentBook.Title</h5>
+                                        <p class="card-text">
+                                            @currentBook.Author <br />
+                                            Genres: @string.Join(", ", currentBook.Genres) <br />
+                                            Release Year: @currentBook.ReleaseYear <br />
+                                            Rating: @currentBook.Rating/5 <i class="bi bi-star-fill orange-txt"></i> <br />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    bookCounter++;
+                    if (bookCounter == Model.Count())
+                    {
+                        isEnd = true;
+                        break;
+                    }
+                }
+
+            </div>
+            if (isEnd)
+            {
+                break;
+            }
+        }
+
+    }
+</div>
+
+<div style="height:5rem"></div>
+
+<div class="container fixed-bottom py-5 d-flex justify-content-center pagination-div">
+    <paging show-prev-next="false"
+            show-first-last="false"
+            show-total-pages="false"
+            show-total-records="false"
+            show-page-size-nav="false"
+            url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
+            page-size=@ViewBag.PageSize
+            total-records=@Model.Count()></paging>
+</div>
