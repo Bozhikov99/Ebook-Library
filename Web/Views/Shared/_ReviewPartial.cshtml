@@ -35,10 +35,10 @@
                     <input hidden name="UserId" value=@ViewBag.UserId />
                     <input hidden name="BookId" value=@Model.Id />
                     <input hidden name="Comment" />
-                    <div class="col d-flex justify-content-end" style="padding-right: 1.5rem">
+                    <div id="rating-div" class="col d-flex justify-content-end" style="padding-right: 1.5rem">
                         @for (int i = 0; i < 5; i++)
                         {
-                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white; padding:0.25rem"></i>
+                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white; padding:0.25rem" data-value=@(i+1)></i>
                         }
                     </div>
                 </div>
@@ -61,7 +61,7 @@
     </div>
 
 }
-
+<script type="module" src=~/js/review.js></script>
 <script type="text/javascript">
     let submitReviewElement=document.querySelector('#submit-review');
 
