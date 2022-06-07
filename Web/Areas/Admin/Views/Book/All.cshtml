@@ -47,7 +47,7 @@
 
     </form>
 
-    
+
 
 
     @if (books.Length != 0)
@@ -76,15 +76,24 @@
 
                                     </a>
                                 </div>
-                                <div class="col-lg-8" style="height:14rem;">
+                                <div class="col-lg-8 text-center">
                                     <div class="card-body">
-                                        <h5 class="card-title">@currentBook.Title</h5>
+                                        <h2 class="card-title" style="color: #f15a24">@currentBook.Title</h2>
                                         <p class="card-text">
-                                            @currentBook.Author <br />
-                                            Genres: @string.Join(", ", currentBook.Genres) <br />
-                                            Release Year: @currentBook.ReleaseYear <br />
+                                            Author: <span style="font-weight:500">@currentBook.Author</span><br />
+                                            Genres: <span style="font-weight:500">@string.Join(", ", currentBook.Genres)</span> <br />
+                                            Release Year: <span style="font-weight:500">@currentBook.ReleaseYear</span> <br />
                                             Rating: @currentBook.Rating/5 <i class="bi bi-star-fill orange-txt"></i> <br />
                                         </p>
+                                        
+                                        <a class="btn navbutton"
+                               asp-action="Delete"
+                               asp-route-id=@Model
+                               style="float: right; margin:0.25rem; margin-bottom: 1rem;">Delete</a>
+                               <a class="btn navbutton"
+                               asp-action="Edit"
+                               asp-route-id=@Model
+                               style="float: right; margin:0.25rem; margin-bottom: 1rem;">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +119,7 @@
 
 <div style="height:5rem"></div>
 
-<div class="container fixed-bottom py-5 d-flex justify-content-center pagination-div">
+<div class="container fixed-bottom d-flex justify-content-center pagination-div" style="margin-bottom: 2rem">
     <paging show-prev-next="false"
             show-first-last="false"
             show-total-pages="false"
