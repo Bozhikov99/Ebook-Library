@@ -193,3 +193,7 @@ navbar-toggler {
     max-height: 225px !important;
 
 }
+
+.card:hover {
+    background-color: #f38c67;
+}
