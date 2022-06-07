@@ -4,10 +4,10 @@ i:{00000000-0000-0000-0000-000000000000}:EbookLibrary.sln
 i:{00000000-0000-0000-0000-000000000000}:Infrastructure
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\infrastructure\bin\debug\net6.0\infrastructure.dll
 ++Dependencies
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>404
-i:{21bffe36-bff2-44cc-8172-7420ecbb6c9a}:>402
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>402
+i:{21bffe36-bff2-44cc-8172-7420ecbb6c9a}:>404
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>403
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1347
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1355
 ++Common
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\common\
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\common\bin\debug\net6.0\common.dll
@@ -16,22 +16,6 @@ i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\common\bi
 ++Migrations
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\
-++20220503165844_InitialDb.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220503165844_initialdb.cs
-++20220505081208_SubscriptionFix.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220505081208_subscriptionfix.cs
-++20220511131308_AddingUsers.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220511131308_addingusers.cs
-++20220512172606_ReworkingSubscriptions.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512172606_reworkingsubscriptions.cs
-++20220512190249_FixingUserIds.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512190249_fixinguserids.cs
-++20220516082040_AddingBookContent.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082040_addingbookcontent.cs
-++20220516082449_AddingContent.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082449_addingcontent.cs
-++EbookDbContextModelSnapshot.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\ebookdbcontextmodelsnapshot.cs
 ++Models
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\models\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\models\
@@ -62,20 +46,22 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:projects
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\common\irepository.cs
 ++Repository.cs
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\common\repository.cs
-++20220503165844_InitialDb.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220503165844_initialdb.designer.cs
-++20220505081208_SubscriptionFix.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220505081208_subscriptionfix.designer.cs
-++20220511131308_AddingUsers.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220511131308_addingusers.designer.cs
-++20220512172606_ReworkingSubscriptions.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512172606_reworkingsubscriptions.designer.cs
-++20220512190249_FixingUserIds.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512190249_fixinguserids.designer.cs
-++20220516082040_AddingBookContent.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082040_addingbookcontent.designer.cs
-++20220516082449_AddingContent.Designer.cs
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082449_addingcontent.designer.cs
+++20220503165844_InitialDb.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220503165844_initialdb.cs
+++20220505081208_SubscriptionFix.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220505081208_subscriptionfix.cs
+++20220511131308_AddingUsers.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220511131308_addingusers.cs
+++20220512172606_ReworkingSubscriptions.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512172606_reworkingsubscriptions.cs
+++20220512190249_FixingUserIds.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512190249_fixinguserids.cs
+++20220516082040_AddingBookContent.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082040_addingbookcontent.cs
+++20220516082449_AddingContent.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082449_addingcontent.cs
+++EbookDbContextModelSnapshot.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\ebookdbcontextmodelsnapshot.cs
 ++Author.cs
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\models\author.cs
 ++Book.cs
@@ -117,18 +103,32 @@ i:{21bffe36-bff2-44cc-8172-7420ecbb6c9a}:e:\other\github\ebook-library\common\mi
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\microsoft.netcore.app
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\microsoft.netcore.app
 ++Microsoft.AspNetCore.Identity.EntityFrameworkCore (6.0.4)
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1405
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1364
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1407
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1387
 ++Microsoft.EntityFrameworkCore (6.0.4)
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1398
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1404
 ++Microsoft.EntityFrameworkCore.Proxies (6.0.4)
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1403
-++Microsoft.EntityFrameworkCore.SqlServer (6.0.4)
-i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1400
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1360
-++Microsoft.EntityFrameworkCore.Tools (6.0.4)
 i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1406
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1366
+++Microsoft.EntityFrameworkCore.SqlServer (6.0.4)
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1405
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1383
+++Microsoft.EntityFrameworkCore.Tools (6.0.4)
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:>1408
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1389
+++20220503165844_InitialDb.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220503165844_initialdb.designer.cs
+++20220505081208_SubscriptionFix.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220505081208_subscriptionfix.designer.cs
+++20220511131308_AddingUsers.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220511131308_addingusers.designer.cs
+++20220512172606_ReworkingSubscriptions.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512172606_reworkingsubscriptions.designer.cs
+++20220512190249_FixingUserIds.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220512190249_fixinguserids.designer.cs
+++20220516082040_AddingBookContent.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082040_addingbookcontent.designer.cs
+++20220516082449_AddingContent.Designer.cs
+i:{58026d7d-bb34-4bf8-b701-1b5f68f0258f}:e:\other\github\ebook-library\infrastructure\migrations\20220516082449_addingcontent.designer.cs
 ++MessageConstants
 i:{21bffe36-bff2-44cc-8172-7420ecbb6c9a}:e:\other\github\ebook-library\common\messageconstants\
 ++ErrorMessageConstants.cs
@@ -193,10 +193,11 @@ i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\serv
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\
 ++Author
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\author\
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\author\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\author\
 ++Book
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\book\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\book\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\book\
 ++BookDetailsModel.cs
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\book\bookdetailsmodel.cs
 ++CreateBookModel.cs
@@ -209,7 +210,7 @@ i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\view
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\book\listbookmodel.cs
 ++Genre
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\genre\
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\genre\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\genre\
 ++Review
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\review\
 ++Subscription
@@ -218,6 +219,7 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views
 ++User
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\user\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\user\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\user\
 ++ListUserModel.cs
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\user\listusermodel.cs
 ++LoginUserModel.cs
@@ -261,16 +263,16 @@ i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\view
 ++ListSubscriptionModel.cs
 i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:e:\other\github\ebook-library\core\viewmodels\subscription\listsubscriptionmodel.cs
 ++AutoMapper (11.0.1)
-i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1399
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1365
+i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1369
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1388
 ++Microsoft.AspNetCore.Http.Features (5.0.16)
-i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1395
+i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1367
 ++Microsoft.AspNetCore.Identity (2.2.0)
-i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1397
+i:{c56049f9-fa4e-4a44-994d-923ac8ff49b5}:>1368
 ++Web
 i:{00000000-0000-0000-0000-000000000000}:Web
 ++Connected Services 
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1348
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1356
 ++Properties
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\properties\
 ++launchSettings.json
@@ -281,6 +283,8 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\prope
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\
 ++css
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\css\
+++site.css
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\css\site.css
 ++img
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\img\
 ++js
@@ -291,27 +295,41 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwro
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\favicon.ico
 ++Areas
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\
+++Admin
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\
 ++Controllers
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\
 ++AuthorController.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\authorcontroller.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\authorcontroller.cs
+++BaseController.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\basecontroller.cs
 ++BookController.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\bookcontroller.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\bookcontroller.cs
 ++GenreController.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\genrecontroller.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\genrecontroller.cs
 ++HomeController.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\homecontroller.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\homecontroller.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\homecontroller.cs
+++UserController.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\usercontroller.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\usercontroller.cs
+++Views
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\
+++Identity
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\
+++Pages
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\pages\
+++_ViewStart.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\pages\_viewstart.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\_viewstart.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\_viewstart.cshtml
 ++SubscriptionController.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\subscriptioncontroller.cs
-++UserController.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\controllers\usercontroller.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\usercontroller.cs
 ++Data
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\
-++ApplicationDbContext.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\applicationdbcontext.cs
 ++Extensions
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\extensions\
 ++ServiceCollectionExtension.cs
@@ -320,23 +338,24 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\exten
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\modelbinders\
 ++ErrorViewModel.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\models\errorviewmodel.cs
-++Views
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\
 ++All.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\book\all.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\author\all.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\genre\all.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\author\all.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\book\all.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\genre\all.cshtml
 ++Create.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\book\create.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\author\create.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\genre\create.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\author\create.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\book\create.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\genre\create.cshtml
 ++Details.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\book\details.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\book\details.cshtml
 ++Edit.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\book\edit.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\author\edit.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\genre\edit.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\author\edit.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\book\edit.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\genre\edit.cshtml
 ++Home
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\home\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\home\
@@ -356,8 +375,6 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_layout.cshtml
 ++_LoginPartial.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_loginpartial.cshtml
-++_LoginPartialMobile.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_loginpartialmobile.cshtml
 ++_ReadPartial.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_readpartial.cshtml
 ++_RemainingSubscriptionPartial.cshtml
@@ -368,6 +385,7 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_reviewpartial.cshtml
 ++_ToastrPartial.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_toastrpartial.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\shared\_toastrpartial.cshtml
 ++_ValidationScriptsPartial.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\_validationscriptspartial.cshtml
 ++Error.cshtml
@@ -382,21 +400,15 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\user\register.cshtml
 ++_ViewImports.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\_viewimports.cshtml
-++_ViewStart.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\_viewstart.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\_viewstart.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\pages\_viewstart.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\_viewimports.cshtml
 ++appsettings.json
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\appsettings.json
 ++Program.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\program.cs
 ++SQL Server Express LocalDB (Local) (ConnectionStrings:DefaultConnection)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1424
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1432
 ++serviceDependencies.local.json
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\properties\servicedependencies.local.json
-++pagination.css
-++site.css
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\css\site.css
 ++books.svg
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\img\books.svg
 ++ebooklogo.svg
@@ -405,22 +417,14 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwro
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\img\profileicon.png
 ++favMovie.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\js\favmovie.js
-++pagination.js
-++site.js
 ++jquery
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery\
 ++jquery-validation
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\
 ++jquery-validation-unobtrusive
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation-unobtrusive\
-++Admin
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\
-++Identity
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\
-++00000000000000_CreateIdentitySchema.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\00000000000000_createidentityschema.cs
-++ApplicationDbContextModelSnapshot.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\applicationdbcontextmodelsnapshot.cs
+++ApplicationDbContext.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\applicationdbcontext.cs
 ++Providers
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\modelbinders\providers\
 ++DateTimeModelBinder.cs
@@ -429,6 +433,8 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\model
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\modelbinders\decimalmodelbinder.cs
 ++AdminCheck
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheck\
+++AdminCheckMobile
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheckmobile\
 ++BrowseGenres
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\browsegenres\
 ++appsettings.Development.json
@@ -456,17 +462,17 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:c:\program files\dotnet\sdk\6.0.202\sdk
 ++Microsoft.AspNetCore.App
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\microsoft.aspnetcore.app
 ++AutoMapper.Extensions.Microsoft.DependencyInjection (11.0.0)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1361
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1384
 ++LazZiya.TagHelpers (6.0.2)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1369
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1392
 ++Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore (6.0.4)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1363
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1386
 ++Microsoft.AspNetCore.Identity.UI (6.0.4)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1368
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1391
 ++Microsoft.VisualStudio.Web.CodeGeneration.Design (6.0.5)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1367
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1390
 ++Swashbuckle.AspNetCore (6.3.0)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1362
+i:{819d557a-adca-41c0-8881-e336e14756dd}:>1385
 ++dist
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery\dist\
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\dist\
@@ -477,10 +483,14 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwro
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\license.md
 ++jquery.validate.unobtrusive.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
-++Pages
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\identity\pages\
-++00000000000000_CreateIdentitySchema.Designer.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\00000000000000_createidentityschema.designer.cs
+++_AdminLayout.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\shared\_adminlayout.cshtml
+++ManageUsers.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\user\manageusers.cshtml
+++00000000000000_CreateIdentitySchema.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\00000000000000_createidentityschema.cs
+++ApplicationDbContextModelSnapshot.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\applicationdbcontextmodelsnapshot.cs
 ++DateTimeModelBinderProvider.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\modelbinders\providers\datetimemodelbinderprovider.cs
 ++DecimalMovieBinderProvider.cs
@@ -489,7 +499,10 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\model
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheck\admincheckviewcomponent.cs
 ++Default.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheck\default.cshtml
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheckmobile\default.cshtml
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\browsegenres\default.cshtml
+++AdminCheckMobileViewComponent.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\admincheckmobile\admincheckmobileviewcomponent.cs
 ++BrowseGenresViewComponent.cs
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\views\shared\components\browsegenres\browsegenresviewcomponent.cs
 ++jquery.js
@@ -500,23 +513,13 @@ i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwro
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\dist\jquery.validate.js
 ++jquery.validate.unobtrusive.min.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
-++BaseController.cs
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\controllers\basecontroller.cs
+++00000000000000_CreateIdentitySchema.Designer.cs
+i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\data\migrations\00000000000000_createidentityschema.designer.cs
 ++jquery.min.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery\dist\jquery.min.js
 ++additional-methods.min.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\dist\additional-methods.min.js
 ++jquery.validate.min.js
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery-validation\dist\jquery.validate.min.js
-++_AdminLayout.cshtml
-i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\areas\admin\views\shared\_adminlayout.cshtml
 ++jquery.min.map
 i:{819d557a-adca-41c0-8881-e336e14756dd}:e:\other\github\ebook-library\web\wwwroot\lib\jquery\dist\jquery.min.map
-++Secrets.json (Local)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1427
-++Secrets.json (Local) dependency is detected
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1428
-++SQL Server Database (ConnectionStrings:ContributorConnection)
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1425
-++SQL Server Database dependency with connectionId 'ConnectionStrings:ContributorConnection' is detected
-i:{819d557a-adca-41c0-8881-e336e14756dd}:>1426

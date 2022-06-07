@@ -39,9 +39,14 @@
         </div>
         <div class="col d-flex justify-content-start" style="margin-left: 0.5rem; margin-right: 0.5rem"><button class="btn navbutton" type="submit">Search</button></div>
 
-        <div class="col d-flex justify-content-end"> @await Component.InvokeAsync("BrowseGenres")</div>
+        <div class="col d-flex justify-content-end"> @await Component.InvokeAsync("AdminGenres")</div>
 
     </form>
+
+    <div class="d-flex justify-content-end">
+        <a asp-action="Create" class="btn navbutton"
+           style="margin-top:0.5rem">Create</a>
+    </div>
 
 
     @if (books.Length != 0)

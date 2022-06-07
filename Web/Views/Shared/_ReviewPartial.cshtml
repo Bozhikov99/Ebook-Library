@@ -28,17 +28,17 @@
                 <button type="submit">Submit</button>
             *@
             <div class="col" style="background-color: #212529; margin-top: 4rem">
-                <div class="row align-middle">
+                <div class="row d-flex align-items-center">
                     <div class="col">
-                        <h2 style="padding: 1rem; color: white">Review:</h2>
+                        <h2 style="padding-top: 0.5rem; padding-left:1rem; color: white">Review:</h2>
                     </div>
                     <input hidden name="UserId" value=@ViewBag.UserId />
                     <input hidden name="BookId" value=@Model.Id />
                     <input hidden name="Comment" />
-                    <div class="col ">
+                    <div class="col d-flex justify-content-end" style="padding-right: 1.5rem">
                         @for (int i = 0; i < 5; i++)
                         {
-                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white;"></i>
+                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white; padding:0.25rem"></i>
                         }
                     </div>
                 </div>
@@ -46,12 +46,12 @@
             <div>
                 <textarea class="form-control"
                   rows="6"
-                  style="border-color: #f15a24"></textarea>
+                  style="border-color: #f15a24; margin-top:1rem"></textarea>
             </div>
             <div class="row">
                 <div class="col d-flex justify-content-end">
                     <button id="submit-review" class="btn navbutton"
-                    style="margin-top: 1rem">
+                    style="margin-top: 1rem; font-size:1.5rem">
                         Submit
                     </button>
                 </div>
