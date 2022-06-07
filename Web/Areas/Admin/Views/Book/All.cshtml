@@ -27,8 +27,12 @@
 
 <div class="container">
     <!-- Search Bar -->
+    <div class="d-flex justify-content-center">
+        <a asp-action="Create" class="btn navbutton"
+           style="margin-top:0.5rem; width:100%">Create Book</a>
+    </div>
 
-    <form asp-action="All" class="d-flex" style="padding-top: 2rem">
+    <form asp-action="All" class="d-flex" style="padding-top: 0.5rem">
 
         <div class="col-2 d-flex justify-content-end" style="min-width:15rem">
             <input name="search" type="search"
@@ -43,10 +47,7 @@
 
     </form>
 
-    <div class="d-flex justify-content-end">
-        <a asp-action="Create" class="btn navbutton"
-           style="margin-top:0.5rem">Create</a>
-    </div>
+    
 
 
     @if (books.Length != 0)
