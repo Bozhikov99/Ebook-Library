@@ -27,7 +27,7 @@
             $.ajax({
             type: "POST",
             url: "@Url.Action("RemoveFromFavourites")",
-            data: { id }
+            data: { id: '@ViewBag.BookId' }
             })
         }
     })

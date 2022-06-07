@@ -15,24 +15,76 @@
         }
         else
         {
-            <form asp-action="CreateReview">
-                <select name="Value">
-                    @for (var i = 1; i < 6; i++)
-                    {
-                        <option value=@i>@i</option>
-                    }
+            @*<form asp-action="CreateReview">*@
+            @*<select name="Value">
+                @for (var i = 1; i < 6; i++)
+                {
+                <option value=@i>@i</option>
+                }
                 </select>
                 <input type="text" name="Comment" />
                 <input hidden name="UserId" value=@ViewBag.UserId />
                 <input hidden name="BookId" value=@Model.Id />
                 <button type="submit">Submit</button>
-            </form>
+            *@
+            <div class="col" style="background-color: #212529; margin-top: 4rem">
+                <div class="row align-middle">
+                    <div class="col">
+                        <h2 style="padding: 1rem; color: white">Review:</h2>
+                    </div>
+                    <input hidden name="UserId" value=@ViewBag.UserId />
+                    <input hidden name="BookId" value=@Model.Id />
+                    <input hidden name="Comment" />
+                    <div class="col ">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white;"></i>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div>
+                <textarea class="form-control"
+                  rows="6"
+                  style="border-color: #f15a24"></textarea>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-end">
+                    <button id="submit-review" class="btn navbutton"
+                    style="margin-top: 1rem">
+                        Submit
+                    </button>
+                </div>
+            </div>
+            @*</form>*@
         }
     </div>
 
 }
 
 <script type="text/javascript">
+    let submitReviewElement=document.querySelector('#submit-review');
+
+    submitReviewElement.addEventListener('click', ()=>{
+        let textAreaElement=document.querySelector('textarea');
+        let userIdElement=document.querySelector('input[name="UserId"]');
+        let bookIdElement=document.querySelector('input[name="BookId"]');
+
+        let UserId=userIdElement.value;
+        let BookId=bookIdElement.value;
+        let Comment=textAreaElement.value;
+        let Value=4;
+
+        console.log(Comment);
+
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateReview")",
+                data: {model: {
+                    Value, Comment, BookId, UserId}}
+            })
+    })
+
     let editButtonElement=document.querySelector('#edit');
     let deleteButtonElement=document.querySelector('#delete');
     let divElement=document.querySelector('#partial');
