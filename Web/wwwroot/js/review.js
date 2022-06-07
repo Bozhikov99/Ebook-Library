@@ -1,5 +1,6 @@
 ﻿let ratingDivElement = document.querySelector('#rating-div');
 let ratingStarElements = ratingDivElement.querySelectorAll('.bi');
+let ratingInputElement = document.querySelector('input[name="Value"]');
 
 ratingStarElements.forEach(s => s.addEventListener('click', () => {
     ratingStarElements.forEach(rs => {
@@ -14,7 +15,38 @@ ratingStarElements.forEach(s => s.addEventListener('click', () => {
         let currentElement = ratingStarElements[i];
         ToggleClass(currentElement);
     }
-}))
+
+    ratingInputElement.value = value;
+}));
+
+//ratingStarElements.forEach(s => s.addEventListener('mouseover', () => {
+//    ratingStarElements.forEach(rs => {
+//        rs.classList.remove('bi-star-fill');
+//        rs.classList.add('bi-star');
+//    });
+
+//    let value = s.dataset.value;
+
+//    for (var i = 0; i < value; i++) {
+//        //bi-star-fill
+//        let currentElement = ratingStarElements[i];
+//        ToggleClass(currentElement);
+//    }
+//}));
+//ratingStarElements.forEach(s => s.addEventListener('mouseout', () => {
+//    ratingStarElements.forEach(rs => {
+//        rs.classList.remove('bi-star-fill');
+//        rs.classList.add('bi-star');
+//    });
+
+//    let value = s.dataset.value;
+
+//    for (var i = 0; i < value; i++) {
+//        //bi-star-fill
+//        let currentElement = ratingStarElements[i];
+//            ToggleClass(currentElement);
+//    }
+//}));
 
 function ToggleClass(element) {
     if (element.classList.contains('bi-star')) {

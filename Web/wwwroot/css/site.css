@@ -191,9 +191,31 @@ navbar-toggler {
     width: 100%;
     object-fit: cover;
     max-height: 225px !important;
-
 }
 
 .card:hover {
     background-color: #f38c67;
+}
+
+.reply-section {
+    background-color: rgb(243, 194, 166);
+}
+
+.reply-userdiv {
+    background-color: #212529;
+    color: white;
+}
+
+.reply-col {
+    padding: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.rating-div {
+    padding-bottom: 1.5rem;
+}
+
+.user-ifont {
+    font-size: 2rem;
 }

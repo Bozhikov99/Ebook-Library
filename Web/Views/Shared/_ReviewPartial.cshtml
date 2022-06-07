@@ -27,33 +27,36 @@
                 <input hidden name="BookId" value=@Model.Id />
                 <button type="submit">Submit</button>
             *@
-            <div class="col" style="background-color: #212529; margin-top: 4rem">
-                <div class="row d-flex align-items-center">
-                    <div class="col">
-                        <h2 style="padding-top: 0.5rem; padding-left:1rem; color: white">Review:</h2>
-                    </div>
-                    <input hidden name="UserId" value=@ViewBag.UserId />
-                    <input hidden name="BookId" value=@Model.Id />
-                    <input hidden name="Comment" />
-                    <div id="rating-div" class="col d-flex justify-content-end" style="padding-right: 1.5rem">
-                        @for (int i = 0; i < 5; i++)
-                        {
-                            <i class="bi bi-star-fill" style="font-size: 2rem; color:white; padding:0.25rem" data-value=@(i+1)></i>
-                        }
+            <div id="comment-form">
+                <div class="col" style="background-color: #212529; margin-top: 4rem">
+                    <div class="row d-flex align-items-center">
+                        <div class="col">
+                            <h2 style="padding-top: 0.5rem; padding-left:1rem; color: white">Review:</h2>
+                        </div>
+                        <input hidden name="UserId" value=@ViewBag.UserId />
+                        <input hidden name="BookId" value=@Model.Id />
+                        <input hidden name="Value" />
+                        <input hidden name="Comment" />
+                        <div id="rating-div" class="col d-flex justify-content-end" style="padding-right: 1.5rem">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <i class="bi bi-star" style="font-size: 2rem; color:white; padding:0.25rem" data-value=@(i+1)></i>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <textarea class="form-control"
-                  rows="6"
-                  style="border-color: #f15a24; margin-top:1rem"></textarea>
-            </div>
-            <div class="row">
-                <div class="col d-flex justify-content-end">
-                    <button id="submit-review" class="btn navbutton"
-                    style="margin-top: 1rem; font-size:1.5rem">
-                        Submit
-                    </button>
+                <div>
+                    <textarea class="form-control"
+                      rows="6"
+                      style="border-color: #f15a24; margin-top:1rem"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                        <button id="submit-review" class="btn navbutton"
+                        style="margin-top: 1rem; font-size:1.5rem">
+                            Submit
+                        </button>
+                    </div>
                 </div>
             </div>
             @*</form>*@
@@ -66,102 +69,209 @@
     let submitReviewElement=document.querySelector('#submit-review');
 
     submitReviewElement.addEventListener('click', ()=>{
+        let commentElement=document.querySelector('#comment-form');
         let textAreaElement=document.querySelector('textarea');
         let userIdElement=document.querySelector('input[name="UserId"]');
         let bookIdElement=document.querySelector('input[name="BookId"]');
+        let valueElement=document.querySelector('input[name="Value"]');
 
         let UserId=userIdElement.value;
         let BookId=bookIdElement.value;
         let Comment=textAreaElement.value;
-        let Value=4;
+        let Value=valueElement.value;
 
-        console.log(Comment);
-
+        commentElement.remove();
         $.ajax({
                 type: "POST",
                 url: "@Url.Action("CreateReview")",
                 data: {model: {
                     Value, Comment, BookId, UserId}}
             })
+            .then((result)=>{
+                AddUserReview(result);
+            });
     })
 
-    let editButtonElement=document.querySelector('#edit');
-    let deleteButtonElement=document.querySelector('#delete');
-    let divElement=document.querySelector('#partial');
+    function AddUserReview(result){
+        console.log(result);
+        let comment=result.comment;
+        let value=result.value;
+        let id=result.id;
+        let bookId=result.bookId;
+        let mainElement=document.querySelector('#partial');
+        console.log(mainElement);
 
-    deleteButtonElement.addEventListener('click', ()=>{
-        let id=document.querySelector('#review-id')
-            .textContent;
-        let commentDivElement=document.querySelector('#commentDiv');
-        commentDivElement.remove();
+        //section
+        let sectionElement=document.createElement('section');
+        sectionElement.classList.add('reply-section');
 
-        CreateReviewForm();
+        let userNameDiv=document.createElement('div');
+        userNameDiv.classList.add('col');
+        userNameDiv.classList.add('text-center');
+        userNameDiv.classList.add('reply-userdiv');
 
-        $.ajax({
-                type: "POST",
-                url: "@Url.Action("DeleteReview")",
-                data: {id}
-            })
-    })
+        let h2Element=document.createElement('h2');
+        h2Element.textContent='Your Review';
 
-    editButtonElement.addEventListener('click', ()=>{
+        userNameDiv.appendChild(h2Element);
 
-        let commentDivElement=document.querySelector('#commentDiv');
-        let text=commentDivElement.querySelector('#comment')
-            .textContent;
 
-        CreateReviewForm(text);
-        //let formElement=document.createElement('form');
-        //let selectElement=document.createElement('select');
+        //user row 
+        let userRowDivElement=document.createElement('div');
+        userRowDivElement.classList.add('row');
+        
+        userRowDivElement.appendChild(userNameDiv);
 
-        //for(var i=1; i<6;i++){
-        //    let optionElement=document.createElement('option');
-        //    optionElement.value=i;
-        //    optionElement.textContent=i;
-        //    selectElement.appendChild(optionElement);
-        //}
+        let ratingDivElement=document.createElement('div');
+        ratingDivElement.classList.add('rating-div');
+        ratingDivElement.classList.add('col');
+        ratingDivElement.classList.add('text-center');
 
-        //let commentInputElement=document.createElement('input');
-        //commentInputElement.name='Value';
-        //commentInputElement.type='text';
+        for(var i=0; i<5; i++){
+            let iElement=document.createElement('i');
+            iElement.classList.add('bi');
+            iElement.classList.add('orange-txt');
+            iElement.classList.add('user-ifont');
 
-        //let bookIdInputElement=document.createElement('input')
-        //bookIdInputElement.hidden='true';
-        //bookIdInputElement.value='@Model.Id';
-        //bookIdInputElement.name='BookId';
+            if(i<value){
+                iElement.classList.add('bi-star-fill');
+            } else {
+                iElement.classList.add('bi-star');
+            }
 
-        //let userIdInputElement=document.createElement('input')
-        //userIdInputElement.hidden='true';
-        //userIdInputElement.name='UserId';
-        //userIdInputElement.value='@ViewBag.UserId';
+            ratingDivElement.appendChild(iElement);
+        }
 
-        //let submitElement=document.createElement('button');
-        //submitElement.type='submit';
-        //submitElement.textContent='Submit';
+        userRowDivElement.appendChild(ratingDivElement);
 
-        //formElement.appendChild(selectElement);
-        //formElement.appendChild(commentInputElement);
-        //formElement.appendChild(bookIdInputElement);
-        //formElement.appendChild(userIdInputElement);
-        //formElement.appendChild(submitElement);
-        //divElement.appendChild(formElement);
+        sectionElement.appendChild(userRowDivElement);
 
-        //submitElement.addEventListener('click', (e)=>{
-        //    e.preventDefault();
+        //row
+        let rowDivElement=document.createElement('div');
+        rowDivElement.classList.add('row');
+        let colDivElement=document.createElement('div');
+        colDivElement.classList.add('reply-col');
+        colDivElement.textContent=comment;
 
-        //    let Value=selectElement.value;
-        //    let Comment=commentInputElement.value;
-        //    let BookId=bookIdInputElement.value;
-        //    let UserId=userIdInputElement.value;
+        rowDivElement.appendChild(colDivElement);
 
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "@Url.Action("CreateReview")",
-        //        data: {model: {
-        //            Value, Comment, BookId, UserId}}
-        //    })
-        //})
-    })
+        
+
+        mainElement.appendChild(userRowDivElement);
+        mainElement.appendChild(rowDivElement);
+        mainElement.appendChild(ratingDivElement);
+    //    <section style="background-color: rgb(243, 194, 166)">
+    // <div class="row">
+    //    <div class="col text-center" style="background-color: #212529">
+    //        <h2 style="margin-top: 3%; padding: 1rem; color: white">Heathen</h2>
+    //    </div>
+
+    //    <div class="row">
+    //        <div class="col"
+    //             style="padding: 1.5rem; padding-left: 2rem; padding-right: 2rem">
+    //            The Great Gatsby kept me interested until the end. The Great Gatsby
+    //            was a very good and interesting read. The Great Gatsby had true
+    //            potential. If you want engaging material, then look no further.The
+    //            Great Gatsby was well written and engaging. The Great Gatsby evoked
+    //            emotion. The story was beautifully written, with a consistent style
+    //            and tone, and efficiency of description that didn't slow the pace.
+    //            The Great Gatsby was original, and well written. An excellent
+    //            addition to the genre. The Great Gatsby had standard tropes
+    //            delivered with a smooth writing style.This was a smooth flowing
+    //            story with lots of action and very likeable characters. The dialogue
+    //            in The Great Gatsby was nice and tight. I would recommend The Great
+    //            Gatsby to any fan of the genre. The Great Gatsby was a great example
+    //            of the genre.The Great Gatsby was a joy to read.
+    //        </div>
+    //    </div>
+    //    <div class="col text-center" style="padding-bottom: 1.5rem">
+    //        <i class="bi bi-star-fill orange-txt" style="font-size: 2rem"></i>
+    //        <i class="bi bi-star-fill orange-txt" style="font-size: 2rem"></i>
+    //        <i class="bi bi-star-fill orange-txt" style="font-size: 2rem"></i>
+    //        <i class="bi bi-star-fill orange-txt" style="font-size: 2rem"></i>
+    //        <i class="bi bi-star-fill"
+    //           style="color: #252525; font-size: 2rem"></i>
+    //    </div>
+    //</section>
+    }
+
+    //let editButtonElement=document.querySelector('#edit');
+    //let deleteButtonElement=document.querySelector('#delete');
+    //let divElement=document.querySelector('#partial');
+
+    //deleteButtonElement.addEventListener('click', ()=>{
+    //    let id=document.querySelector('#review-id')
+    //        .textContent;
+    //    let commentDivElement=document.querySelector('#commentDiv');
+    //    commentDivElement.remove();
+
+    //    CreateReviewForm();
+
+    //    $.ajax({
+    //            type: "POST",
+    //            url: "@Url.Action("DeleteReview")",
+    //            data: {id}
+    //        })
+    //})
+
+    //editButtonElement.addEventListener('click', ()=>{
+
+    //    let commentDivElement=document.querySelector('#commentDiv');
+    //    let text=commentDivElement.querySelector('#comment')
+    //        .textContent;
+
+    //    CreateReviewForm(text);
+    //    let formElement=document.createElement('form');
+    //    let selectElement=document.createElement('select');
+
+    //    for(var i=1; i<6;i++){
+    //        let optionElement=document.createElement('option');
+    //        optionElement.value=i;
+    //        optionElement.textContent=i;
+    //        selectElement.appendChild(optionElement);
+    //    }
+
+    //    let commentInputElement=document.createElement('input');
+    //    commentInputElement.name='Value';
+    //    commentInputElement.type='text';
+
+    //    let bookIdInputElement=document.createElement('input')
+    //    bookIdInputElement.hidden='true';
+    //    bookIdInputElement.value='@Model.Id';
+    //    bookIdInputElement.name='BookId';
+
+    //    let userIdInputElement=document.createElement('input')
+    //    userIdInputElement.hidden='true';
+    //    userIdInputElement.name='UserId';
+    //    userIdInputElement.value='@ViewBag.UserId';
+
+    //    let submitElement=document.createElement('button');
+    //    submitElement.type='submit';
+    //    submitElement.textContent='Submit';
+
+    //    formElement.appendChild(selectElement);
+    //    formElement.appendChild(commentInputElement);
+    //    formElement.appendChild(bookIdInputElement);
+    //    formElement.appendChild(userIdInputElement);
+    //    formElement.appendChild(submitElement);
+    //    divElement.appendChild(formElement);
+
+    //    submitElement.addEventListener('click', (e)=>{
+    //        e.preventDefault();
+
+    //        let Value=selectElement.value;
+    //        let Comment=commentInputElement.value;
+    //        let BookId=bookIdInputElement.value;
+    //        let UserId=userIdInputElement.value;
+
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "@Url.Action("CreateReview")",
+    //            data: {model: {
+    //                Value, Comment, BookId, UserId}}
+    //        })
+    //    })
+    //})
 
     function CreateReviewForm(text){
         let formElement=document.createElement('form');

@@ -147,11 +147,12 @@ namespace Web.Controllers
             }
             catch (Exception)
             {
-
-                throw;
             }
 
-            return RedirectToAction(nameof(Details), model.BookId);
+            UserReviewModel userReview = await reviewService.GetUserReview(model.UserId, model.BookId);
+            string id = userReview.Id;
+
+            return Ok(userReview);
         }
 
         [Authorize]
