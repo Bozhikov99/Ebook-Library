@@ -10,11 +10,6 @@
    asp-route-FileName="Book.pdf" class="btn btn-primary" id="btnOpenDocument">
         <i class="fa fa-receipt"></i> Read book
     </a>
-
-    <a asp-controller="Book" asp-action="TestRead" asp-route-id=@Model.Id>
-        Read it
-    </a>
-
     <script>
         $('#btnOpenDocument').click(function (e) {
             e.preventDefault();

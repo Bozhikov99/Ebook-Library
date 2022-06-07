@@ -1,30 +1,27 @@
-﻿@if (ViewBag.UserId!=null)
+﻿@if (ViewBag.UserId != null)
 {
     @if (ViewBag.IsFavourite)
     {
-        <div>
-            <button id="favButton" class="btn-danger">Unfav</button>
-        </div>
+        <button id="favButton" class="btn navbutton"
+            style="font-size: 1.5rem; width: 40%; max-width: 200px">Unfavorite</button>
     }
     else
     {
-        <div>
-            <button id="favButton" class="btn-warning">Fav</button>
-        </div>
+        <button id="favButton" class="btn navbutton"
+            style="font-size: 1.5rem; width: 40%; max-width: 200px">Favorite</button>
     }
 }
 
 <script type="text/javascript">
     let buttonElement = document.querySelector('#favButton');
-    let id = @ViewBag.UserId;
-
+    console.log(buttonElement);
     buttonElement.addEventListener('click', ()=>{
-        if(buttonElement.textContent=='Fav'){
+        if(buttonElement.textContent=='Favorite'){
 
      $.ajax({
          type: "POST",
          url: "@Url.Action("AddToFavourites")",
-         data: { id }
+         data: { id: '@ViewBag.BookId' }
      })
         } else{
             $.ajax({

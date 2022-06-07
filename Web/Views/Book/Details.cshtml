@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    ViewBag.BookId = Model.Id;
     byte[] cover = Model.Cover;
     string imreBase64Data = Convert.ToBase64String(cover);
     string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
@@ -25,9 +26,10 @@
                 Score: @rating/5
                 <i class="bi bi-star-fill orange-txt"></i>
             </h4>
-            <a class="btn navbutton"
+            @*<a class="btn navbutton"
                href="https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnxtcnNkYXducGlwb3xneDo1YzY3MjczZDc0MTNlNjYz"
-               style="font-size: 1.5rem; width: 40%; max-width: 200px">Favorite/Unfavorite</a>
+               style="font-size: 1.5rem; width: 40%; max-width: 200px">Favorite/Unfavorite</a>*@
+               <partial name="_FavouriteBookPartial" />
         </div>
 
         <!-- Book Cover & Button -->
@@ -111,5 +113,4 @@
 </div>
 
 <partial name="_ReadPartial" />
-<partial name="_FavouriteBookPartial" />
 <partial name="_ReviewPartial" />
