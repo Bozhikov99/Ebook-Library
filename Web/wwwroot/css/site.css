@@ -190,7 +190,7 @@ navbar-toggler {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    max-height: 225px !important;
+    min-block-size:240px;
 }
 
 .card:hover {
@@ -218,4 +218,8 @@ navbar-toggler {
 
 .user-ifont {
     font-size: 2rem;
+}
+
+.card {
+    flex:1 1 0;
 }

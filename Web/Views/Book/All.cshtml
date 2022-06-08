@@ -57,9 +57,9 @@
                     byte[] cover = currentBook.Cover;
                     string imreBase64Data = Convert.ToBase64String(cover);
                     string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
-                    <div class="col" style="max-width: 50%">
+                    <div class="col d-flex align-items-stretch" style="max-width: 50%">
 
-                        <div class="card" style="cursor: pointer;">
+                        <div class="card" style="cursor: pointer;" onclick="location.href='Details/@currentBook.Id';">
                             <div class="row g-0 d-flex justify-content-center">
                                 <div class="col-lg-4">
                                     <a asp-action="Details" asp-route-id=@currentBook.Id>
@@ -71,7 +71,7 @@
 
                                     </a>
                                 </div>
-                                <div class="col-lg-8 text-center">
+                                <div class="col-lg-8 text-center d-flex align-items-center">
                                     <div class="card-body">
                                         <h2 class="card-title">@currentBook.Title</h2>
                                         <p class="card-text">
