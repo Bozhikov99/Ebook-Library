@@ -33,7 +33,7 @@ namespace Infrastructure
         {
             if (!builder.IsConfigured)
             {
-                builder.UseSqlServer(DbConfiguration.ConnectionString);
+                builder.UseSqlServer(DbConfiguration.ContributorConnectionString);
             }
 
             base.OnConfiguring(builder);
