@@ -19,35 +19,6 @@ ratingStarElements.forEach(s => s.addEventListener('click', () => {
     ratingInputElement.value = value;
 }));
 
-//ratingStarElements.forEach(s => s.addEventListener('mouseover', () => {
-//    ratingStarElements.forEach(rs => {
-//        rs.classList.remove('bi-star-fill');
-//        rs.classList.add('bi-star');
-//    });
-
-//    let value = s.dataset.value;
-
-//    for (var i = 0; i < value; i++) {
-//        //bi-star-fill
-//        let currentElement = ratingStarElements[i];
-//        ToggleClass(currentElement);
-//    }
-//}));
-//ratingStarElements.forEach(s => s.addEventListener('mouseout', () => {
-//    ratingStarElements.forEach(rs => {
-//        rs.classList.remove('bi-star-fill');
-//        rs.classList.add('bi-star');
-//    });
-
-//    let value = s.dataset.value;
-
-//    for (var i = 0; i < value; i++) {
-//        //bi-star-fill
-//        let currentElement = ratingStarElements[i];
-//            ToggleClass(currentElement);
-//    }
-//}));
-
 function ToggleClass(element) {
     if (element.classList.contains('bi-star')) {
         element.classList.remove('bi-star');

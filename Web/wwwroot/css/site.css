@@ -7,6 +7,11 @@ li {
     font-size: 2rem;
 }
 
+textarea {
+    border-color: #f15a24;
+    margin-top: 1rem;
+}
+
 .fav-book,
 .fav-book-mobile,
 .orange-bg,
@@ -190,7 +195,7 @@ navbar-toggler {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    min-block-size:240px;
+    min-block-size: 240px;
 }
 
 .card:hover {
@@ -204,6 +209,7 @@ navbar-toggler {
 .reply-userdiv {
     background-color: #212529;
     color: white;
+    padding: 0.5rem;
 }
 
 .reply-col {
@@ -212,8 +218,8 @@ navbar-toggler {
     padding-right: 2rem;
 }
 
-.rating-div {
-    padding-bottom: 1.5rem;
+#rating-div {
+    padding-right: 1.5rem;
 }
 
 .user-ifont {
@@ -221,5 +227,32 @@ navbar-toggler {
 }
 
 .card {
-    flex:1 1 0;
+    flex: 1 1 0;
+}
+
+#remove-icon {
+    padding-left: 1rem
+}
+
+.reply-icon:hover {
+    color: #f12446;
+    cursor: pointer;
+}
+
+.form-headline {
+    background-color: #212529;
+    margin-top: 4rem;
+}
+
+#rev {
+    padding-top: 0.5rem;
+    padding-left: 1rem;
+    color: white;
+}
+
+.rate-star {
+    font-size: 2rem;
+    color: #f15a24;
+    padding: 0.25rem;
+    cursor: pointer;
 }
