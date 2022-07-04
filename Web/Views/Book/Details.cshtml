@@ -23,7 +23,7 @@
             <h4>Genre: @string.Join(", ", Model.Genres)</h4>
             <h4>Year: @Model.ReleaseYear</h4>
             <h4 style="margin-bottom: 2rem;">
-                Score: ????Must fix/5
+                @Model.Rating/5
                 <i class="bi bi-star-fill orange-txt"></i>
             </h4>
                <partial name="_FavouriteBookPartial" />

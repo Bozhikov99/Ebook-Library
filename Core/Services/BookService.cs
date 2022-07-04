@@ -143,6 +143,7 @@ namespace Core.Services
             Book book = repository.All<Book>(b => b.Id == id)
                 .Include(b => b.Genres)
                 .Include(b => b.Author)
+                .Include(b=> b.Reviews)
                 .First();
 
             BookDetailsModel model = mapper.Map<BookDetailsModel>(book);

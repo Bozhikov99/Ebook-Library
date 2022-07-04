@@ -188,7 +188,7 @@ namespace Core.Services
         {
             string userId = GetUserId();
             Subscription subscription = await repository.All<Subscription>(s => s.UserId == userId)
-                .FirstOrDefaultAsync(s => s.Deadline < DateTime.Now);
+                .FirstOrDefaultAsync(s => s.Deadline > DateTime.Now);
 
             return subscription != null;
         }
