@@ -109,9 +109,9 @@ namespace Core.Services
             book.Title = model.Title;
             book.Content = model.Content == null ? book.Content : model.Content;
             book.Cover = model.Cover == null ? book.Cover : model.Cover;
-            book.AuthorId = book.AuthorId;
-            book.ReleaseYear = book.ReleaseYear;
-            book.Pages = book.Pages;
+            book.AuthorId = model.AuthorId;
+            book.ReleaseYear = model.ReleaseYear;
+            book.Pages = model.Pages;
 
             await repository.SaveChangesAsync();
         }
