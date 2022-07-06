@@ -46,7 +46,7 @@ namespace Core.Services
 
         public async Task<IEnumerable<ListReviewModel>> GetAll(string userId, string bookId)
         {
-            IEnumerable<ListReviewModel> reviews = await repository.All<Review>(r => r.UserId != userId)
+            IEnumerable<ListReviewModel> reviews = await repository.All<Review>(r => r.UserId != userId && r.BookId == bookId)
                 .ProjectTo<ListReviewModel>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
