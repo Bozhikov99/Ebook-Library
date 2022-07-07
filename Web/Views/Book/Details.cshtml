@@ -22,10 +22,17 @@
             <h4>Author: @Model.Author</h4>
             <h4>Genre: @string.Join(", ", Model.Genres)</h4>
             <h4>Year: @Model.ReleaseYear</h4>
-            <h4 style="margin-bottom: 2rem;">
-                @Math.Round(Model.Rating)/5
-                <i class="bi bi-star-fill orange-txt"></i>
-            </h4>
+            
+                @if ((Model.Rating % 1) == 0)
+                {
+                    <h4 style="margin-bottom: 2rem;"><i class="bi bi-star-fill orange-txt"></i>
+                        @Model.Rating/5</h4>
+                }
+                else
+                {
+                    <h4 style="margin-bottom: 2rem;"><i class="bi bi-star-fill orange-txt"></i>
+                        @Math.Round(Model.Rating, 1)/5</h4>
+                }
             <partial name="_FavouriteBookPartial" />
         </div>
 
