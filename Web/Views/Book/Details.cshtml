@@ -23,10 +23,10 @@
             <h4>Genre: @string.Join(", ", Model.Genres)</h4>
             <h4>Year: @Model.ReleaseYear</h4>
             <h4 style="margin-bottom: 2rem;">
-                @Model.Rating/5
+                @Math.Round(Model.Rating)/5
                 <i class="bi bi-star-fill orange-txt"></i>
             </h4>
-               <partial name="_FavouriteBookPartial" />
+            <partial name="_FavouriteBookPartial" />
         </div>
 
         <!-- Book Cover & Button -->
@@ -35,8 +35,8 @@
             <img src=@imgUrl
                  class="img-fluid"
                  id="cover" />
-                 <partial name="_ReadPartial" />
-           
+            <partial name="_ReadPartial" />
+
         </div>
     </div>
 
@@ -45,7 +45,37 @@
     <partial name="_ReviewPartial" />
 
     <!-- Created Review -->
-    <section style="background-color: rgb(243, 194, 166)">
+    @foreach (var r in ViewBag.Reviews)
+    {
+        <section style="background-color: rgb(243, 194, 166)">
+            <div class="col text-center" style="background-color: #212529">
+                <h2 style="margin-top: 3%; padding: 1rem; color: white">@r.UserName</h2>
+            </div>
+
+            <div class="row">
+                <div class="col"
+                 style="padding: 1.5rem; padding-left: 2rem; padding-right: 2rem">
+                    @r.Comment
+                </div>
+            </div>
+            <div class="col text-center" style="padding-bottom: 1.5rem">
+                @for (var i = 0; i < 5; i++)
+                {
+                    if (i < r.Value)
+                    {
+                        <i class="bi bi-star-fill orange-txt" style="font-size: 2rem"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-star-fill"
+                        style="color: #252525; font-size: 2rem"></i>
+                    }
+
+                }
+            </div>
+        </section>
+    }
+    @*<section style="background-color: rgb(243, 194, 166)">
         <div class="col text-center" style="background-color: #212529">
             <h2 style="margin-top: 3%; padding: 1rem; color: white">Heathen</h2>
         </div>
@@ -76,21 +106,7 @@
             <i class="bi bi-star-fill"
                style="color: #252525; font-size: 2rem"></i>
         </div>
-    </section>
-</div>
-
-@foreach (var r in ViewBag.Reviews)
-{
-    <div style="background-color: orchid">
-        <h5>@r.UserName</h5>
-        <h5>@r.Value</h5>
-        <p>@r.Comment</p>
-    </div>
-}
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    </section>*@
 </div>
 
 <partial name="_ReadPartial" />
