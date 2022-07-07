@@ -150,7 +150,6 @@ namespace Web.Controllers
             }
 
             UserReviewModel userReview = await reviewService.GetUserReview(model.UserId, model.BookId);
-            string id = userReview.Id;
 
             return Ok(userReview);
         }

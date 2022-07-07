@@ -10,12 +10,13 @@
                     <h2>Your Review</h2>
                 </div>
                 <div class="col-2 text-end">
-                    <i class="bi bi-pencil-fill reply-icon"></i>
+                    <i id="edit-icon" class="bi bi-pencil-fill reply-icon"></i>
                     <i id="remove-icon" class="bi bi-trash3-fill reply-icon"></i>
                 </div>
             </div>
             <div class="row">
-                <div class="reply-col">@ViewBag.UserReview.Comment</div>
+                <div id="comment-text" class="reply-col">@ViewBag.UserReview.Comment</div>
+                <div id="review-id" hidden class="reply-col">@ViewBag.UserReview.Id</div>
             </div>
             <div class="rating-div col text-center">
                 @for (var i = 1; i <= 5; i++)
@@ -70,6 +71,17 @@
 <script type="module" src=~/js/review.js></script>
 <script type="text/javascript">
     let submitReviewElement=document.querySelector('#submit-review');
+    let deleteReviewElement=document.querySelector('#remove-icon');
+    let editReviewElement=document.querySelector('#edit-icon');
+
+    if(deleteReviewElement){
+        deleteReviewElement.addEventListener('click', DeleteReview);
+    }
+
+    if(editReviewElement)
+    {
+        editReviewElement.addEventListener('click', EditReview);
+    }
 
     submitReviewElement.addEventListener('click', ()=>{
         let commentElement=document.querySelector('#comment-form');
@@ -128,8 +140,8 @@
         let iconsDivElement=customElement('div', ['col-2', 'text-end']);
         let editIconElement=customElement('i', ['bi', 'bi-pencil-fill', 'reply-icon']);
         let deleteIconElement=customElement('i', ['bi', 'bi-trash3-fill', 'reply-icon'], 'remove-icon');
-        deleteIconElement.addEventListener('click', CreateReviewForm);
-        editIconElement.addEventListener('click', CreateReviewForm);
+        deleteIconElement.addEventListener('click', DeleteReview);
+        editIconElement.addEventListener('click', EditReview);
 
         iconsDivElement.appendChild(editIconElement);
         iconsDivElement.appendChild(deleteIconElement);
@@ -162,13 +174,15 @@
         //row
         let rowDivElement=document.createElement('div');
         rowDivElement.classList.add('row');
-        let colDivElement=document.createElement('div');
-        colDivElement.classList.add('reply-col');
+        let colDivElement=customElement('div', ['reply-col'], 'comment-text');
         colDivElement.textContent=comment;
 
+        let idDivElement=customElement('div', ['reply-col'], 'review-id');
+        idDivElement.textContent=result.id;
+        idDivElement.setAttribute('hidden', 'true');
+
         rowDivElement.appendChild(colDivElement);
-
-
+        rowDivElement.appendChild(idDivElement);
 
         mainElement.appendChild(userRowDivElement);
         mainElement.appendChild(rowDivElement);
@@ -254,6 +268,30 @@
     //    })
     //})
 
+    function DeleteReview(){
+
+        let id=document.querySelector('#review-id')
+            .textContent;
+
+        CreateReviewForm();
+
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteReview")",
+                data: {id}
+            })
+    }
+
+    function EditReview(){
+        let oldTextAreaElement=document.querySelector('#comment-text');
+        let commentValue=oldTextAreaElement.textContent;
+
+        CreateReviewForm();
+
+        let newTextAreaElement=document.querySelector('textarea');
+        newTextAreaElement.value=commentValue;
+    }
+
     function CreateReviewForm(){
         let comment=document.querySelector('.reply-col').textContent;
         let partialElement=document.querySelector('#partial');
@@ -293,7 +331,7 @@
         let commentInputElement=document.createElement('input');
         commentInputElement.setAttribute('name', 'Comment');
         commentInputElement.setAttribute('hidden', 'true');
-        
+
         let ratingDivElement=customElement('div', ['col', 'd-flex', 'justify-content-end'], 'rating-div');
 
         for (var i = 0; i < 5; i++)
@@ -317,17 +355,13 @@
         let textAreaElement=customElement('textarea', ['form-control']);
         textAreaElement.setAttribute('rows', '6');
 
-        if(comment){
-            textAreaElement.value=comment;
-        }
-
         textAreaDivElement.appendChild(textAreaElement);
 
         let submitDivElement=customElement('div', ['row']);
         let submitDivWrapperElement=customElement('div', ['col', 'd-flex', 'justify-content-end']);
 
         let submitButtonElement=customElement('button', ['btn', 'navbutton'], 'submit-review');
-        submitButtonElement.textContent='Edit';
+        submitButtonElement.textContent='Submit';
 
         submitButtonElement.addEventListener('click', ()=>{
             let textAreaElement=document.querySelector('textarea');
