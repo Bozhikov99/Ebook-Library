@@ -1,0 +1,36 @@
+﻿@if (ViewBag.UserId != null)
+{
+    @if (ViewBag.IsFavourite)
+    {
+        <button id="favButton" class="btn navbutton"
+            style="font-size: 1.5rem; width: 40%; max-width: 200px">Unfavorite</button>
+    }
+    else
+    {
+        <button id="favButton" class="btn navbutton"
+            style="font-size: 1.5rem; width: 40%; max-width: 200px">Favorite</button>
+    }
+}
+
+<script type="text/javascript">
+    let buttonElement = document.querySelector('#favButton');
+    console.log(buttonElement);
+    buttonElement.addEventListener('click', ()=>{
+        if(buttonElement.textContent=='Favorite'){
+
+     $.ajax({
+         type: "POST",
+         url: "@Url.Action("AddToFavourites")",
+         data: { id: '@ViewBag.BookId' }
+     })
+        } else{
+            $.ajax({
+            type: "POST",
+            url: "@Url.Action("RemoveFromFavourites")",
+            data: { id: '@ViewBag.BookId' }
+            })
+        }
+    })
+</script>
+
+<script src="~/js/favMovie.js" type="module"></script>

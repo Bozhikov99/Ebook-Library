@@ -1,0 +1,473 @@
+﻿@using Core.ViewModels.Review
+
+@if (ViewBag.UserId != null)
+{
+    <div id="partial">
+        @if (ViewBag.UserReview != null)
+        {
+            <div class="row reply-userdiv align-items-center">
+                <div class="col">
+                    <h2>Your Review</h2>
+                </div>
+                <div class="col-2 text-end">
+                    <i id="edit-icon" class="bi bi-pencil-fill reply-icon"></i>
+                    <i id="remove-icon" class="bi bi-trash3-fill reply-icon"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div id="comment-text" class="reply-col">@ViewBag.UserReview.Comment</div>
+                <div id="review-id" hidden class="reply-col">@ViewBag.UserReview.Id</div>
+            </div>
+            <div class="rating-div col text-center">
+                @for (var i = 1; i <= 5; i++)
+                {
+                    if (i <= ViewBag.UserReview.Value)
+                    {
+                        <i class="bi orange-txt user-ifont bi-star-fill"></i>
+                    }
+                    else
+                    {
+                        <i class="bi orange-txt user-ifont bi-star"></i>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <div id="comment-form">
+                <div class="col form-headline">
+                    <div class="row d-flex align-items-center">
+                        <div class="col">
+                            <h2 id="rev">Review:</h2>
+                        </div>
+                        <input hidden name="UserId" value=@ViewBag.UserId />
+                        <input hidden name="BookId" value=@Model.Id />
+                        <input hidden name="Value" />
+                        <input hidden name="Comment" />
+                        <div id="rating-div" class="col d-flex justify-content-end">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <i class="bi bi-star rate-star" data-value=@(i+1)></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <textarea class="form-control" rows="6"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                        <button id="submit-review" class="btn navbutton"
+                        style="margin-top: 1rem; font-size:1.5rem">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+}
+<script type="module" src=~/js/review.js></script>
+<script type="text/javascript">
+    let submitReviewElement=document.querySelector('#submit-review');
+    let deleteReviewElement=document.querySelector('#remove-icon');
+    let editReviewElement=document.querySelector('#edit-icon');
+
+    if(deleteReviewElement){
+        deleteReviewElement.addEventListener('click', DeleteReview);
+    }
+
+    if(editReviewElement)
+    {
+        editReviewElement.addEventListener('click', EditReview);
+    }
+
+    submitReviewElement.addEventListener('click', ()=>{
+        let commentElement=document.querySelector('#comment-form');
+        let textAreaElement=document.querySelector('textarea');
+        let userIdElement=document.querySelector('input[name="UserId"]');
+        let bookIdElement=document.querySelector('input[name="BookId"]');
+        let valueElement=document.querySelector('input[name="Value"]');
+
+        let UserId=userIdElement.value;
+        let BookId=bookIdElement.value;
+        let Comment=textAreaElement.value;
+        let Value=valueElement.value;
+
+        commentElement.remove();
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateReview")",
+                data: {model: {
+                    Value, Comment, BookId, UserId}}
+            })
+            .then((result)=>{
+                AddUserReview(result);
+            });
+    })
+
+    function AddUserReview(result){
+        console.log(result);
+        let comment=result.comment;
+        let value=result.value;
+        let id=result.id;
+        let bookId=result.bookId;
+        let mainElement=document.querySelector('#partial');
+
+        //section
+        let sectionElement=document.createElement('section');
+        sectionElement.classList.add('reply-section');
+
+        let userNameDiv=document.createElement('div');
+        userNameDiv.classList.add('col');
+
+        let h2Element=document.createElement('h2');
+        h2Element.textContent='Your Review';
+
+        userNameDiv.appendChild(h2Element);
+
+
+        //user row
+        let userRowDivElement=document.createElement('div');
+        userRowDivElement.classList.add('row');
+        userRowDivElement.classList.add('reply-userdiv');
+        userRowDivElement.classList.add('align-items-center');
+
+        userRowDivElement.appendChild(userNameDiv);
+
+
+        let iconsDivElement=customElement('div', ['col-2', 'text-end']);
+        let editIconElement=customElement('i', ['bi', 'bi-pencil-fill', 'reply-icon']);
+        let deleteIconElement=customElement('i', ['bi', 'bi-trash3-fill', 'reply-icon'], 'remove-icon');
+        deleteIconElement.addEventListener('click', DeleteReview);
+        editIconElement.addEventListener('click', EditReview);
+
+        iconsDivElement.appendChild(editIconElement);
+        iconsDivElement.appendChild(deleteIconElement);
+        userRowDivElement.appendChild(iconsDivElement);
+
+        let ratingDivElement=document.createElement('div');
+        ratingDivElement.classList.add('rating-div');
+        ratingDivElement.classList.add('col');
+        ratingDivElement.classList.add('text-center');
+
+        for(var i=0; i<5; i++){
+            let iElement=document.createElement('i');
+            iElement.classList.add('bi');
+            iElement.classList.add('orange-txt');
+            iElement.classList.add('user-ifont');
+
+            if(i<value){
+                iElement.classList.add('bi-star-fill');
+            } else {
+                iElement.classList.add('bi-star');
+            }
+
+            ratingDivElement.appendChild(iElement);
+        }
+
+        userRowDivElement.appendChild(ratingDivElement);
+
+        sectionElement.appendChild(userRowDivElement);
+
+        //row
+        let rowDivElement=document.createElement('div');
+        rowDivElement.classList.add('row');
+        let colDivElement=customElement('div', ['reply-col'], 'comment-text');
+        colDivElement.textContent=comment;
+
+        let idDivElement=customElement('div', ['reply-col'], 'review-id');
+        idDivElement.textContent=result.id;
+        idDivElement.setAttribute('hidden', 'true');
+
+        rowDivElement.appendChild(colDivElement);
+        rowDivElement.appendChild(idDivElement);
+
+        mainElement.appendChild(userRowDivElement);
+        mainElement.appendChild(rowDivElement);
+        mainElement.appendChild(ratingDivElement);
+
+    }
+
+    //let editButtonElement=document.querySelector('#edit');
+    //let deleteButtonElement=document.querySelector('#delete');
+    //let divElement=document.querySelector('#partial');
+
+    //deleteButtonElement.addEventListener('click', ()=>{
+    //    let id=document.querySelector('#review-id')
+    //        .textContent;
+    //    let commentDivElement=document.querySelector('#commentDiv');
+    //    commentDivElement.remove();
+
+    //    CreateReviewForm();
+
+    //    $.ajax({
+    //            type: "POST",
+    //            url: "@Url.Action("DeleteReview")",
+    //            data: {id}
+    //        })
+    //})
+
+    //editButtonElement.addEventListener('click', ()=>{
+
+    //    let commentDivElement=document.querySelector('#commentDiv');
+    //    let text=commentDivElement.querySelector('#comment')
+    //        .textContent;
+
+    //    CreateReviewForm(text);
+    //    let formElement=document.createElement('form');
+    //    let selectElement=document.createElement('select');
+
+    //    for(var i=1; i<6;i++){
+    //        let optionElement=document.createElement('option');
+    //        optionElement.value=i;
+    //        optionElement.textContent=i;
+    //        selectElement.appendChild(optionElement);
+    //    }
+
+    //    let commentInputElement=document.createElement('input');
+    //    commentInputElement.name='Value';
+    //    commentInputElement.type='text';
+
+    //    let bookIdInputElement=document.createElement('input')
+    //    bookIdInputElement.hidden='true';
+    //    bookIdInputElement.value='@Model.Id';
+    //    bookIdInputElement.name='BookId';
+
+    //    let userIdInputElement=document.createElement('input')
+    //    userIdInputElement.hidden='true';
+    //    userIdInputElement.name='UserId';
+    //    userIdInputElement.value='@ViewBag.UserId';
+
+    //    let submitElement=document.createElement('button');
+    //    submitElement.type='submit';
+    //    submitElement.textContent='Submit';
+
+    //    formElement.appendChild(selectElement);
+    //    formElement.appendChild(commentInputElement);
+    //    formElement.appendChild(bookIdInputElement);
+    //    formElement.appendChild(userIdInputElement);
+    //    formElement.appendChild(submitElement);
+    //    divElement.appendChild(formElement);
+
+    //    submitElement.addEventListener('click', (e)=>{
+    //        e.preventDefault();
+
+    //        let Value=selectElement.value;
+    //        let Comment=commentInputElement.value;
+    //        let BookId=bookIdInputElement.value;
+    //        let UserId=userIdInputElement.value;
+
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "@Url.Action("CreateReview")",
+    //            data: {model: {
+    //                Value, Comment, BookId, UserId}}
+    //        })
+    //    })
+    //})
+
+    function DeleteReview(){
+
+        let id=document.querySelector('#review-id')
+            .textContent;
+
+        CreateReviewForm();
+
+        $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteReview")",
+                data: {id}
+            })
+    }
+
+    function EditReview(){
+        let oldTextAreaElement=document.querySelector('#comment-text');
+        let commentValue=oldTextAreaElement.textContent;
+
+        CreateReviewForm();
+
+        let newTextAreaElement=document.querySelector('textarea');
+        newTextAreaElement.value=commentValue;
+    }
+
+    function CreateReviewForm(){
+        let comment=document.querySelector('.reply-col').textContent;
+        let partialElement=document.querySelector('#partial');
+        let userReviewElements=partialElement.querySelectorAll('div');
+        userReviewElements.forEach(e=>e.remove());
+
+        //comment form
+        let commentFormElement=customElement('div', [], 'comment-form');
+
+        //form headline
+
+        let headlineDivElement=customElement('div', ['col', 'form-headline']);
+
+        let headlineDivContainerElement=customElement('div', ['row', 'd-flex', 'align-items-center'])
+
+        let headlineColElement=customElement('div', ['col']);
+        let h2Element=customElement('h2', [], 'rev');
+        h2Element.textContent='Review:';
+
+        headlineColElement.appendChild(h2Element);
+        headlineDivContainerElement.appendChild(headlineColElement);
+
+        let userIdInputElement=document.createElement('input');
+        userIdInputElement.value='@ViewBag.UserId';
+        userIdInputElement.setAttribute('name', 'UserId');
+        userIdInputElement.setAttribute('hidden', 'true');
+
+        let bookIdInputElement=document.createElement('input');
+        bookIdInputElement.value='@Model.Id';
+        bookIdInputElement.setAttribute('name', 'BookId');
+        bookIdInputElement.setAttribute('hidden', 'true');
+
+        let valueInputElement=document.createElement('input');
+        valueInputElement.setAttribute('name', 'Value');
+        valueInputElement.setAttribute('hidden', 'true');
+
+        let commentInputElement=document.createElement('input');
+        commentInputElement.setAttribute('name', 'Comment');
+        commentInputElement.setAttribute('hidden', 'true');
+
+        let ratingDivElement=customElement('div', ['col', 'd-flex', 'justify-content-end'], 'rating-div');
+
+        for (var i = 0; i < 5; i++)
+        {
+             let currentIElement=customElement('i', ['bi', 'bi-star', 'rate-star']);
+             currentIElement.setAttribute('data-value', i+1);
+
+             ratingDivElement.appendChild(currentIElement);
+        }
+
+        headlineDivContainerElement.appendChild(userIdInputElement);
+        headlineDivContainerElement.appendChild(bookIdInputElement);
+        headlineDivContainerElement.appendChild(valueInputElement);
+        headlineDivContainerElement.appendChild(commentInputElement);
+        headlineDivContainerElement.appendChild(ratingDivElement);
+
+
+        headlineDivElement.appendChild(headlineDivContainerElement);
+
+        let textAreaDivElement=document.createElement('div');
+        let textAreaElement=customElement('textarea', ['form-control']);
+        textAreaElement.setAttribute('rows', '6');
+
+        textAreaDivElement.appendChild(textAreaElement);
+
+        let submitDivElement=customElement('div', ['row']);
+        let submitDivWrapperElement=customElement('div', ['col', 'd-flex', 'justify-content-end']);
+
+        let submitButtonElement=customElement('button', ['btn', 'navbutton'], 'submit-review');
+        submitButtonElement.textContent='Submit';
+
+        submitButtonElement.addEventListener('click', ()=>{
+            let textAreaElement=document.querySelector('textarea');
+            let Value=valueInputElement.value;
+            let Comment=textAreaElement.value;
+            let BookId=bookIdInputElement.value;
+            let UserId=userIdInputElement.value;
+
+            let partialElement=document.querySelector('#partial');
+            let userReviewElements=partialElement.querySelectorAll('div');
+            userReviewElements.forEach(e=>e.remove());
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CreateReview")",
+                data: {model: {
+                    Value, Comment, BookId, UserId}}
+            })
+            .then((result)=>{
+                AddUserReview(result);
+            });
+
+        });
+
+        submitDivWrapperElement.appendChild(submitButtonElement);
+        submitDivElement.appendChild(submitDivWrapperElement);
+
+        commentFormElement.appendChild(headlineDivElement);
+        commentFormElement.appendChild(textAreaDivElement);
+        commentFormElement.appendChild(submitDivElement);
+        partialElement.appendChild(commentFormElement);
+        reloadScript();
+        //<div id="comment-form">
+        //    <div class="col form-headline">
+        //        <div class="row d-flex align-items-center">
+        //            <div class="col">
+        //                <h2 id="rev">Review:</h2>
+        //            </div>
+        //            <input hidden name="UserId" value=@ViewBag.UserId />
+        //            <input hidden name="BookId" value=@Model.Id />
+        //            <input hidden name="Value" />
+        //            <input hidden name="Comment" />
+        //            <div id="rating-div" class="col d-flex justify-content-end">
+        //                for (int i = 0; i < 5; i++)
+        //                {
+        //                    <i class="bi bi-star" style="font-size: 2rem; color:#f15a24; padding:0.25rem; cursor:pointer" data-value=(i+1)></i>
+        //                }
+        //            </div>
+        //        </div>
+        //    </div>
+        //    <div>
+        //        <textarea class="form-control" rows="6"></textarea>
+        //    </div>
+        //    <div class="row">
+        //        <div class="col d-flex justify-content-end">
+        //            <button id="submit-review" class="btn navbutton"
+        //            >
+        //                Submit
+        //            </button>
+        //        </div>
+        //    </div>
+        //</div>
+    }
+
+    function customElement(tagname, classList, id){
+        let element=document.createElement(tagname);
+
+        classList.forEach(c=>element.classList.add(c));
+
+        if(id){
+            element.setAttribute('id', id);
+        }
+
+        return element;
+    }
+
+    function reloadScript(){
+        let ratingDivElement = document.querySelector('#rating-div');
+        let ratingStarElements = ratingDivElement.querySelectorAll('.bi');
+        let ratingInputElement = document.querySelector('input[name="Value"]');
+
+        ratingStarElements.forEach(s => s.addEventListener('click', () => {
+            ratingStarElements.forEach(rs => {
+                rs.classList.remove('bi-star-fill');
+                rs.classList.add('bi-star');
+            });
+
+            let value = s.dataset.value;
+
+            for (var i = 0; i < value; i++) {
+                let currentElement = ratingStarElements[i];
+                ToggleClass(currentElement);
+            }
+
+            ratingInputElement.value = value;
+        }));
+
+        function ToggleClass(element) {
+            if (element.classList.contains('bi-star')) {
+                element.classList.remove('bi-star');
+                element.classList.add('bi-star-fill');
+            } else {
+                element.classList.remove('bi-star-fill');
+                element.classList.add('bi-star');
+            }
+        }
+    };
+
+</script>

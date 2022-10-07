@@ -1,0 +1,40 @@
+﻿@using Core.ViewModels.User
+@model LoginUserModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="d-flex justify-content-center" style="margin-top: 6rem">
+    <img class="img" src="/img/profileicon.png" style="user-select: none" />
+</div>
+
+<div class="row-2 d-flex justify-content-center s-space">
+    <form method="post" asp-action="Login" style="margin-bottom: 4rem">
+        <div asp-validation-summary="ModelOnly" class="danger"></div>
+        <div class="form-text" style="text-align: center; padding-bottom: 10px">
+            Please input your login credentials to sign in:
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Username</label>
+            <input asp-for="UserName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn float-end navbutton">Login</button>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

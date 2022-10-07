@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MediatR" />
+    <None Remove="Commands\" />
+    <None Remove="Queries\" />
+    <None Remove="Handlers\" />
+    <None Remove="Queries\Author\" />
+    <None Remove="Queries\Book\" />
+    <None Remove="Queries\Genre\" />
+    <None Remove="Queries\Review\" />
+    <None Remove="Queries\Subscription\" />
+    <None Remove="Queries\User\" />
+    <None Remove="Commands\GenreCommands\" />
+    <None Remove="Validators\" />
+    <None Remove="Commands\AuthorCommands\" />
+    <None Remove="Commands\SubscriptionCommands\" />
+    <None Remove="Handlers\SubscriptionHandlers\" />
+    <None Remove="Handlers\UserHandlers\" />
+    <None Remove="Helpers\" />
+    <None Remove="Commands\UserCommands\" />
+    <None Remove="Handlers\ReviewHandlers\" />
+    <None Remove="Commands\ReviewCommands\" />
+    <None Remove="Handlers\BookHandlers\" />
+    <None Remove="Commands\BookCommands\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Queries\" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Queries\Author\" />
+    <Folder Include="Queries\Book\" />
+    <Folder Include="Queries\Genre\" />
+    <Folder Include="Queries\Review\" />
+    <Folder Include="Queries\Subscription\" />
+    <Folder Include="Queries\User\" />
+    <Folder Include="Commands\GenreCommands\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Commands\AuthorCommands\" />
+    <Folder Include="Commands\SubscriptionCommands\" />
+    <Folder Include="Handlers\SubscriptionHandlers\" />
+    <Folder Include="Handlers\UserHandlers\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Commands\UserCommands\" />
+    <Folder Include="Handlers\ReviewHandlers\" />
+    <Folder Include="Commands\ReviewCommands\" />
+    <Folder Include="Handlers\BookHandlers\" />
+    <Folder Include="Commands\BookCommands\" />
+  </ItemGroup>
+</Project>

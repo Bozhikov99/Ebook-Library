@@ -1,0 +1,17 @@
+﻿@using Core.ViewModels.Genre
+@model IEnumerable<ListGenreModel>
+
+<form action="#">
+    <div class="form-group d-flex justify-content-end">
+
+        <select name="genres" id="genres" class="selectpicker" multiple title="Genres" data-width="130px">
+
+            @foreach (ListGenreModel g in Model)
+            {
+                <option value=@g.Name style="font-size: 1rem">
+                    @g.Name
+                </option>
+            }
+        </select>
+    </div>
+</form>

@@ -1,0 +1,103 @@
+﻿@using Core.ViewModels.User
+@model UserProfileModel
+@{
+    ViewData["Title"] = @Model.UserName;
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="container" style="margin-top: 7rem">
+    <div class="row">
+        <!-- Profile Picture / Logout Button / Name -->
+
+        <div class="col-xxl-3" style="text-align: center">
+            <div class="d-none d-xxl-block" style="margin-top: 5rem;"></div>
+            <img class="img"
+                 src="/img/profileicon.png"
+                 style="user-select: none" />
+
+            <h1>@Model.UserName</h1>
+
+
+            <form class="nav-item px-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="btn navbutton">Logout</button>
+            </form>
+        </div>
+
+        <!-- DESKTOP: Remaining Subscription / Favorite Books -->
+
+        <div class="col d-none d-xxl-block"
+             style="text-align: center; padding-left: 5rem">
+            @if (ViewBag.Subscription != null)
+            {
+                <partial name="_RemainingSubscriptionPartial" />
+            }
+
+            <div class="l-space"></div>
+            <div class="row">
+                <div class="d-none d-xxl-block"><h1>Favorite Books:</h1></div>
+                @foreach (var b in ViewBag.Books)
+                {
+                    byte[] cover = b.Cover;
+                    string imreBase64Data = Convert.ToBase64String(cover);
+                    string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
+
+                    <div class="col d-none d-xxl-block">
+                        <div class="fav-book">
+                            <a asp-controller="Book" asp-action="Details" asp-route-id=@b.Id>
+                                <img src=@imgUrl
+                                 class="image-sizing rounded-start"
+                                 alt="..." />
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE: Remaining Subscription / Favorite Books -->
+    <div class="container" style="margin-bottom: 4rem">
+        @if (ViewBag.Subscription != null)
+        {
+            <partial name="_RemainingSubscriptionPartialMobile" />
+        }
+        <div class="row">
+            <div class="m-space"></div>
+            <div class="d-xxl-none d-flex justify-content-center" ">
+                <h1>Favorite Books:</h1>
+            </div>
+            @foreach (var b in ViewBag.Books)
+                {
+                    byte[] cover = b.Cover;
+                    string imreBase64Data = Convert.ToBase64String(cover);
+                    string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
+
+                    <div class="col m-3 d-xxl-none d-flex justify-content-center">
+                        <div class="fav-book-mobile">
+                            <a asp-controller="Book" asp-action="Details" asp-route-id=@b.Id>
+                                <img src=@imgUrl
+                                 class="image-sizing rounded-start"
+                                 alt="..." />
+                            </a>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+</div>
+
+@*
+            <h2>@Model.UserName</h2>
+        <h2>@Model.Email</h2>
+        <h2>@Model.RegisterDate</h2>
+
+
+
+        <div>
+            @foreach (var b in ViewBag.Books)
+            {
+            <h3>@b.Title</h3>
+            }
+        </div>*@
+

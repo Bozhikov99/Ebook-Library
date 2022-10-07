@@ -1,0 +1,70 @@
+﻿@using Domain.Entities;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="nav-item px-2 d-none d-lg-block">
+        <a class="btn navbutton"
+           asp-controller="User"
+           asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
+    </div>
+    @await Component.InvokeAsync("AdminCheck")
+
+    <form class="nav-item px-2 d-none d-lg-block" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <button type="submit" class="btn navbutton"><i class="bi bi-door-closed-fill"></i> Logout</button>
+    </form>
+
+    <!-- Mobile User Buttons -->
+
+    <div class="container d-lg-none" style="margin-top: 2rem">
+        <div class="row d-lg-none">
+
+            <div class="col">
+                <a class="btn navbutton" style="width: 100%" asp-controller="User"
+                   asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
+            </div>
+            @await Component.InvokeAsync("AdminCheckMobile")
+            <div class="col">
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" style="width: 100%" class="btn navbutton"><i class="bi bi-door-closed-fill"></i> Logout</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <!-- Login/Register Buttons -->
+
+    <div class="nav-item px-2 d-none d-lg-block">
+        <a class="btn navbutton"
+           asp-controller="User"
+           asp-action="Login"><i class="bi bi-door-open-fill"></i> Login</a>
+    </div>
+    <div class="nav-item px-2 d-none d-lg-block">
+        <a class="btn navbutton" asp-controller="User"
+           asp-action="Register"><i class="bi bi-pencil-square"></i> Register</a>
+    </div>
+
+    <!-- Mobile Login/Register Buttons -->
+
+    <div class="container d-lg-none" style="margin-top: 2rem">
+        <div class="row d-lg-none">
+            <div class="col">
+                <a class="btn navbutton" style="width: 100%" asp-controller="User"
+                   asp-action="Login"><i class="bi bi-door-open-fill"></i> Login</a>
+            </div>
+            <div class="col">
+                <a class="btn navbutton"
+                   style="width: 100%"
+                   asp-controller="User"
+                   asp-action="Register"><i class="bi bi-pencil-square"></i> Register</a>
+            </div>
+        </div>
+    </div>
+}
+

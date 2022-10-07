@@ -1,0 +1,41 @@
+﻿@using Core.ViewModels.Author
+@model IEnumerable<ListAuthorModel>
+
+@{
+    ViewData["Title"] = "All";
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="container" style="margin-top: 5%">
+    <div class="row">
+        <div class="col"><h1 style="font-size: 4rem">Authors:</h1></div>
+        <div class="col">
+            <a asp-action="Create">
+                <button type="submit"
+                        class="btn navbutton float-end d-flex align-items-center">
+                    Add Author
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <ul>
+        @foreach (ListAuthorModel a in Model)
+        {
+            <li>
+                @a.FirstName @a.LastName
+                <a asp-action="Edit" asp-route-id=@a.Id>
+                    <button type="submit" class="btn navbutton float-end">
+                        Edit
+                    </button>
+                </a>
+                <a asp-action="Delete" asp-route-id=@a.Id>
+                    <button type="submit" class="btn navbutton float-end mx-2">
+                        Remove
+                    </button>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

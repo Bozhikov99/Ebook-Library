@@ -1,0 +1,233 @@
+﻿@using Core.ViewModels.Subscription
+@model CreateSubscriptionModel
+
+@{
+    ViewData["Title"] = "Subscribe";
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="container d-none d-lg-block">
+    <h1 class="text-center" style="padding-top: 160px; padding-bottom: 2%">
+        <br />
+        Choose a subscription:
+    </h1>
+
+
+
+    <div class="row">
+        <div class="col-lg d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="2" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="7" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center subscriptions-big"
+                       value="1 Week - 2$"
+                       type="submit"
+                       role="button" />
+            </form>
+        </div>
+
+        <div class="col-lg d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="6" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="31" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center subscriptions-big"
+                       value="1 Month - 6$"
+                       type="submit"
+                       role="button" />
+            </form>
+        </div>
+
+        <div class="col-lg d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="16" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="93" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center subscriptions-big"
+                       value="3 Months - 16$"
+                       type="submit"
+                       role="button" />
+            </form>
+        </div>
+
+        <div class="col-lg d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="30" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="186" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center subscriptions-big"
+                       value="6 Months - 30$"
+                       type="submit"
+                       role="button" />
+            </form>
+        </div>
+
+        <div class="col-lg d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="60" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="372" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center subscriptions-big"
+                       value="1 Year - 60$"
+                       type="submit"
+                       role="button" />
+            </form>
+        </div>
+   
+        <h7 class="d-flex justify-content-center"
+            style="color: gray; padding-top: 2%">
+            You will be billed at regular intervals based on your subscription.
+            All your billing information is kept safe.
+        </h7>
+    </div>
+</div>
+
+<!-- MOBILE: Pricing -->
+
+
+<div class="container d-lg-none" style="margin-top: 2rem">
+    <h1 class="text-center" style="margin-bottom: 1.4rem; font-size: 3.5rem">
+        Choose a subscription:
+    </h1>
+    <div class="row d-flex justify-content-center">
+            <form asp-action="Subscribe" class="sub-form-width py-2 d-flex justify-content-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="2" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="7" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center sub-button-mobile "
+                       value="1 Week - 2$"
+                       type="submit"
+                       role="button" />
+            </form>
+            <form asp-action="Subscribe" class="sub-form-width py-2 d-flex justify-content-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="6" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="31" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center sub-button-mobile "
+                       value="1 Month - 6$"
+                       type="submit"
+                       role="button" />
+            </form>
+            <form asp-action="Subscribe" class="sub-form-width py-2 d-flex justify-content-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="16" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="93" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center sub-button-mobile "
+                       value="3 Months - 16$"
+                       type="submit"
+                       role="button" />
+            </form>
+            <form asp-action="Subscribe" class="sub-form-width py-2 d-flex justify-content-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="30" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="186" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center sub-button-mobile "
+                       value="6 Months - 30$"
+                       type="submit"
+                       role="button" />
+            </form>
+            <form asp-action="Subscribe" class="sub-form-width py-2 d-flex justify-content-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="Price" class="form-control" value="60" />
+                </div>
+                <div class="form-group">
+                    <input hidden asp-for="Days" class="form-control" value="372" />
+                </div>
+                <div hidden class="form-group">
+                    <input name="UserId" class="form-control" value=@ViewBag.UserId />
+                </div>
+                <input class="btn btn-primary align-items-center sub-button-mobile "
+                       value="1 Year - 60$"
+                       type="submit"
+                       role="button" />
+            </form>
+    
+    
+
+
+    
+  
+   
+    <div class="row">
+        
+        <h7 class="d-flex justify-content-center py-2"
+            style="color: gray; text-align: center; font-size: 1.2rem">
+            You will be billed at regular intervals based on your subscription.
+            All your billing information is kept safe.
+        </h7>
+        <div class="m-space"></div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

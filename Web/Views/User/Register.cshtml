@@ -1,0 +1,56 @@
+﻿@using Core.ViewModels.User
+@model RegisterUserModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="m-space orange-bg"></div>
+
+<!-- Profile Icon -->
+
+<div class="d-flex justify-content-center s-space">
+    <img class="img" src="/img/profileicon.png" />
+</div>
+
+<!-- Account Details -->
+
+<div class="row-2 d-flex justify-content-center s-space">
+    <form method="post" asp-action="Register" style="margin-bottom: 4rem">
+        <div asp-validation-summary="ModelOnly" class="danger"></div>
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">Username</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email address</label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label">Repeat Password</label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <div style="height: 10px"></div>
+
+
+        <button type="submit" class="btn float-end navbutton">Register</button>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

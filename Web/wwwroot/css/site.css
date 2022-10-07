@@ -1,0 +1,263 @@
+
+img {
+    user-select: none;
+}
+
+li {
+    font-size: 2rem;
+}
+
+textarea {
+    border-color: #f15a24;
+    margin-top: 1rem;
+}
+
+.fav-book,
+.fav-book-mobile,
+.orange-bg,
+.collapse-button:hover,
+.subscriptions-big,
+.navbutton,
+.sub-button-mobile,
+#dropdown-icon {
+    background-color: #f15a24 !important;
+}
+
+.dropdown {
+    display: none;
+}
+
+.pagination {
+    color: #f15a24;
+}
+
+
+#dropdown-icon {
+    border-radius: 0.2rem;
+}
+
+    #dropdown-icon:hover {
+        background-color: #f12446 !important;
+    }
+
+#page-num {
+    background-color: white;
+}
+
+    #page-num:hover {
+        background-color: #fa703e !important;
+        color: white !important;
+    }
+
+.collapse-button:hover {
+    color: white;
+}
+
+.s-space {
+    margin-top: 3rem;
+}
+
+.m-space {
+    height: 3rem;
+}
+
+.l-space {
+    height: 5rem;
+}
+
+.test {
+    background-color: rgb(38, 0, 255);
+}
+
+.maxhw {
+    max-width: 130px;
+    max-height: 180px;
+}
+
+.orange-txt {
+    color: #f15a24;
+}
+
+#cover {
+    max-height: 20rem;
+}
+
+.fav-book {
+    height: 245px;
+    width: 180px;
+    border-radius: 5px;
+}
+
+.fav-book-mobile {
+    height: 245px;
+    width: 170px;
+    border-radius: 5px;
+}
+
+/* Hover Button */
+
+.hovbutton {
+    color: rgb(37, 37, 37) !important;
+    font-size: 1.2rem !important;
+    text-align: center;
+    user-select: none;
+    border-radius: 0.5rem;
+}
+
+    .hovbutton:hover {
+        color: white !important;
+    }
+
+    .hovbutton:active {
+        background-color: #f12446 !important;
+    }
+
+/* Navbar Buttons */
+.navbutton {
+    border: none !important;
+    color: white !important;
+}
+
+    .navbutton:hover {
+        background-color: #f12446 !important;
+    }
+
+/* Subscription Buttons */
+
+#subdirect {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 300;
+}
+
+.subscriptions-big {
+    border: none !important;
+    font-size: 1.4vw !important;
+    width: 100% !important;
+}
+
+    .subscriptions-big:hover {
+        background-color: #f12446 !important;
+    }
+
+.sub-button-mobile {
+    border: none !important;
+    font-size: 30px !important;
+    width: 400px !important;
+}
+
+    .sub-button-mobile:hover {
+        background-color: #f12446 !important;
+    }
+
+/* Admin Button */
+.adminbutton {
+    border: none;
+    font-size: 1rem;
+    color: white !important;
+}
+
+    .adminbutton:hover {
+        background-color: #f12446 !important;
+    }
+
+navbar-toggler {
+    justify-content: space-between !important;
+}
+
+.sub-form-width {
+    width: 100%
+}
+
+.page-item a {
+    background-color: #f15a24 !important;
+    color: white;
+    border: none;
+}
+
+    .page-item a:hover {
+        background-color: #f12446 !important;
+        color: white;
+    }
+
+.page-item .active {
+    background-color: #f12446 !important;
+}
+
+.page-item a:focus {
+    color: white;
+}
+
+.image-sizing {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    min-block-size: 240px;
+}
+
+.card:hover {
+    background-color: #f38c67;
+}
+
+.reply-section {
+    background-color: rgb(243, 194, 166);
+}
+
+.reply-userdiv {
+    background-color: #212529;
+    color: white;
+    padding: 0.5rem;
+}
+
+.reply-col {
+    padding: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+#rating-div {
+    padding-right: 1.5rem;
+}
+
+.user-ifont {
+    font-size: 2rem;
+}
+
+.card {
+    flex: 1 1 0;
+}
+
+#remove-icon {
+    padding-left: 1rem
+}
+
+.reply-icon:hover {
+    color: #f12446;
+    cursor: pointer;
+}
+
+.form-headline {
+    background-color: #212529;
+    margin-top: 4rem;
+}
+
+#rev {
+    padding-top: 0.5rem;
+    padding-left: 1rem;
+    color: white;
+}
+
+.rate-star {
+    font-size: 2rem;
+    color: #f15a24;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+
+#submit-review {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}

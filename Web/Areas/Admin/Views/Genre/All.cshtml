@@ -1,0 +1,38 @@
+﻿@using Core.ViewModels.Genre
+@model IEnumerable<ListGenreModel>
+
+@{
+    ViewData["Title"] = "Genres";
+}
+<div class="m-space orange-bg"></div>
+<div class="container" style="margin-top: 5%">
+    <div class="row">
+        <div class="col"><h1 style="font-size: 4rem">Genres:</h1></div>
+        <div class="col">
+            <a asp-action="Create">
+                <button type="submit"
+                        class="btn navbutton float-end d-flex align-items-center">
+                    Add Genre
+                </button>
+            </a>
+        </div>
+    </div>
+    <ul>
+        @foreach (ListGenreModel g in Model)
+        {
+            <li>
+                @g.Name
+                <a asp-action="Edit" asp-route-id=@g.Id>
+                    <button type="submit" class="btn navbutton float-end">
+                        Edit
+                    </button>
+                </a>
+
+                <a asp-action="Delete" asp-route-id=@g.Id>
+                    <button type="submit" class="btn navbutton float-end mx-2">
+                        Remove
+                    </button>
+                </a>
+            </li>
+        }
+    </ul>

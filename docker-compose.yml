@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  mssql-server:
+    container_name: mssql_server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+        - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Docker*Database*2022"
+    volumes:
+        - sql-data:/var/opt/mssql
+  web:
+    build: .
+    environment:
+        -  "ConnectionStrings__DefaultConnection=Server=mssql_server;Database=EBookLibrary;User=sa;Password=Docker*Database*2022;"
+    ports:
+        - "8080:80"
+    depends_on:
+      - mssql-server
+volumes:
+    sql-data:

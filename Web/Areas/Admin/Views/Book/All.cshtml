@@ -1,0 +1,125 @@
+﻿@using Core.ViewModels.Book
+@model IEnumerable<ListBookModel>
+
+@{
+    ViewData["Title"] = "Browse";
+    int rows = Model.Count() < 3 ? 1 : 2;
+    int bookCounter = ViewBag.StarterBook;
+    bool isEnd = false;
+    ListBookModel[] books = Model.ToArray();
+    string queryGenres = string.Empty;
+
+    if (ViewBag.Genres != null)
+    {
+        string[] genres = ViewBag.Genres;
+        queryGenres = $"&genres=";
+
+        foreach (string g in genres)
+        {
+            queryGenres += $"{g}&genres=";
+        }
+
+        queryGenres = queryGenres.Substring(0, queryGenres.Length - 8);
+    }
+}
+
+<div class="m-space orange-bg"></div>
+
+<div class="container">
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-center">
+        <a asp-action="Create" class="btn navbutton"
+           style="margin-top:0.5rem; width:100%">Create Book</a>
+    </div>
+
+    <form asp-action="All" class="d-flex" style="padding-top: 0.5rem">
+
+        <div class="col-2 d-flex justify-content-end" style="min-width:15rem">
+            <input name="search" type="search"
+                   class="form-control input-button"
+                   style="border-color: #f15a24"
+                   placeholder="Search for a book.."
+                   value=@TempData["Search"] />
+        </div>
+        <div class="col d-flex justify-content-start" style="margin-left: 0.5rem; margin-right: 0.5rem"><button class="btn navbutton" type="submit">Search</button></div>
+
+        <div class="col d-flex justify-content-end"> @await Component.InvokeAsync("AdminGenres")</div>
+
+    </form>
+
+
+
+
+    @if (books.Length != 0)
+    {
+        @for (int i = 0; i < rows; i++)
+        {
+            <div class="row my-2">
+
+                @for (int j = 0; j < 2; j++)
+
+                {
+                    ListBookModel currentBook = books[bookCounter];
+                    byte[] cover = currentBook.Cover;
+                    string imreBase64Data = Convert.ToBase64String(cover);
+                    string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);
+                    <div class="col d-flex align-items-stretch" style="max-width: 50%">
+                        <div class="card" style="cursor: pointer;" onclick="location.href='Details/@currentBook.Id';">
+                            <div class="row g-0 d-flex justify-content-center">
+                                <div class="col-lg-4">
+                                    <a asp-action="Details" asp-route-id=@currentBook.Id>
+
+                                        <img src=@imgUrl
+                                 class="image-sizing rounded-start"
+                                 alt="..." />
+
+
+                                    </a>
+                                </div>
+                                <div class="col-lg-8 text-center">
+                                    <div class="card-body">
+                                        <h2 class="card-title">@currentBook.Title</h2>
+                                        <p class="card-text">
+                                            Author: <span style="font-weight:500">@currentBook.Author</span><br />
+                                            Genres: <span style="font-weight:500">@string.Join(", ", currentBook.Genres)</span> <br />
+                                            Release Year: <span style="font-weight:500">@currentBook.ReleaseYear</span> <br />
+                                            Rating: @currentBook.Rating/5 <i class="bi bi-star-fill orange-txt"></i> <br />
+                                        </p>
+                                        
+                                        
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    bookCounter++;
+                    if (bookCounter == Model.Count())
+                    {
+                        isEnd = true;
+                        break;
+                    }
+                }
+
+            </div>
+            if (isEnd)
+            {
+                break;
+            }
+        }
+
+    }
+</div>
+
+<div style="height:5rem"></div>
+
+<div class="container fixed-bottom d-flex justify-content-center pagination-div" style="margin-bottom: 2rem">
+    <paging show-prev-next="false"
+            show-first-last="false"
+            show-total-pages="false"
+            show-total-records="false"
+            show-page-size-nav="false"
+            url-template="All?p={0}&s={1}&search=@TempData["Search"]@queryGenres" page-no=@ViewBag.PageNo
+            page-size=@ViewBag.PageSize
+            total-records=@Model.Count()></paging>
+</div>

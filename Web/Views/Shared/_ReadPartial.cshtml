@@ -1,0 +1,23 @@
+﻿@using Core.ViewModels.Book
+@model BookDetailsModel
+
+@if (ViewBag.UserId != null)
+{
+
+    <a asp-action="Read"
+   asp-controller="Book"
+   asp-route-id=@Model.Id
+   asp-route-FileName="Book.pdf" class="btn navbutton" id="btnOpenDocument" style="font-size: 1.5rem; width: 80%; margin-top: 10%">
+        <i class="fa fa-receipt"></i> Read Book
+    </a>
+    <script>
+        $('#btnOpenDocument').click(function (e) {
+            e.preventDefault();
+            window.open('@Url.Action("Read"
+                 ,"Book"
+                 ,new {id=@Model.Id
+                      ,fileName=@$"{Model.Title}.pdf" })'
+                        ,"_blank");
+        });
+    </script>
+}

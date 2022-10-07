@@ -1,0 +1,71 @@
+﻿@using Core.ViewModels.Book
+@model EditBookModel
+
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<div class="m-space orange-bg"></div>
+<h1 class="text-center" style="margin-top: 1rem">Edit "<span style="color:#f15a24">@Model.Title</span>":</h1>
+
+<div class="row-2 d-flex justify-content-center" style="margin-top:1rem;">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <input asp-for="Title" placeholder="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Description" placeholder="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Cover" class="control-label"></label>
+            <input asp-for="Cover" class="form-control" placeholder="Cover Image" name="Cover" type="file" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Content" class="control-label"></label>
+            <input asp-for="Content" class="form-control" name="Content" type="file" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="AuthorId" class="control-label">Author</label>
+            <select id="AuthorId" name="AuthorId" class="form-control">
+                @foreach (var a in ViewBag.Authors)
+                {
+                    <option value="@a.Id">@a.FirstName @a.LastName</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="ReleaseYear" placeholder="Release Year" class="form-control" />
+            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="Pages" placeholder="Page Number" class="form-control" />
+            <span asp-validation-for="Pages" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <select id="GenreIds" name="GenreIds" class="form-control" multiple>
+                @foreach (var g in ViewBag.Genres)
+                {
+                    <option value="@g.Id">@g.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class=mb-3>
+            <input type="submit" value="Edit" class="btn navbutton" />
+        </div>
+
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

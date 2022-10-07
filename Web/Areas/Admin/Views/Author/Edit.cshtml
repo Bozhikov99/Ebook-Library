@@ -1,0 +1,35 @@
+﻿@using Core.ViewModels.Author
+@model EditAuthorModel
+@{
+    ViewData["Title"] = "Edit Author";
+}
+
+<div class="m-space orange-bg"></div>
+<h1 class="text-center" style="margin-top: 4rem">@Model.FirstName @Model.LastName</h1>
+<div class="row-2 d-flex justify-content-center s-space">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input hidden asp-for="Id" value=@Model.Id />
+        <div class="form-group mb-3">
+            <input asp-for="FirstName" placeholder="First Name" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <input asp-for="LastName" placeholder="Last Name" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit"
+                    class="btn float-end navbutton"
+                    style="margin-top: 2rem">
+                Edit
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

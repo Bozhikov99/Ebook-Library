@@ -1,0 +1,17 @@
+﻿@{
+    DateTime SubscriptionDeadline = @ViewBag.Subscription
+                        .Deadline;
+
+    TimeSpan subscriptionTimespan = SubscriptionDeadline.Subtract(DateTime.Now);
+    string remaining = $"{subscriptionTimespan.Days} days and {subscriptionTimespan.Hours} hours";
+}
+
+@if (ViewBag.Subscription != null)
+{
+    <h1 class="text-center d-xxl-none" style="margin-top: 6rem">
+        Remaining Subscription:
+        <div class="orange-txt">@remaining</div>
+    </h1>
+
+}
+

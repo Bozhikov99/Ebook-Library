@@ -1,0 +1,52 @@
+﻿<Properties StartupConfiguration="{819D557A-ADCA-41C0-8881-E336E14756DD}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Web/Extensions/ServiceCollectionExtension.cs">
+    <Files>
+      <File FileName="Web/Program.cs" Line="15" Column="29" IsPinned="True" />
+      <File FileName="Web/Extensions/ServiceCollectionExtension.cs" Line="44" Column="39" IsPinned="True" />
+      <File FileName="Web/Controllers/BookController.cs" Line="70" Column="29" IsPinned="True" />
+      <File FileName="Domain/Entities/Author.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="EbookLibrary" expanded="True">
+            <Node name="Domain" expanded="True">
+              <Node name="Entities" expanded="True" />
+              <Node name="Exceptions" expanded="True" />
+            </Node>
+            <Node name="Infrastructure" expanded="True">
+              <Node name="ConnectedServicesFolder" selected="True" />
+            </Node>
+            <Node name="Web" expanded="True">
+              <Node name="Areas" expanded="True">
+                <Node name="Admin" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True" />
+              <Node name="Extensions" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Book" expanded="True" />
+                <Node name="Shared" expanded="True">
+                  <Node name="Components" expanded="True">
+                    <Node name="AdminCheck" expanded="True" />
+                    <Node name="AdminCheckMobile" expanded="True" />
+                    <Node name="BrowseGenres" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Web PreferredExecutionTarget="/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+</Properties>
