@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Handlers.UserHandlers
 {
-	public class RegisterHandler:IRequestHandler<RegisterCommand, bool>
-	{
+    public class RegisterHandler : IRequestHandler<RegisterCommand, bool>
+    {
         private readonly IRepository repository;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
@@ -22,7 +22,7 @@ namespace Core.Handlers.UserHandlers
             IRepository repository,
             IMapper mapper,
             UserManager<User> userManager)
-		{
+        {
             this.repository = repository;
             this.mapper = mapper;
             this.userManager = userManager;
@@ -36,17 +36,19 @@ namespace Core.Handlers.UserHandlers
 
             User user = mapper.Map<User>(model);
             user.RegisterDate = DateTime.Now;
-            User existingUser = await repository.All<User>().FirstOrDefaultAsync(u => u.UserName == model.UserName);
-            User existingEmail = await repository.All<User>().FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            if (existingUser != null)
+            bool isExistingName = await repository.AnyAsync<User>(u => u.UserName == model.UserName);
+            bool isExistingEmail = await repository.AnyAsync<User>(u => u.Email == model.Email);
+
+            if (isExistingName)
             {
                 throw new ExistingUserRegisterException(ErrorMessageConstants.USER_EXISTS);
             }
-            if (existingEmail != null)
+            if (isExistingEmail)
             {
                 throw new ExistingUserRegisterException(ErrorMessageConstants.EMAIL_EXISTS);
             }
+
             IdentityResult? result = await userManager.CreateAsync(user, model.Password);
 
             return result.Succeeded;

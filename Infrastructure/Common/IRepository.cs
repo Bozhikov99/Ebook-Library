@@ -12,6 +12,14 @@ namespace Infrastructure.Common
 
         IQueryable<T> AllReadonly<T>(Expression<Func<T, bool>> expression) where T : class;
 
+        bool Any<T>() where T : class;
+
+        bool Any<T>(Expression<Func<T, bool>> expression) where T : class;
+
+        Task<bool> AnyAsync<T>() where T : class;
+
+        Task<bool> AnyAsync<T>(Expression<Func<T, bool>> expression) where T : class;
+
         Task<T> GetByIdAsync<T>(object id) where T : class;
 
         Task<T> GetByIdsAsync<T>(object[] id) where T : class;

@@ -44,12 +44,45 @@ namespace Infrastructure.Common
                 .AsQueryable()
                 .AsNoTracking();
         }
+
         public IQueryable<T> AllReadonly<T>(Expression<Func<T, bool>> search) where T : class
         {
             return DbSet<T>()
                 .Where(search)
                 .AsQueryable()
                 .AsNoTracking();
+        }
+
+        public bool Any<T>() where T : class
+        {
+            bool result = DbSet<T>()
+                .Any();
+
+            return result;
+        }     
+        
+        public bool Any<T>(Expression<Func<T, bool>> expression) where T : class
+        {
+            bool result = DbSet<T>()
+                .Any(expression);
+
+            return result;
+        }
+
+        public async Task<bool> AnyAsync<T>() where T : class
+        {
+            bool result = await DbSet<T>()
+                .AnyAsync();
+
+            return result;
+        }
+
+        public async Task<bool> AnyAsync<T>(Expression<Func<T, bool>> expression) where T : class
+        {
+            bool result = await DbSet<T>()
+                .AnyAsync(expression);
+
+            return result;
         }
 
         public async Task DeleteAsync<T>(object id) where T : class
@@ -121,7 +154,7 @@ namespace Infrastructure.Common
 
         public void DeleteRange<T>(Expression<Func<T, bool>> deleteWhereClause) where T : class
         {
-            var entities = All<T>(deleteWhereClause);
+            var entities = All(deleteWhereClause);
             DeleteRange(entities);
         }
     }
