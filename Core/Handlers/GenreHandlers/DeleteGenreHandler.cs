@@ -22,12 +22,10 @@ namespace Core.Handlers.GenreHandlers
             DeleteGenreCommand request,
             CancellationToken cancellationToken)
         {
-            bool isDeleted = false;
-
             await repository.DeleteAsync<Genre>(request.Id);
-            await repository.SaveChangesAsync();
+            int commits = await repository.SaveChangesAsync();
 
-            isDeleted = true;
+            bool isDeleted = commits > 0;
 
             return isDeleted;
         }

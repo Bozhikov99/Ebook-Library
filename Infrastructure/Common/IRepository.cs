@@ -12,6 +12,8 @@ namespace Infrastructure.Common
 
         IQueryable<T> AllReadonly<T>(Expression<Func<T, bool>> expression) where T : class;
 
+        Task<T> FirstAsync<T>(Expression<Func<T, bool>> search) where T : class;
+
         bool Any<T>() where T : class;
 
         bool Any<T>(Expression<Func<T, bool>> expression) where T : class;

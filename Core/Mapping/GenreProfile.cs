@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.ApiModels.Genre;
 using Core.ViewModels.Genre;
 using Domain.Entities;
 
@@ -14,6 +15,9 @@ namespace Core.Mapping
                 .ReverseMap();
 
             CreateMap<Genre, ListGenreModel>();
+
+            CreateMap<Genre, UpsertGenreModel>()
+                .ReverseMap();
         }
     }
 }

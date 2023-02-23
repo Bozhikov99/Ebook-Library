@@ -53,14 +53,22 @@ namespace Infrastructure.Common
                 .AsNoTracking();
         }
 
+        public async Task<T> FirstAsync<T>(Expression<Func<T, bool>> search) where T : class
+        {
+            T entity = await DbSet<T>()
+                .FirstAsync(search);
+
+            return entity;
+        }
+
         public bool Any<T>() where T : class
         {
             bool result = DbSet<T>()
                 .Any();
 
             return result;
-        }     
-        
+        }
+
         public bool Any<T>(Expression<Func<T, bool>> expression) where T : class
         {
             bool result = DbSet<T>()
@@ -94,7 +102,7 @@ namespace Infrastructure.Common
 
         public void Delete<T>(T entity) where T : class
         {
-            EntityEntry entry = this.Context.Entry(entity);
+            EntityEntry entry = Context.Entry(entity);
 
             if (entry.State == EntityState.Detached)
             {
@@ -106,7 +114,7 @@ namespace Infrastructure.Common
 
         public void Detach<T>(T entity) where T : class
         {
-            EntityEntry entry = this.Context.Entry(entity);
+            EntityEntry entry = Context.Entry(entity);
 
             entry.State = EntityState.Detached;
         }

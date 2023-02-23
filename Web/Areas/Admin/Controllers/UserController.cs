@@ -2,7 +2,6 @@
 using Core.Queries.User;
 using Core.ViewModels.User;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Admin.Controllers
@@ -10,12 +9,10 @@ namespace Web.Areas.Admin.Controllers
     public class UserController : BaseController
     {
         private readonly IMediator mediator;
-        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UserController(IMediator mediator,RoleManager<IdentityRole> roleManager)
+        public UserController(IMediator mediator)
         {
             this.mediator = mediator;
-            this.roleManager = roleManager;
         }
 
         public async Task<IActionResult> ManageUsers()

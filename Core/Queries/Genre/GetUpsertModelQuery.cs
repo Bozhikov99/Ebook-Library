@@ -1,11 +1,11 @@
-﻿using Core.ViewModels.Genre;
+﻿using Core.ApiModels.Genre;
 using MediatR;
 
 namespace Core.Queries.Genre
 {
-    public class GetEditModelQuery : IRequest<EditGenreModel>
+    public class GetUpsertModelQuery : IRequest<UpsertGenreModel>
     {
-        public GetEditModelQuery(string id)
+        public GetUpsertModelQuery(string id)
         {
             Id = id;
         }
@@ -13,4 +13,3 @@ namespace Core.Queries.Genre
         public string Id { get; private set; }
     }
 }
-

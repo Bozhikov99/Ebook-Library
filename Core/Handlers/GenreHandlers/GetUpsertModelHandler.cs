@@ -1,39 +1,36 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
+using Core.ApiModels.Genre;
 using Core.Queries.Genre;
-using Core.ViewModels.Genre;
 using Domain.Entities;
 using Infrastructure.Common;
 using MediatR;
 
 namespace Core.Handlers.GenreHandlers
 {
-    public class GetEditModelHandler: IRequestHandler<GetEditModelQuery, EditGenreModel>
+    public class GetUpsertModelHandler : IRequestHandler<GetUpsertModelQuery, UpsertGenreModel>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
 
-        public GetEditModelHandler(IRepository repository, IMapper mapper)
+        public GetUpsertModelHandler(IRepository repository, IMapper mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
         }
 
-        public async Task<EditGenreModel> Handle(
-            GetEditModelQuery request,
-            CancellationToken cancellationToken)
+        public async Task<UpsertGenreModel> Handle(GetUpsertModelQuery request, CancellationToken cancellationToken)
         {
             Genre genre = await repository.GetByIdAsync<Genre>(request.Id);
 
-            if (genre == null)
+            if (genre is null)
             {
                 throw new ArgumentNullException(ErrorMessageConstants.INVALID_GENRE);
             }
 
-            EditGenreModel model = mapper.Map<EditGenreModel>(genre);
+            UpsertGenreModel model = mapper.Map<UpsertGenreModel>(genre);
 
             return model;
         }
     }
 }
-
