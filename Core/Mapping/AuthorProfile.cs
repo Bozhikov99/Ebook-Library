@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.ApiModels.Author;
 using Core.ViewModels.Author;
 using Domain.Entities;
 
@@ -14,6 +15,9 @@ namespace Core.Mapping
                 .ReverseMap();
 
             CreateMap<Author, ListAuthorModel>();
+
+            CreateMap<Author, UpsertAuthorModel>()
+                .ReverseMap();
         }
     }
 }

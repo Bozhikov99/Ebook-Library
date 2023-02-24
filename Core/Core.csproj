@@ -44,13 +44,10 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Queries\Author\" />
-    <Folder Include="Queries\Book\" />
     <Folder Include="Queries\Review\" />
     <Folder Include="Queries\Subscription\" />
     <Folder Include="Queries\User\" />
     <Folder Include="Validators\" />
-    <Folder Include="Commands\AuthorCommands\" />
     <Folder Include="Commands\SubscriptionCommands\" />
     <Folder Include="Handlers\SubscriptionHandlers\" />
     <Folder Include="Handlers\UserHandlers\" />
@@ -58,7 +55,6 @@
     <Folder Include="Commands\UserCommands\" />
     <Folder Include="Handlers\ReviewHandlers\" />
     <Folder Include="Commands\ReviewCommands\" />
-    <Folder Include="Handlers\BookHandlers\" />
     <Folder Include="Commands\BookCommands\" />
   </ItemGroup>
 </Project>

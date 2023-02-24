@@ -1,33 +1,32 @@
-﻿using Common.MessageConstants;
-using Core.ApiModels.Genre;
-using Core.Commands.GenreCommands;
-using Core.Queries.Genre;
-using Core.ViewModels.Genre;
+﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using Common.MessageConstants;
+using Core.ApiModels.Author;
+using Core.Commands.AuthorCommands;
+using Core.Queries.Author;
+using Core.ViewModels.Author;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [Route("[controller]s")]
-    public class GenreController : ApiBaseController
+    public class AuthorController : ApiBaseController
     {
         private readonly IMediator mediator;
 
-        public GenreController(IMediator mediator)
+        public AuthorController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<ListGenreModel>>> List()
+        public async Task<ActionResult<IEnumerable<ListAuthorModel>>> All()
         {
             try
             {
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
 
-                return Ok(genres);
+                return Ok(authors);
             }
             catch (Exception)
             {
@@ -38,20 +37,15 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete([FromRoute] string id)
         {
             try
             {
-                await mediator.Send(new DeleteGenreCommand(id));
-            }
-            catch (ArgumentNullException)
-            {
-                return NotFound();
+                await mediator.Send(new DeleteAuthorCommand(id));
             }
             catch (Exception)
             {
-                return BadRequest(ErrorMessageConstants.DELETE_GENRE_UNEXPECTED);
+                return BadRequest(ErrorMessageConstants.DELETE_AUTHOR_UNEXPECTED);
             }
 
             return NoContent();
@@ -59,12 +53,13 @@ namespace Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UpsertGenreModel>> Edit([FromRoute] string id)
+        public async Task<ActionResult<UpsertAuthorModel>> Edit([FromRoute] string id)
         {
             try
             {
-                UpsertGenreModel model = await mediator.Send(new GetUpsertModelQuery(id));
+                UpsertAuthorModel model = await mediator.Send(new GetEditAuthorApiQuery(id));
 
                 return Ok(model);
             }
@@ -72,17 +67,23 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
+            catch (Exception)
+            {
+                return BadRequest(ErrorMessageConstants.UNEXPECTED_ERROR);
+            }
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpsertGenreModel model)
+        public async Task<ActionResult> Edit(string id, UpsertAuthorModel model)
         {
             try
             {
-                await mediator.Send(new EditGenreApiCommand(id, model));
+                await mediator.Send(new EditAuthorApiCommand(id, model));
+
+                return NoContent();
             }
             catch (ArgumentNullException)
             {
@@ -90,36 +91,33 @@ namespace Api.Controllers
             }
             catch (ArgumentException)
             {
-                return BadRequest(ErrorMessageConstants.GENRE_EXISTS);
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
             }
             catch (Exception)
             {
-                return BadRequest(ErrorMessageConstants.EDIT_GENRE_UNEXPECTED);
+                return BadRequest(ErrorMessageConstants.EDIT_AUTHOR_UNEXPECTED);
             }
-
-            return NoContent();
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ListGenreModel>> Create([FromBody] UpsertGenreModel model)
+        public async Task<ActionResult<ListAuthorModel>> Add([FromBody] UpsertAuthorModel model)
         {
             try
             {
-                ListGenreModel result = await mediator.Send(new CreateGenreApiCommand(model));
+                ListAuthorModel result = await mediator.Send(new CreateAuthorApiCommand(model));
 
                 return Created(nameof(Edit), result);
             }
             catch (ArgumentException)
             {
-                return BadRequest(ErrorMessageConstants.GENRE_EXISTS);
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest(ErrorMessageConstants.UNEXPECTED_ERROR);
             }
-
         }
     }
 }
