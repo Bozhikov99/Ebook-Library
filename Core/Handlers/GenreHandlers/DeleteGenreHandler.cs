@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Commands.GenreCommands;
 using Domain.Entities;
 using Infrastructure.Common;

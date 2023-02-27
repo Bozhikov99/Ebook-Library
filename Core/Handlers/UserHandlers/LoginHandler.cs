@@ -1,6 +1,9 @@
 ﻿using System;
+using Api.Authentication;
+using Api.Authentication.Interfaces;
 using AutoMapper;
 using Common.MessageConstants;
+using Core.Authentication;
 using Core.Commands.UserCommands;
 using Core.ViewModels.User;
 using Domain.Entities;
@@ -11,23 +14,20 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Core.Handlers.UserHandlers
 {
-    public class LoginHandler:IRequestHandler<LoginCommand, bool>
+    public class LoginHandler : IRequestHandler<LoginCommand, bool>
     {
-        private readonly IRepository repository;
-        private readonly IMapper mapper;
+        //private readonly IJwtProvider jwtProvider;
         private readonly SignInManager<User> signInManager;
         private readonly UserManager<User> userManager;
 
         public LoginHandler(
-            IRepository repository,
-            IMapper mapper,
+            //IJwtProvider jwtProvider,
             SignInManager<User> signInManager,
             UserManager<User> userManager)
         {
-            this.repository = repository;
-            this.mapper = mapper;
             this.userManager = userManager;
             this.signInManager = signInManager;
+            //this.jwtProvider = jwtProvider;
         }
 
         public async Task<bool> Handle(
@@ -54,6 +54,8 @@ namespace Core.Handlers.UserHandlers
             }
 
             await signInManager.SignInAsync(user, true);
+
+            //string token = jwtProvider.GenerateToken(model);
 
             isSuccessful = true;
 

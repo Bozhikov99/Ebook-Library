@@ -57,7 +57,7 @@ namespace Web.Controllers
                 TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
                 return View();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
             }

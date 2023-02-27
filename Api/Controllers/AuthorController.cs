@@ -77,7 +77,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Edit(string id, UpsertAuthorModel model)
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpsertAuthorModel model)
         {
             try
             {

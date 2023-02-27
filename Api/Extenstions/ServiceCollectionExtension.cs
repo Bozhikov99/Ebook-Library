@@ -37,6 +37,11 @@ namespace Api.Extenstions
             return services;
         }
 
+        //public static IServiceCollection AddJwtProvider(this IServiceCollection services, IConfiguration config)
+        //{
+        //    services.AddTransient<>
+        //}
+
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddTransient<GenreValidator>();
