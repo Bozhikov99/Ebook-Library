@@ -37,6 +37,10 @@
         public const string USER_EXISTS = "Username is already taken";
         public const string EMAIL_EXISTS = "Email is already taken";
 
+        public const string ROLES_EMPTY = "Roles must not be empty";
+        public const string INVALID_ROLE_INPUT = "Role name must contain letters only";
+        public const string ROLE_NOT_FOUND = "Role not found";
+
         public const string UNEXPECTED_ERROR = "Unexpected error";
 
     }

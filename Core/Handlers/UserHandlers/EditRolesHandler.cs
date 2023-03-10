@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using AutoMapper;
+using Common.MessageConstants;
 using Core.Commands.UserCommands;
 using Domain.Entities;
 using Infrastructure.Common;
@@ -29,6 +30,9 @@ namespace Core.Handlers.UserHandlers
             bool isSuccessful = false;
 
             User user = await repository.GetByIdAsync<User>(id);
+
+            ArgumentNullException.ThrowIfNull(user, ErrorMessageConstants.INVALID_USER);
+
             IEnumerable<string> userRoles = await userManager.GetRolesAsync(user);
 
             await userManager.RemoveFromRolesAsync(user, userRoles);

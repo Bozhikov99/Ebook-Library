@@ -33,5 +33,11 @@ namespace Api.Controllers
                 return BadRequest(ErrorMessageConstants.UNEXPECTED_ERROR);
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Details(string id)
+        {
+            return Ok();
+        }
     }
 }

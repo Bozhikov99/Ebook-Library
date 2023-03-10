@@ -28,6 +28,11 @@ namespace Api.Controllers
         {
             string userId = userIdHelper.GetUserId();
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
             return Ok(userId);
         }
 

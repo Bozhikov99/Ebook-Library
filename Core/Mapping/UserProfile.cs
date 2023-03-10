@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Core.ApiModels.User;
 using Core.ViewModels.User;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Core.Mapping
 {
@@ -17,6 +19,8 @@ namespace Core.Mapping
             CreateMap<User, UserProfileModel>();
 
             CreateMap<User, ListUserModel>();
+
+            CreateMap<IdentityRole, RoleInfoModel>();
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Subscribe(CreateSubscriptionModel model)
         {
-
             try
             {
                 await mediator.Send(new CreateSubscriptionCommand(model));
