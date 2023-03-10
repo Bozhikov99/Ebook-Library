@@ -51,7 +51,6 @@
     <Folder Include="Validators\" />
     <Folder Include="Commands\SubscriptionCommands\" />
     <Folder Include="Handlers\SubscriptionHandlers\" />
-    <Folder Include="Handlers\UserHandlers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Handlers\ReviewHandlers\" />
     <Folder Include="Commands\ReviewCommands\" />

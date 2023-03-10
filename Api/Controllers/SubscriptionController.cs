@@ -13,10 +13,12 @@ namespace Api.Controllers
     public class SubscriptionController : ApiBaseController
     {
         private readonly IMediator mediator;
+        private readonly UserIdHelper userIdHelper;
 
-        public SubscriptionController(IMediator mediator)
+        public SubscriptionController(IMediator mediator, UserIdHelper userIdHelper)
         {
             this.mediator = mediator;
+            this.userIdHelper = userIdHelper;
         }
 
         [HttpGet]
@@ -24,9 +26,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<string> Subscribe()
         {
-            string userId = User.Claims
-                .First()
-                .Value;
+            string userId = userIdHelper.GetUserId();
 
             return Ok(userId);
         }

@@ -1,9 +1,6 @@
 ﻿using System;
-using Api.Authentication;
-using Api.Authentication.Interfaces;
 using AutoMapper;
 using Common.MessageConstants;
-using Core.Authentication;
 using Core.Commands.UserCommands;
 using Core.ViewModels.User;
 using Domain.Entities;
@@ -54,7 +51,7 @@ namespace Core.Handlers.UserHandlers
             }
 
             await signInManager.SignInAsync(user, true);
-
+            
             //string token = jwtProvider.GenerateToken(model);
 
             isSuccessful = true;

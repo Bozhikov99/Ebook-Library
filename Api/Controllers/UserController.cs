@@ -1,5 +1,6 @@
 ﻿using Common.MessageConstants;
 using Core.Commands.UserCommands;
+using Core.Queries.User;
 using Core.ViewModels.User;
 using Domain.Exceptions;
 using MediatR;
@@ -80,22 +81,23 @@ namespace Api.Controllers
                 return BadRequest(ErrorMessageConstants.LOGIN_UNEXPECTED);
             }
 
-            string token = CreateToken(model);
+            string token = await CreateToken(model);
 
             return Ok(token);
         }
 
 
         //move this in Core
-        private string CreateToken(LoginUserModel model)
+        private async Task<string> CreateToken(LoginUserModel model)
         {
+            string userId = await mediator.Send(new GetUserIdByUsernameQuery(model.UserName));
+
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, model.UserName)
+                new Claim(ClaimTypes.Name, model.UserName),
+                new Claim(ClaimTypes.NameIdentifier, userId)
             };
 
-            //SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            //    configuration.GetSection("AppSettings:Token").Value));
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 configuration.GetValue<string>(apiKey)));
 
@@ -103,7 +105,10 @@ namespace Api.Controllers
 
             DateTime expiration = DateTime.Now.AddDays(1);
 
-            JwtSecurityToken token = new JwtSecurityToken(claims: claims, expires: expiration, signingCredentials: credentials);
+            JwtSecurityToken token = new JwtSecurityToken(
+                claims: claims, 
+                expires: expiration, 
+                signingCredentials: credentials);
 
             string jwt = new JwtSecurityTokenHandler()
                 .WriteToken(token);
