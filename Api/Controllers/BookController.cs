@@ -166,7 +166,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = RoleConstants.Administrator)]
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -192,6 +192,7 @@ namespace Api.Controllers
         [HttpGet("Reviews/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ListReviewModel>> GetReview([FromRoute] string id)
         {
             try
@@ -211,8 +212,31 @@ namespace Api.Controllers
         }
 
         [Authorize]
+        [HttpDelete("Reviews/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteReview(string id)
+        {
+            try
+            {
+                await mediator.Send(new DeleteReviewCommand(id));
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound(ErrorMessageConstants.REVIEW_NOT_FOUND);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            return NoContent();
+        }
+
+        [Authorize]
         [HttpPost("{bookId}/Reviews")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] CreateReviewApiModel model)
         {
