@@ -121,6 +121,31 @@ namespace Api.Controllers
         }
 
         [Authorize]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete([FromRoute] string id)
+        {
+            try
+            {
+                await mediator.Send(new DeleteBookCommand(id));
+
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.DELETE_BOOK_UNEXPECTED);
+            }
+        }
+
+        #region [Favourite]
+
+        [Authorize]
         [HttpPut("/Follow")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -166,28 +191,9 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [Authorize]
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete([FromRoute] string id)
-        {
-            try
-            {
-                await mediator.Send(new DeleteBookCommand(id));
+        #endregion
 
-                return NoContent();
-            }
-            catch (ArgumentNullException)
-            {
-                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.DELETE_BOOK_UNEXPECTED);
-            }
-        }
+        #region [Review]
 
         [HttpGet("Reviews/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -256,5 +262,7 @@ namespace Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        #endregion
     }
 }
