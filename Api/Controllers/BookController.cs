@@ -221,6 +221,7 @@ namespace Api.Controllers
         [Authorize]
         [HttpDelete("Reviews/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteReview(string id)
         {
@@ -236,6 +237,10 @@ namespace Api.Controllers
             catch (NullReferenceException)
             {
                 return NotFound(ErrorMessageConstants.REVIEW_NOT_FOUND);
+            }
+            catch (InvalidOperationException io)
+            {
+                return BadRequest(io.Message);
             }
             catch (Exception)
             {
