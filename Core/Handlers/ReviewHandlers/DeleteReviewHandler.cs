@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core.Handlers.ReviewHandlers
 {
-    public class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand, bool>
+    public class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand>
     {
         private readonly IRepository repository;
 
@@ -15,18 +15,14 @@ namespace Core.Handlers.ReviewHandlers
             this.repository = repository;
         }
 
-        public async Task<bool> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
         {
-            bool isDeleted = false;
-
             string id = request.Id;
 
             await repository.DeleteAsync<Review>(id);
             await repository.SaveChangesAsync();
 
-            isDeleted = true;
-
-            return isDeleted;
+            return Unit.Value;
         }
     }
 }

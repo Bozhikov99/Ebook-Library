@@ -12,6 +12,7 @@ using Core.Queries.Review;
 using Core.Queries.User;
 using Core.ViewModels.Book;
 using Core.ViewModels.Review;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> DetailsUser([FromRoute] string id)
+        public async Task<ActionResult<BookDetailsApiModel>> DetailsUser([FromRoute] string id)
         {
             string userId = helper.GetUserId();
 
@@ -76,7 +77,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> DetailGuest([FromRoute] string id)
+        public async Task<ActionResult<BookDetailsApiModel>> DetailGuest([FromRoute] string id)
         {
             try
             {
@@ -99,7 +100,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status402PaymentRequired)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Read([FromRoute] string id)
+        public async Task<ActionResult> Read([FromRoute] string id)
         {
             try
             {
@@ -225,7 +226,12 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteReviewCommand(id));
+                string userId = helper.GetUserId();
+
+                bool isAdmin = await mediator.Send(new IsUserAdminQuery());
+                IRequest request = isAdmin ? new DeleteReviewCommand(id) : new DeleteReviewApiCommand(id, userId);
+
+                await mediator.Send(request);
             }
             catch (NullReferenceException)
             {

@@ -11,7 +11,6 @@
         public const string EDIT_GENRE_UNEXPECTED = "Unexpected error editing a genre";
         public const string DELETE_GENRE_UNEXPECTED = "Unexpected error deleting a genre";
 
-
         public const string AUTHOR_EXISTS = "Author \"{0}\" already exists";
         public const string CREATE_AUTHOR_UNEXPECTED = "Unexpected error creating an author";
         public const string DELETE_AUTHOR_UNEXPECTED = "Unexpected error deleting an author";
@@ -42,6 +41,7 @@
         public const string ROLE_NOT_FOUND = "Role not found";
 
         public const string REVIEW_NOT_FOUND = "Review does not exist";
+        public const string UNAUTHORIZED_REVIEW = "Cannot delete another user's review";
 
         public const string UNEXPECTED_ERROR = "Unexpected error";
 
