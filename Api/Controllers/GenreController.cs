@@ -1,9 +1,11 @@
-﻿using Common.MessageConstants;
+﻿using Common;
+using Common.MessageConstants;
 using Core.ApiModels.Genre;
 using Core.Commands.GenreCommands;
 using Core.Queries.Genre;
 using Core.ViewModels.Genre;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -36,6 +38,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -58,6 +61,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UpsertGenreModel>> Edit([FromRoute] string id)
@@ -75,6 +79,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -101,6 +106,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ListGenreModel>> Create([FromBody] UpsertGenreModel model)

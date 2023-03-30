@@ -41,6 +41,8 @@
         public const string INVALID_ROLE_INPUT = "Role name must contain letters only";
         public const string ROLE_NOT_FOUND = "Role not found";
 
+        public const string REVIEW_NOT_FOUND = "Review does not exist";
+
         public const string UNEXPECTED_ERROR = "Unexpected error";
 
     }

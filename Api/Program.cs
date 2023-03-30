@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection.PortableExecutable;
+using System.Security.Principal;
 using System.Text;
 
 namespace Api
@@ -32,6 +33,7 @@ namespace Api
 
             builder.Services.AddAutomapperProfiles();
             builder.Services.AddApplicationServices();
+            builder.Services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

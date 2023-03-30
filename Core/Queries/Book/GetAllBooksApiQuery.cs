@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Core.Queries.Book
 {
-    public class GetAllBooksApiQuery : IRequest<BooksModel>
+    public class GetAllBooksApiQuery : IRequest<BooksBrowsingModel>
     {
         public GetAllBooksApiQuery(string search, string[] genres)
         {

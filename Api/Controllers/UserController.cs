@@ -9,6 +9,7 @@ using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -211,7 +212,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> CreateRole(string roleName)
+        public async Task<ActionResult<IdentityRole>> CreateRole([FromBody] string roleName)
         {
             roleName = roleName.Trim();
 

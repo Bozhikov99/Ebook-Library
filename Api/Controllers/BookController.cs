@@ -1,8 +1,19 @@
-﻿using Common.MessageConstants;
+﻿using Common;
+using Common.MessageConstants;
+using Common.ValidationConstants;
 using Core.ApiModels.Books;
+using Core.ApiModels.Review;
+using Core.Commands.BookCommands;
+using Core.Commands.ReviewCommands;
+using Core.Commands.UserCommands;
+using Core.Helpers;
 using Core.Queries.Book;
+using Core.Queries.Review;
+using Core.Queries.User;
 using Core.ViewModels.Book;
+using Core.ViewModels.Review;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -11,10 +22,12 @@ namespace Api.Controllers
     public class BookController : ApiBaseController
     {
         private readonly IMediator mediator;
+        private readonly UserIdHelper helper;
 
-        public BookController(IMediator mediator)
+        public BookController(IMediator mediator, UserIdHelper helper)
         {
             this.mediator = mediator;
+            this.helper = helper;
         }
 
         [HttpGet]
@@ -24,7 +37,7 @@ namespace Api.Controllers
         {
             try
             {
-                BooksModel books = await mediator.Send(new GetAllBooksApiQuery(search, genres));
+                BooksBrowsingModel books = await mediator.Send(new GetAllBooksApiQuery(search, genres));
 
                 return Ok(books);
             }
@@ -34,10 +47,190 @@ namespace Api.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult> Details(string id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> DetailsUser([FromRoute] string id)
         {
-            return Ok();
+            string userId = helper.GetUserId();
+
+            try
+            {
+                BookDetailsApiModel model = await mediator.Send(new GetUserBookDetailsApiQuery(id, userId));
+
+                return Ok(model);
+            }
+            catch (InvalidOperationException io)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("{id}/Guest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> DetailGuest([FromRoute] string id)
+        {
+            try
+            {
+                BookDetailsApiModel model = await mediator.Send(new GetGuestBookDetailsApiQuery(id));
+
+                return Ok(model);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("{id}/Read")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status402PaymentRequired)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Read([FromRoute] string id)
+        {
+            try
+            {
+                bool isSubscribed = await mediator.Send(new IsUserSubscribedQuery());
+
+                if (!isSubscribed)
+                {
+                    return StatusCode(StatusCodes.Status402PaymentRequired);
+                }
+
+                byte[] content = await mediator.Send(new GetContentQuery(id));
+
+                return File(content, BookConstants.AllowedContentType);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("/Follow")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddToFavourites([FromBody] string id)
+        {
+            try
+            {
+                await mediator.Send(new AddBookToFavouritesCommand(id));
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("/Unfollow")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RemoveFromFavourites([FromBody] string id)
+        {
+            try
+            {
+                await mediator.Send(new RemoveBookFromFavouritesCommand(id));
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = RoleConstants.Administrator)]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete([FromRoute] string id)
+        {
+            try
+            {
+                await mediator.Send(new DeleteBookCommand(id));
+
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.DELETE_BOOK_UNEXPECTED);
+            }
+        }
+
+        [HttpGet("Reviews/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ListReviewModel>> GetReview([FromRoute] string id)
+        {
+            try
+            {
+                ListReviewModel model = await mediator.Send(new GetReviewQuery(id));
+
+                return Ok(model);
+            }
+            catch (ArgumentNullException an)
+            {
+                return NotFound(an.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("{bookId}/Reviews")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] CreateReviewApiModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                ListReviewModel review = await mediator.Send(new CreateReviewApiCommand(bookId, model));
+
+                return Created(nameof(GetReview), review);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

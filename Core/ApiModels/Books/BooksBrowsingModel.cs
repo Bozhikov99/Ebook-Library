@@ -2,7 +2,7 @@
 
 namespace Core.ApiModels.Books
 {
-    public class BooksModel
+    public class BooksBrowsingModel
     {
         public IEnumerable<ListBookModel> Books { get; set; } = new List<ListBookModel>();
 

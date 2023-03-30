@@ -45,14 +45,11 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Queries\Review\" />
     <Folder Include="Queries\Subscription\" />
     <Folder Include="Validators\" />
     <Folder Include="Commands\SubscriptionCommands\" />
     <Folder Include="Handlers\SubscriptionHandlers\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Handlers\ReviewHandlers\" />
-    <Folder Include="Commands\ReviewCommands\" />
     <Folder Include="Commands\BookCommands\" />
   </ItemGroup>
 </Project>

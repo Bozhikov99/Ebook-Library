@@ -1,11 +1,14 @@
 ﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using Common;
 using Common.MessageConstants;
 using Core.ApiModels.Author;
 using Core.Commands.AuthorCommands;
 using Core.Queries.Author;
 using Core.ViewModels.Author;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Api.Controllers
 {
@@ -35,6 +38,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Delete([FromRoute] string id)
@@ -52,6 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,6 +79,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -100,6 +106,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ListAuthorModel>> Add([FromBody] UpsertAuthorModel model)

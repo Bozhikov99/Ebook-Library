@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.ApiModels.Review;
 using Core.ViewModels.Review;
 using Domain.Entities;
 
@@ -9,6 +10,8 @@ namespace Core.Mapping
         public ReviewProfile()
         {
             CreateMap<CreateReviewModel, Review>();
+
+            CreateMap<CreateReviewApiModel, Review>();
 
             CreateMap<Review, UserReviewModel>();
 

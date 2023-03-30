@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 
 namespace Core.Handlers.BookHandlers
 {
-    public class GetAllBooksApiHandler : IRequestHandler<GetAllBooksApiQuery, BooksModel>
+    public class GetAllBooksApiHandler : IRequestHandler<GetAllBooksApiQuery, BooksBrowsingModel>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
@@ -23,7 +23,7 @@ namespace Core.Handlers.BookHandlers
             this.mapper = mapper;
         }
 
-        public async Task<BooksModel> Handle(GetAllBooksApiQuery request, CancellationToken cancellationToken)
+        public async Task<BooksBrowsingModel> Handle(GetAllBooksApiQuery request, CancellationToken cancellationToken)
         {
             string search = request.Search;
             string[] genres = request.Genres;
@@ -55,7 +55,7 @@ namespace Core.Handlers.BookHandlers
                     .ToArrayAsync();
             }
 
-            BooksModel model = new BooksModel
+            BooksBrowsingModel model = new BooksBrowsingModel
             {
                 Books = books,
                 Genres = genres

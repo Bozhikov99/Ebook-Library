@@ -26,7 +26,7 @@ namespace Core.Handlers.UserHandlers
             string bookId = request.BookId;
             string userId = helper.GetUserId();
 
-            User user = repository.All<User>()
+            User user = repository.AllReadonly<User>()
                 .Include(u => u.FavouriteBooks)
                 .First(u => u.Id == userId);
 
