@@ -192,7 +192,6 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditBookModel model, IFormFile cover, IFormFile content)
         {
-            string coverContentType = cover.ContentType;
             EditBookModel bookModel = await mediator.Send(new GetEditModelQuery(model.Id));
 
             if (cover == null || cover.Length == 0)
@@ -206,6 +205,9 @@ namespace Web.Areas.Admin.Controllers
 
                 return View(bookModel);
             }
+
+            string coverContentType = cover.ContentType;
+
             if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
             {
                 TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;

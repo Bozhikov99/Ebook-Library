@@ -14,5 +14,11 @@
         public static string[] AllowedImageTypes = { "image/jpeg", "image/jpg", "image/png" };
 
         public const string AllowedContentType = "application/pdf";
+
+        public const int COVER_MINLENGTH = 102400;
+        public const int COVER_MAXLENGTH = 52428800;
+        
+        public const int CONTENT_MINLENGTH = 51200;
+        public const int CONTENT_MAXLENGTH = 8388608;
     }
 }

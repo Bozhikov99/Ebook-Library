@@ -16,6 +16,8 @@
         public const string DELETE_AUTHOR_UNEXPECTED = "Unexpected error deleting an author";
         public const string EDIT_AUTHOR_UNEXPECTED = "Unexpected error editing an author";
 
+        public const string COVER_SIZE = "Book cover must be between 100 KB and 50 MB";
+        public const string CONTENT_SIZE = "Book cover must be between 50 KB and 8 MB";
         public const string COVER_ISNULL = "You must upload the book's cover";
         public const string CONTENT_ISNULL = "You must upload the book's content";
         public const string COVER_INVALID_FORMAT = "Invalid cover image format";

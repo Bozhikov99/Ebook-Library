@@ -1,4 +1,6 @@
-﻿using Common;
+﻿using Api.Helpers;
+using AutoMapper;
+using Common;
 using Common.MessageConstants;
 using Common.ValidationConstants;
 using Core.ApiModels.Books;
@@ -7,7 +9,9 @@ using Core.Commands.BookCommands;
 using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
 using Core.Helpers;
+using Core.Queries.Author;
 using Core.Queries.Book;
+using Core.Queries.Genre;
 using Core.Queries.Review;
 using Core.Queries.User;
 using Core.ViewModels.Book;
@@ -23,12 +27,14 @@ namespace Api.Controllers
     public class BookController : ApiBaseController
     {
         private readonly IMediator mediator;
+        private readonly IMapper mapper;
         private readonly UserIdHelper helper;
 
-        public BookController(IMediator mediator, UserIdHelper helper)
+        public BookController(IMediator mediator, IMapper mapper, UserIdHelper helper)
         {
             this.mediator = mediator;
             this.helper = helper;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -71,6 +77,89 @@ namespace Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+        }
+
+        [Authorize(Roles = RoleConstants.Administrator)]
+        [HttpGet("Add")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<BookInputDataModel>> Add()
+        {
+            BookInputDataModel model = await LoadBookInputData();
+
+            return Ok(model);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Add([FromBody] BookInputModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            IEnumerable<string> errors = BookInputValidationHelper.Validate(model);
+
+            if (errors.Any())
+            {
+                return BadRequest(errors);
+            }
+
+            CreateBookModel createBookModel = mapper.Map<CreateBookModel>(model);
+            await mediator.Send(new CreateBookCommand(createBookModel));
+
+            return Created(nameof(DetailsUser), model);
+        }
+
+        [Authorize(Roles = RoleConstants.Administrator)]
+        [HttpGet("{id}/Edit")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EditBookResponseModel>> Edit([FromRoute] string id)
+        {
+            BookInputDataModel bookData = await LoadBookInputData();
+            try
+            {
+                BookInputModel model = await mediator.Send(new GetBookInputModelQuery(id));
+
+                EditBookResponseModel response = new EditBookResponseModel
+                {
+                    Id = id,
+                    BookData = bookData,
+                    Model = model
+                };
+
+                return Ok(response);
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+            }
+        }
+
+        [Authorize(Roles = RoleConstants.Administrator)]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] BookInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            IEnumerable<string> errors = BookInputValidationHelper.Validate(model);
+
+            if (errors.Any())
+            {
+                return BadRequest(errors);
+            }
+
+            EditBookModel editModel = mapper.Map<EditBookModel>(model);
+            editModel.Id = id;
+
+            await mediator.Send(new EditBookCommand(editModel));
+
+            return NoContent();
         }
 
         [HttpGet("{id}/Guest")]
@@ -275,5 +364,15 @@ namespace Api.Controllers
         }
 
         #endregion
+
+        private async Task<BookInputDataModel> LoadBookInputData()
+        {
+            BookInputDataModel model = new BookInputDataModel();
+
+            model.Authors= await mediator.Send(new GetAllAuthorsQuery());
+            model.Genres= await mediator.Send(new GetAllGenresQuery());
+
+            return model;
+        }
     }
 }

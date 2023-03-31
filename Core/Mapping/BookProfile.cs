@@ -11,6 +11,14 @@ namespace Core.Mapping
         {
             CreateMap<CreateBookModel, Book>();
 
+            CreateMap<BookInputModel, CreateBookModel>();
+
+            CreateMap<BookInputModel, EditBookModel>();
+
+            CreateMap<Book, BookInputModel>()
+                .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.Cover, s => s.Ignore());
+
             CreateMap<Book, ListBookModel>()
                 .ForMember(d => d.Genres, s => s.MapFrom(b => b.Genres.Select(r => r.Name)))
                 .ForMember(d => d.Author, s => s.MapFrom(b => $"{b.Author.FirstName} {b.Author.LastName}"))
@@ -20,6 +28,8 @@ namespace Core.Mapping
                          .Sum() / b.Reviews.Count));
 
             CreateMap<Book, EditBookModel>()
+                .ForMember(d => d.Content, s => s.Ignore())
+                .ForMember(d => d.Cover, s => s.Ignore())
                 .ReverseMap();
 
             CreateMap<Book, BookDetailsModel>()
