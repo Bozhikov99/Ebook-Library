@@ -32,7 +32,7 @@ namespace Core.Handlers.BookHandlers
 
             if (!isExisting)
             {
-                throw new ArgumentNullException(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
+                throw new ArgumentNullException();
             }
 
             Book book = await repository.GetByIdAsync<Book>(id);
