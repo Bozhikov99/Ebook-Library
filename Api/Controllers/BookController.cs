@@ -368,8 +368,8 @@ namespace Api.Controllers
         {
             BookInputDataModel model = new BookInputDataModel();
 
-            model.Authors= await mediator.Send(new GetAllAuthorsQuery());
-            model.Genres= await mediator.Send(new GetAllGenresQuery());
+            model.Authors = await mediator.Send(new GetAllAuthorsQuery());
+            model.Genres = await mediator.Send(new GetAllGenresQuery());
 
             return model;
         }
