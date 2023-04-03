@@ -1,6 +1,6 @@
 ﻿namespace Core.ApiModels.OutputModels.Author
 {
-    public class ListAuthorApiModel : OutputBaseModel
+    public class ListAuthorOutputModel : OutputBaseModel
     {
         public string FirstName { get; set; }
 
