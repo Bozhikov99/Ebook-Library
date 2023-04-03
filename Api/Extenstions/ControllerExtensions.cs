@@ -14,7 +14,9 @@ namespace Api.Extenstions
                 .Host
                 .Value;
 
-            string link = controller.Url.Action(action, controllerName, values, scheme, host);
+            string link = controller
+                .Url
+                .Action(action, controllerName, values, scheme, host);
 
             return link;
         }
@@ -35,7 +37,9 @@ namespace Api.Extenstions
                 .Host
                 .Value;
 
-            string link = controller.Url.Action(action, controllerName, values, scheme, host);
+            string link = controller
+                .Url
+                .Action(action, controllerName, values, scheme, host);
 
             return link;
         }
