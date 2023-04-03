@@ -16,7 +16,6 @@ using Core.Queries.Review;
 using Core.Queries.User;
 using Core.ViewModels.Book;
 using Core.ViewModels.Review;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
