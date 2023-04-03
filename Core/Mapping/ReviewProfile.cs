@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.ApiModels.Review;
+using Core.ApiModels.InputModels.Review;
 using Core.ViewModels.Review;
 using Domain.Entities;
 
@@ -11,7 +11,7 @@ namespace Core.Mapping
         {
             CreateMap<CreateReviewModel, Review>();
 
-            CreateMap<CreateReviewApiModel, Review>();
+            CreateMap<ReviewInputModel, Review>();
 
             CreateMap<Review, UserReviewModel>();
 

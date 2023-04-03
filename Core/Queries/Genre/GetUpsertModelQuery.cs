@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.Genre;
+﻿using Core.ApiModels.InputModels.Genre;
 using MediatR;
 
 namespace Core.Queries.Genre

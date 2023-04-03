@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.Review;
+﻿using Core.ApiModels.InputModels.Review;
 using Core.ViewModels.Review;
 using MediatR;
 
@@ -6,7 +6,7 @@ namespace Core.Commands.ReviewCommands
 {
     public class CreateReviewApiCommand : IRequest<ListReviewModel>
     {
-        public CreateReviewApiCommand(string bookId, CreateReviewApiModel model)
+        public CreateReviewApiCommand(string bookId, ReviewInputModel model)
         {
             BookId = bookId;
             Model = model;
@@ -14,6 +14,6 @@ namespace Core.Commands.ReviewCommands
 
         public string BookId { get; set; }
 
-        public CreateReviewApiModel Model { get; set; }
+        public ReviewInputModel Model { get; set; }
     }
 }

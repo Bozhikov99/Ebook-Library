@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.ApiModels.User;
+using Core.ApiModels.OutputModels.User;
 using Core.ViewModels.User;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;

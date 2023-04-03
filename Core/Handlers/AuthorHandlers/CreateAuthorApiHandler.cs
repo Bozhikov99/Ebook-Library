@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.ApiModels.Author;
+using Core.ApiModels.InputModels.Author;
 using Core.Commands.AuthorCommands;
 using Core.Validators;
 using Core.ViewModels.Author;

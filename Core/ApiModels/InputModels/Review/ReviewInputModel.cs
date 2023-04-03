@@ -1,13 +1,13 @@
 ﻿using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.ApiModels.Review
+namespace Core.ApiModels.InputModels.Review
 {
-    public class CreateReviewApiModel
+    public class ReviewInputModel
     {
         [Range(ReviewConstants.VALUE_MIN, ReviewConstants.VALUE_MAX)]
         public double Value { get; set; }
-        
+
         public string Comment { get; set; }
 
         [Required]

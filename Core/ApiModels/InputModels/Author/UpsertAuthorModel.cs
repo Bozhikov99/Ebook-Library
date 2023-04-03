@@ -2,7 +2,7 @@
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.ApiModels.Author
+namespace Core.ApiModels.InputModels.Author
 {
     public class UpsertAuthorModel
     {

@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.User;
+﻿using Core.ApiModels.OutputModels.User;
 using MediatR;
 
 namespace Core.Queries.User

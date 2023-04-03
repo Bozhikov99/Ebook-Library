@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
-using Core.ApiModels.Books;
+using Core.ApiModels.InputModels.Books;
 using Core.Queries.Book;
 using Domain.Entities;
 using Infrastructure.Common;

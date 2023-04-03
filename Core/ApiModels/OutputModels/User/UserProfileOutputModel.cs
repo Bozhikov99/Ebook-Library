@@ -1,14 +1,9 @@
 ﻿using Core.ViewModels.Book;
 using Core.ViewModels.Subscription;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.ApiModels.User
+namespace Core.ApiModels.OutputModels.User
 {
-    public class ProfileModel
+    public class UserProfileOutputModel: OutputBaseModel
     {
         public string UserName { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using Core.ViewModels.Author;
 using Core.ViewModels.Genre;
 
-namespace Core.ApiModels.Books
+namespace Core.ApiModels.InputModels.Books
 {
     public class BookInputDataModel
     {

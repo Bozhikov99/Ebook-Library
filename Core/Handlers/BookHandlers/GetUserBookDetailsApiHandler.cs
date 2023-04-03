@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Core.ApiModels.Books;
+using Core.ApiModels.InputModels.Books;
 using Core.Helpers;
 using Core.Queries.Book;
 using Core.ViewModels.Review;

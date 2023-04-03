@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.MessageConstants;
-using Core.ApiModels.User;
+using Core.ApiModels.OutputModels.User;
 using Core.Commands.UserCommands;
 using Core.Queries.User;
 using Core.ViewModels.Book;
@@ -158,7 +158,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProfileModel>> Profile()
+        public async Task<ActionResult<UserProfileOutputModel>> Profile()
         {
             try
             {
@@ -172,7 +172,7 @@ namespace Api.Controllers
                 IEnumerable<ListBookModel> books = await mediator.Send(new GetFavouriteBooksQuery());
                 ListSubscriptionModel Subscription = await mediator.Send(new GetActiveSubscriptionQuery());
 
-                ProfileModel model = new ProfileModel
+                UserProfileOutputModel model = new UserProfileOutputModel
                 {
                     Email = profile.Email,
                     UserName = profile.UserName,

@@ -1,19 +1,21 @@
 ﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Common;
 using Common.MessageConstants;
-using Core.ApiModels.Author;
+using Core.ApiModels;
+using Core.ApiModels.InputModels.Author;
+using Core.ApiModels.OutputModels;
 using Core.Commands.AuthorCommands;
 using Core.Queries.Author;
 using Core.ViewModels.Author;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using System.Collections;
 
 namespace Api.Controllers
 {
     [Route("[controller]s")]
-    public class AuthorController : ApiBaseController
+    public class AuthorController : RestController
     {
         private readonly IMediator mediator;
 
@@ -37,6 +39,12 @@ namespace Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetAuthor(string id)
+        {
+            return NotFound();
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -55,7 +63,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/Edit")]
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -125,6 +133,23 @@ namespace Api.Controllers
             {
                 return BadRequest(ErrorMessageConstants.UNEXPECTED_ERROR);
             }
+        }
+
+        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        {
+            if (model is null)
+            {
+                return Enumerable.Empty<HateoasLink>();
+            }
+
+            //IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            //{
+            //    new HateoasLink{ Method = nameof()}
+            //};
+
+
+
+            throw new NotImplementedException();
         }
     }
 }

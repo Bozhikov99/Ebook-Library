@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.Books;
+﻿using Core.ApiModels.InputModels.Books;
 using MediatR;
 
 namespace Core.Queries.Book

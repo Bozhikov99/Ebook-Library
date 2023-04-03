@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Core.ApiModels.Books;
+using Core.ApiModels.InputModels.Books;
 using Core.Queries.Book;
 using Core.ViewModels.Book;
 using Domain.Entities;

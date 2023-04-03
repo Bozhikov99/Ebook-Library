@@ -2,7 +2,7 @@
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.ApiModels.Books
+namespace Core.ApiModels.InputModels.Books
 {
     public class BookInputModel
     {

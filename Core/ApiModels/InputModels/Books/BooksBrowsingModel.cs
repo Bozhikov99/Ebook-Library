@@ -1,6 +1,6 @@
 ﻿using Core.ViewModels.Book;
 
-namespace Core.ApiModels.Books
+namespace Core.ApiModels.InputModels.Books
 {
     public class BooksBrowsingModel
     {

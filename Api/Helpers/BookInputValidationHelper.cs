@@ -1,6 +1,6 @@
 ﻿using Common.MessageConstants;
 using Common.ValidationConstants;
-using Core.ApiModels.Books;
+using Core.ApiModels.InputModels.Books;
 
 namespace Api.Helpers
 {

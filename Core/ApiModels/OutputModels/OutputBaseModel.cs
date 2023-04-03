@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Core.ApiModels
+namespace Core.ApiModels.OutputModels
 {
-    public abstract class OutputModel
+    public abstract class OutputBaseModel
     {
         public string Id { get; set; }
 

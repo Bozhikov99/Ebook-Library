@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.Author;
+﻿using Core.ApiModels.InputModels.Author;
 using MediatR;
 
 namespace Core.Queries.Author

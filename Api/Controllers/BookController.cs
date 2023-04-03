@@ -3,8 +3,8 @@ using AutoMapper;
 using Common;
 using Common.MessageConstants;
 using Common.ValidationConstants;
-using Core.ApiModels.Books;
-using Core.ApiModels.Review;
+using Core.ApiModels.InputModels.Books;
+using Core.ApiModels.InputModels.Review;
 using Core.Commands.BookCommands;
 using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
@@ -343,7 +343,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] CreateReviewApiModel model)
+        public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] ReviewInputModel model)
         {
             if (!ModelState.IsValid)
             {

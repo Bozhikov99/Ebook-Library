@@ -2,7 +2,7 @@
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.ApiModels.Genre
+namespace Core.ApiModels.InputModels.Genre
 {
     public class UpsertGenreModel
     {

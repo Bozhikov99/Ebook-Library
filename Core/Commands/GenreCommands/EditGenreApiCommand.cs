@@ -1,4 +1,4 @@
-﻿using Core.ApiModels.Genre;
+﻿using Core.ApiModels.InputModels.Genre;
 using Core.ViewModels.Genre;
 using MediatR;
 

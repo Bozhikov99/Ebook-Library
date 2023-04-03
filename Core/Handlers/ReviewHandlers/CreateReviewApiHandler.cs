@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
-using Core.ApiModels.Review;
+using Core.ApiModels.InputModels.Review;
 using Core.Commands.ReviewCommands;
 using Core.ViewModels.Book;
 using Core.ViewModels.Review;
@@ -26,7 +26,7 @@ namespace Core.Handlers.ReviewHandlers
         public async Task<ListReviewModel> Handle(CreateReviewApiCommand request, CancellationToken cancellationToken)
         {
             string bookId = request.BookId;
-            CreateReviewApiModel model = request.Model;
+            ReviewInputModel model = request.Model;
 
             bool isExistingBook = await repository.AnyAsync<Book>(b => b.Id == bookId);
 

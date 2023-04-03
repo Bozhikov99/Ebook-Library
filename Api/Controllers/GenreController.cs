@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.MessageConstants;
-using Core.ApiModels.Genre;
+using Core.ApiModels.InputModels.Genre;
 using Core.Commands.GenreCommands;
 using Core.Queries.Genre;
 using Core.ViewModels.Genre;

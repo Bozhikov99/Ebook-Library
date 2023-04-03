@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
-using Core.ApiModels.User;
+using Core.ApiModels.OutputModels.User;
 using Core.Queries.User;
 using Domain.Entities;
 using Infrastructure.Common;
