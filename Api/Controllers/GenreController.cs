@@ -38,11 +38,7 @@ namespace Api.Controllers
                 IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
                 IEnumerable<ListGenreOutputModel> outputModels = mapper.Map<IEnumerable<ListGenreOutputModel>>(genres);
 
-                foreach (ListGenreOutputModel o in outputModels)
-                {
-                    IEnumerable<HateoasLink> links = GetLinks(o);
-                    o.Links = links;
-                }
+                AttachLinks(outputModels);
 
                 return Ok(outputModels);
             }

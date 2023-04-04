@@ -13,8 +13,6 @@ using Core.ViewModels.Author;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
 
 namespace Api.Controllers
 {
@@ -38,11 +36,7 @@ namespace Api.Controllers
                 IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
                 IEnumerable<ListAuthorOutputModel> outputModels = mapper.Map<IEnumerable<ListAuthorOutputModel>>(authors);
 
-                foreach (ListAuthorOutputModel o in outputModels)
-                {
-                    IEnumerable<HateoasLink> links = GetLinks(o);
-                    o.Links = links;
-                }
+                AttachLinks(outputModels);
 
                 return Ok(outputModels);
             }
@@ -141,7 +135,7 @@ namespace Api.Controllers
                 return BadRequest(ErrorMessageConstants.UNEXPECTED_ERROR);
             }
         }
-        //Void AttachLinks()?
+
         protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
         {
             if (model is null)
