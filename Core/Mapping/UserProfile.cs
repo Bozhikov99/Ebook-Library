@@ -21,6 +21,14 @@ namespace Core.Mapping
             CreateMap<User, ListUserModel>();
 
             CreateMap<IdentityRole, RoleInfoModel>();
+
+            #region [Output Model]
+
+            CreateMap<UserProfileModel, UserProfileOutputModel>();
+
+            CreateMap<User, UserProfileOutputModel>();
+
+            #endregion
         }
     }
 }

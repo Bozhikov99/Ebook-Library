@@ -1,5 +1,4 @@
-﻿using System;
-using Core.ViewModels.User;
+﻿using Core.ViewModels.User;
 using MediatR;
 
 namespace Core.Queries.User

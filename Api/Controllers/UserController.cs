@@ -1,5 +1,10 @@
-﻿using Common;
+﻿using Api.Extenstions;
+using AutoMapper;
+using Common;
+using Common.ApiConstants;
 using Common.MessageConstants;
+using Core.ApiModels;
+using Core.ApiModels.OutputModels;
 using Core.ApiModels.OutputModels.User;
 using Core.Commands.UserCommands;
 using Core.Queries.User;
@@ -9,11 +14,9 @@ using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,10 +25,11 @@ using System.Text;
 namespace Api.Controllers
 {
     [Route("[controller]")]
-    public class UserController : ApiBaseController
+    public class UserController : RestController
     {
         private const string apiKey = "ApiKey";
         private readonly IMediator mediator;
+        private readonly IMapper mapper;
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
@@ -34,12 +38,14 @@ namespace Api.Controllers
             IMediator mediator,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
+            IMapper mapper,
             IConfiguration configuration)
         {
             this.mediator = mediator;
             this.roleManager = roleManager;
             this.configuration = configuration;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -105,11 +111,14 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ListUserModel>>> ManageUsers()
+        public async Task<ActionResult<IEnumerable<ListUserModel>>> List()
         {
             try
             {
                 IEnumerable<ListUserModel> users = await mediator.Send(new GetAllUsersQuery());
+                IEnumerable<ListUserOutputModel> outputModels = mapper.Map<IEnumerable<ListUserOutputModel>>(users);
+
+                AttachLinks(outputModels);
 
                 return Ok(users);
             }
@@ -152,17 +161,18 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("Profile")]
         [Authorize]
+        [HttpGet("{id}/Profile")]
+        [HttpHead("{id}/Profile")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UserProfileOutputModel>> Profile()
+        public async Task<ActionResult<UserProfileOutputModel>> Profile([FromRoute] string id)
         {
             try
             {
-                UserProfileModel profile = await mediator.Send(new GetUserProfileQuery());
+                UserProfileOutputModel profile = await mediator.Send(new GetProfileQuery(id));
 
                 if (profile is null)
                 {
@@ -170,18 +180,14 @@ namespace Api.Controllers
                 }
 
                 IEnumerable<ListBookModel> books = await mediator.Send(new GetFavouriteBooksQuery());
-                ListSubscriptionModel Subscription = await mediator.Send(new GetActiveSubscriptionQuery());
+                ListSubscriptionModel subscriptions = await mediator.Send(new GetActiveSubscriptionQuery());
 
-                UserProfileOutputModel model = new UserProfileOutputModel
-                {
-                    Email = profile.Email,
-                    UserName = profile.UserName,
-                    RegisterDate = profile.RegisterDate,
-                    Books = books,
-                    Subscription = Subscription
-                };
+                profile.Books = books;
+                profile.Subscription = subscriptions;
 
-                return Ok(model);
+                AttachLinks(profile);
+
+                return Ok(profile);
             }
             catch (Exception)
             {
@@ -189,8 +195,8 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("Roles/{id}")]
         [Authorize]
+        [HttpGet("Roles/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<RoleInfoModel>>> GetRole([FromRoute] string id)
@@ -291,6 +297,34 @@ namespace Api.Controllers
                 .WriteToken(token);
 
             return jwt;
+        }
+
+        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        {
+            IEnumerable<HateoasLink> links = GetUserLinks(model);
+
+            return links;
+        }
+
+        private IEnumerable<HateoasLink> GetUserLinks(OutputBaseModel model)
+        {
+            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            {
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(Profile), new {model.Id}),
+                    Rel = LinkConstants.SELF,
+                    Method = HttpMethods.Get
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(EditUserRoles), new {model.Id}),
+                    Rel = LinkConstants.UPDATE_ROLES,
+                    Method = HttpMethods.Put
+                }
+            };
+
+            return links;
         }
     }
 }
