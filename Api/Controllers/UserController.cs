@@ -111,7 +111,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ListUserModel>>> List()
+        public async Task<ActionResult<IEnumerable<ListUserOutputModel>>> List()
         {
             try
             {
@@ -120,7 +120,7 @@ namespace Api.Controllers
 
                 AttachLinks(outputModels);
 
-                return Ok(users);
+                return Ok(outputModels);
             }
             catch (Exception)
             {

@@ -28,6 +28,8 @@ namespace Core.Mapping
 
             CreateMap<User, UserProfileOutputModel>();
 
+            CreateMap<ListUserModel, ListUserOutputModel>();
+
             #endregion
         }
     }
