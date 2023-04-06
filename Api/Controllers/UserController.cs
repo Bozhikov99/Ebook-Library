@@ -157,7 +157,7 @@ namespace Api.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.UNEXPECTED_ERROR);
             }
         }
 
@@ -191,7 +191,7 @@ namespace Api.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.UNEXPECTED_ERROR);
             }
         }
 

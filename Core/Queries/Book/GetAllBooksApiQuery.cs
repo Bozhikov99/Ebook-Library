@@ -1,9 +1,9 @@
-﻿using Core.ApiModels.InputModels.Books;
+﻿using Core.ApiModels.ResponseModels;
 using MediatR;
 
 namespace Core.Queries.Book
 {
-    public class GetAllBooksApiQuery : IRequest<BooksBrowsingModel>
+    public class GetAllBooksApiQuery : IRequest<BookBrowsingModel>
     {
         public GetAllBooksApiQuery(string search, string[] genres)
         {

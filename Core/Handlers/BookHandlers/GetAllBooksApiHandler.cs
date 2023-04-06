@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Core.ApiModels.InputModels.Books;
 using Core.Queries.Book;
 using Core.ViewModels.Book;
+using Core.ApiModels.ResponseModels;
 using Domain.Entities;
 using Infrastructure.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
+using Core.ApiModels.OutputModels.Book;
 
 namespace Core.Handlers.BookHandlers
 {
-    public class GetAllBooksApiHandler : IRequestHandler<GetAllBooksApiQuery, BooksBrowsingModel>
+    public class GetAllBooksApiHandler : IRequestHandler<GetAllBooksApiQuery, BookBrowsingModel>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
@@ -23,39 +23,39 @@ namespace Core.Handlers.BookHandlers
             this.mapper = mapper;
         }
 
-        public async Task<BooksBrowsingModel> Handle(GetAllBooksApiQuery request, CancellationToken cancellationToken)
+        public async Task<BookBrowsingModel> Handle(GetAllBooksApiQuery request, CancellationToken cancellationToken)
         {
             string search = request.Search;
             string[] genres = request.Genres;
 
-            IEnumerable<ListBookModel> books;
+            IEnumerable<ListBookOutputModel> books;
 
             if (search == null && genres.Length == 0)
             {
                 books = await repository.All<Book>()
-                    .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                    .ProjectTo<ListBookOutputModel>(mapper.ConfigurationProvider)
                     .ToArrayAsync();
             }
             else if (search == null)
             {
                 books = await repository.All(Search(genres))
-                    .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                    .ProjectTo<ListBookOutputModel>(mapper.ConfigurationProvider)
                     .ToArrayAsync();
             }
             else if (genres.Length == 0)
             {
                 books = await repository.All(Search(search))
-                    .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                    .ProjectTo<ListBookOutputModel>(mapper.ConfigurationProvider)
                     .ToArrayAsync();
             }
             else
             {
                 books = await repository.All(Search(search, genres))
-                    .ProjectTo<ListBookModel>(mapper.ConfigurationProvider)
+                    .ProjectTo<ListBookOutputModel>(mapper.ConfigurationProvider)
                     .ToArrayAsync();
             }
 
-            BooksBrowsingModel model = new BooksBrowsingModel
+            BookBrowsingModel model = new BookBrowsingModel
             {
                 Books = books,
                 Genres = genres

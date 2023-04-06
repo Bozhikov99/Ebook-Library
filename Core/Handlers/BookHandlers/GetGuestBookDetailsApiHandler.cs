@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
 using Core.ApiModels.InputModels.Books;
+using Core.ApiModels.OutputModels.Book;
 using Core.Queries.Book;
-using Core.ViewModels.Review;
 using Domain.Entities;
 using Infrastructure.Common;
 using MediatR;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Handlers.BookHandlers
 {
-    public class GetGuestBookDetailsApiHandler : IRequestHandler<GetGuestBookDetailsApiQuery, BookDetailsApiModel>
+    public class GetGuestBookDetailsApiHandler : IRequestHandler<GetGuestBookDetailsApiQuery, BookDetailsOutputModel>
     {
         private readonly IMapper mapper;
         private readonly IRepository repository;
@@ -21,7 +21,7 @@ namespace Core.Handlers.BookHandlers
             this.repository = repository;
         }
 
-        public async Task<BookDetailsApiModel> Handle(GetGuestBookDetailsApiQuery request, CancellationToken cancellationToken)
+        public async Task<BookDetailsOutputModel> Handle(GetGuestBookDetailsApiQuery request, CancellationToken cancellationToken)
         {
             string bookId = request.BookId;
 
@@ -36,7 +36,7 @@ namespace Core.Handlers.BookHandlers
                 throw new ArgumentNullException(ErrorMessageConstants.BOOK_DOES_NOT_EXIST);
             }
 
-            BookDetailsApiModel model = mapper.Map<BookDetailsApiModel>(book);
+            BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
 
             return model;
         }

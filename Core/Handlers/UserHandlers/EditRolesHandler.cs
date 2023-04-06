@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using AutoMapper;
+﻿using AutoMapper;
 using Common.MessageConstants;
 using Core.Commands.UserCommands;
 using Domain.Entities;

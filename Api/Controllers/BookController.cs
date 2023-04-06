@@ -1,10 +1,16 @@
-﻿using Api.Helpers;
+﻿using Api.Extenstions;
+using Api.Helpers;
 using AutoMapper;
 using Common;
+using Common.ApiConstants;
 using Common.MessageConstants;
 using Common.ValidationConstants;
+using Core.ApiModels;
 using Core.ApiModels.InputModels.Books;
 using Core.ApiModels.InputModels.Review;
+using Core.ApiModels.OutputModels;
+using Core.ApiModels.OutputModels.Book;
+using Core.ApiModels.ResponseModels;
 using Core.Commands.BookCommands;
 using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
@@ -23,7 +29,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [Route("[controller]s")]
-    public class BookController : ApiBaseController
+    public class BookController : RestController
     {
         private readonly IMediator mediator;
         private readonly IMapper mapper;
@@ -39,11 +45,16 @@ namespace Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<ListBookModel>>> All([FromQuery] string? search, [FromQuery] string[]? genres)
+        public async Task<ActionResult<BookBrowsingModel>> All([FromQuery] string? search, [FromQuery] string[]? genres)
         {
             try
             {
-                BooksBrowsingModel books = await mediator.Send(new GetAllBooksApiQuery(search, genres));
+                BookBrowsingModel books = await mediator.Send(new GetAllBooksApiQuery(search, genres));
+
+                books
+                    .Books
+                    .ToList()
+                    .ForEach(b => AttachLinks(b));
 
                 return Ok(books);
             }
@@ -58,13 +69,14 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookDetailsApiModel>> DetailsUser([FromRoute] string id)
+        public async Task<ActionResult<BookDetailsOutputModel>> DetailsUser([FromRoute] string id)
         {
             string userId = helper.GetUserId();
 
             try
             {
-                BookDetailsApiModel model = await mediator.Send(new GetUserBookDetailsApiQuery(id, userId));
+                BookDetailsOutputModel model = await mediator.Send(new GetUserBookDetailsApiQuery(id, userId));
+                AttachLinks(model);
 
                 return Ok(model);
             }
@@ -115,7 +127,7 @@ namespace Api.Controllers
         [HttpGet("{id}/Edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EditBookResponseModel>> Edit([FromRoute] string id)
+        public async Task<ActionResult<EditBookResponseModel>> GetEditModel([FromRoute] string id)
         {
             BookInputDataModel bookData = await LoadBookInputData();
             try
@@ -139,6 +151,8 @@ namespace Api.Controllers
 
         [Authorize(Roles = RoleConstants.Administrator)]
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] BookInputModel model)
         {
             if (!ModelState.IsValid)
@@ -165,11 +179,12 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookDetailsApiModel>> DetailGuest([FromRoute] string id)
+        public async Task<ActionResult<BookDetailsOutputModel>> DetailGuest([FromRoute] string id)
         {
             try
             {
-                BookDetailsApiModel model = await mediator.Send(new GetGuestBookDetailsApiQuery(id));
+                BookDetailsOutputModel model = await mediator.Send(new GetGuestBookDetailsApiQuery(id));
+                AttachLinks(model);
 
                 return Ok(model);
             }
@@ -235,7 +250,7 @@ namespace Api.Controllers
         #region [Favourite]
 
         [Authorize]
-        [HttpPut("/Follow")]
+        [HttpPut("Follow")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -258,7 +273,7 @@ namespace Api.Controllers
         }
 
         [Authorize]
-        [HttpPut("/Unfollow")]
+        [HttpPut("Unfollow")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -372,6 +387,62 @@ namespace Api.Controllers
             model.Genres = await mediator.Send(new GetAllGenresQuery());
 
             return model;
+        }
+
+        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        {
+            if (model is null)
+            {
+                return Enumerable.Empty<HateoasLink>();
+            }
+
+            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            {
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(DetailsUser), new {model.Id}),
+                    Rel = LinkConstants.SELF,
+                    Method = HttpMethods.Get
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(DetailGuest), new {model.Id}),
+                    Rel = LinkConstants.SELF,
+                    Method = HttpMethods.Get
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(Read), new {model.Id}),
+                    Rel = LinkConstants.READ,
+                    Method = HttpMethods.Get
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(AddToFavourites), null),
+                    Rel = LinkConstants.FOLLOW,
+                    Method = HttpMethods.Put
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(RemoveFromFavourites), null),
+                    Rel = LinkConstants.UNFOLLOW,
+                    Method = HttpMethods.Put
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
+                    Rel = LinkConstants.DELETE,
+                    Method = HttpMethods.Delete
+                },
+                new HateoasLink
+                {
+                    Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
+                    Rel = LinkConstants.UPDATE,
+                    Method = HttpMethods.Put
+                }
+            };
+
+            return links;
         }
     }
 }

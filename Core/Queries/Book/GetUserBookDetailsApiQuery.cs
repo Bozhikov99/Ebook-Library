@@ -1,9 +1,10 @@
 ﻿using Core.ApiModels.InputModels.Books;
+using Core.ApiModels.OutputModels.Book;
 using MediatR;
 
 namespace Core.Queries.Book
 {
-    public class GetUserBookDetailsApiQuery : IRequest<BookDetailsApiModel>
+    public class GetUserBookDetailsApiQuery : IRequest<BookDetailsOutputModel>
     {
         public GetUserBookDetailsApiQuery(string bookId, string userId)
         {

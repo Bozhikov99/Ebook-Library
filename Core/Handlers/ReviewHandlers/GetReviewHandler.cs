@@ -23,7 +23,7 @@ namespace Core.Handlers.ReviewHandlers
         {
             string id = request.Id;
 
-            bool isExistingReview = await repository.AnyAsync<Review>(r => r.Id==id);
+            bool isExistingReview = await repository.AnyAsync<Review>(r => r.Id == id);
 
             if (!isExistingReview)
             {
