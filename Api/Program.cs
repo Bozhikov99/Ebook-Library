@@ -34,7 +34,8 @@ namespace Api
             builder.Services.AddAutomapperProfiles();
             builder.Services.AddApplicationServices();
             builder.Services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true)
+                .AddXmlDataContractSerializerFormatters();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -66,12 +67,6 @@ namespace Api
                         ValidateAudience = false
                     };
                 });
-
-            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(o => o.TokenValidationParameters = new()
-            //    {
-            //        ValidateIssuer 
-            //    });
 
             var app = builder.Build();
 
