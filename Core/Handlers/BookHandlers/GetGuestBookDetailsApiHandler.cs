@@ -25,6 +25,7 @@ namespace Core.Handlers.BookHandlers
         {
             string bookId = request.BookId;
 
+            //TODO: Try to optimize this
             Book book = await repository.AllReadonly<Book>(b => b.Id == bookId)
                 .Include(b => b.Genres)
                 .Include(b => b.Author)

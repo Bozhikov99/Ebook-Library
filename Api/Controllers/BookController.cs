@@ -176,6 +176,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}/Guest")]
+        [HttpHead("{id}/Guest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -293,88 +294,6 @@ namespace Api.Controllers
             }
 
             return NoContent();
-        }
-
-        #endregion
-
-        #region [Review]
-
-        [HttpGet("Reviews/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ListReviewModel>> GetReview([FromRoute] string id)
-        {
-            try
-            {
-                ListReviewModel model = await mediator.Send(new GetReviewQuery(id));
-
-                return Ok(model);
-            }
-            catch (ArgumentNullException an)
-            {
-                return NotFound(an.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [Authorize]
-        [HttpDelete("Reviews/{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteReview(string id)
-        {
-            try
-            {
-                string userId = helper.GetUserId();
-
-                bool isAdmin = await mediator.Send(new IsUserAdminQuery());
-                IRequest request = isAdmin ? new DeleteReviewCommand(id) : new DeleteReviewApiCommand(id, userId);
-
-                await mediator.Send(request);
-            }
-            catch (NullReferenceException)
-            {
-                return NotFound(ErrorMessageConstants.REVIEW_NOT_FOUND);
-            }
-            catch (InvalidOperationException io)
-            {
-                return BadRequest(io.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpPost("{bookId}/Reviews")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] ReviewInputModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                ListReviewModel review = await mediator.Send(new CreateReviewApiCommand(bookId, model));
-
-                return Created(nameof(GetReview), review);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
         }
 
         #endregion

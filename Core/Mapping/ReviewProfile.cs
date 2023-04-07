@@ -18,6 +18,8 @@ namespace Core.Mapping
 
             CreateMap<Review, UserReviewOutputModel>();
 
+            CreateMap<ListReviewModel, ListReviewOutputModel>();
+
             CreateMap<Review, ListReviewModel>()
                 .ForMember(d => d.UserName, s => s.MapFrom(r => r.User.UserName));
             
