@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.ApiConstants;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 
 namespace Api.Extenstions
 {
@@ -42,6 +45,32 @@ namespace Api.Extenstions
                 .Action(action, controllerName, values, scheme, host);
 
             return link;
+        }
+
+        public static bool IsHateoasRequired(this ControllerBase controller)
+        {
+            bool isHateoasSet = controller
+                .ControllerContext
+                .HttpContext
+                .Request
+                .Headers
+                .TryGetValue(HeaderConstants.HATEOAS, out StringValues header);
+
+            if (isHateoasSet)
+            {
+                try
+                {
+                    bool isHateoasRequired = bool.Parse(header.ToString());
+
+                    return isHateoasRequired;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
 }

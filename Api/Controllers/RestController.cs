@@ -1,4 +1,5 @@
-﻿using Core.ApiModels;
+﻿using Api.Extenstions;
+using Core.ApiModels;
 using Core.ApiModels.OutputModels;
 
 namespace Api.Controllers
@@ -7,14 +8,20 @@ namespace Api.Controllers
     {
         protected void AttachLinks(OutputBaseModel outputModel)
         {
-            outputModel.Links = GetLinks(outputModel);
+            if (this.IsHateoasRequired())
+            {
+                outputModel.Links = GetLinks(outputModel);
+            }
         }
 
         protected void AttachLinks(IEnumerable<OutputBaseModel> outputModels)
         {
-            foreach (OutputBaseModel o in outputModels)
+            if (this.IsHateoasRequired())
             {
-                o.Links = GetLinks(o);
+                foreach (OutputBaseModel o in outputModels)
+                {
+                    o.Links = GetLinks(o);
+                }
             }
         }
 

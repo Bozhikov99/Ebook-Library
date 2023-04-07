@@ -1,5 +1,4 @@
-﻿using Api.Attributes;
-using Api.Extenstions;
+﻿using Api.Extenstions;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
