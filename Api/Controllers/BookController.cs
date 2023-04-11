@@ -7,24 +7,21 @@ using Common.MessageConstants;
 using Common.ValidationConstants;
 using Core.ApiModels;
 using Core.ApiModels.InputModels.Books;
-using Core.ApiModels.InputModels.Review;
 using Core.ApiModels.OutputModels;
 using Core.ApiModels.OutputModels.Book;
 using Core.ApiModels.ResponseModels;
 using Core.Commands.BookCommands;
-using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
 using Core.Helpers;
 using Core.Queries.Author;
 using Core.Queries.Book;
 using Core.Queries.Genre;
-using Core.Queries.Review;
 using Core.Queries.User;
 using Core.ViewModels.Book;
-using Core.ViewModels.Review;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Api.Controllers
 {
@@ -34,9 +31,11 @@ namespace Api.Controllers
         private readonly IMediator mediator;
         private readonly IMapper mapper;
         private readonly UserIdHelper helper;
+        private readonly IMemoryCache memoryCache;
 
-        public BookController(IMediator mediator, IMapper mapper, UserIdHelper helper)
+        public BookController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache, UserIdHelper helper)
         {
+            this.memoryCache = memoryCache;
             this.mediator = mediator;
             this.helper = helper;
             this.mapper = mapper;
@@ -49,7 +48,12 @@ namespace Api.Controllers
         {
             try
             {
-                BookBrowsingModel books = await mediator.Send(new GetAllBooksApiQuery(search, genres));
+                BookBrowsingModel books = await memoryCache.GetOrCreateAsync(CacheKeyConstants.BOOKS, async (entry) =>
+                {
+                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+
+                    return await mediator.Send(new GetAllBooksApiQuery(search, genres));
+                });
 
                 books
                     .Books
@@ -119,6 +123,7 @@ namespace Api.Controllers
 
             CreateBookModel createBookModel = mapper.Map<CreateBookModel>(model);
             await mediator.Send(new CreateBookCommand(createBookModel));
+            memoryCache.Remove(CacheKeyConstants.BOOKS);
 
             return Created(nameof(DetailsUser), model);
         }
@@ -171,6 +176,8 @@ namespace Api.Controllers
             editModel.Id = id;
 
             await mediator.Send(new EditBookCommand(editModel));
+            memoryCache.Remove(CacheKeyConstants.BOOKS);
+            memoryCache.Remove(string.Format(CacheKeyConstants.READ, id));
 
             return NoContent();
         }
@@ -215,7 +222,12 @@ namespace Api.Controllers
                     return StatusCode(StatusCodes.Status402PaymentRequired);
                 }
 
-                byte[] content = await mediator.Send(new GetContentQuery(id));
+                byte[] content = await memoryCache.GetOrCreateAsync(string.Format(CacheKeyConstants.READ, id), async (entry) =>
+                {
+                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+
+                    return await mediator.Send(new GetContentQuery(id));
+                });
 
                 return File(content, BookConstants.AllowedContentType);
             }
@@ -235,6 +247,8 @@ namespace Api.Controllers
             try
             {
                 await mediator.Send(new DeleteBookCommand(id));
+                memoryCache.Remove(CacheKeyConstants.BOOKS);
+                memoryCache.Remove(string.Format(CacheKeyConstants.READ, id));
 
                 return NoContent();
             }

@@ -13,6 +13,7 @@ using Core.ViewModels.Author;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Api.Controllers
 {
@@ -21,11 +22,13 @@ namespace Api.Controllers
     {
         private readonly IMediator mediator;
         private readonly IMapper mapper;
+        private readonly IMemoryCache memoryCache;
 
-        public AuthorController(IMediator mediator, IMapper mapper)
+        public AuthorController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache)
         {
             this.mediator = mediator;
             this.mapper = mapper;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -33,7 +36,13 @@ namespace Api.Controllers
         {
             try
             {
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
+                IEnumerable<ListAuthorModel> authors = await memoryCache.GetOrCreateAsync(CacheKeyConstants.AUTHORS, async (entry) =>
+                {
+                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+
+                    return await mediator.Send(new GetAllAuthorsQuery());
+                });
+
                 IEnumerable<ListAuthorOutputModel> outputModels = mapper.Map<IEnumerable<ListAuthorOutputModel>>(authors);
 
                 AttachLinks(outputModels);
@@ -55,6 +64,7 @@ namespace Api.Controllers
             try
             {
                 await mediator.Send(new DeleteAuthorCommand(id));
+                memoryCache.Remove(CacheKeyConstants.AUTHORS);
             }
             catch (Exception)
             {
@@ -97,6 +107,7 @@ namespace Api.Controllers
             try
             {
                 await mediator.Send(new EditAuthorApiCommand(id, model));
+                memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
                 return NoContent();
             }
@@ -123,6 +134,7 @@ namespace Api.Controllers
             try
             {
                 ListAuthorModel result = await mediator.Send(new CreateAuthorApiCommand(model));
+                memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
                 return Created(nameof(Edit), result);
             }
