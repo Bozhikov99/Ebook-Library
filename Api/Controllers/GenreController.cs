@@ -13,6 +13,7 @@ using Core.ViewModels.Genre;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Api.Controllers
 {
@@ -21,11 +22,13 @@ namespace Api.Controllers
     {
         private readonly IMediator mediator;
         private readonly IMapper mapper;
+        private readonly IMemoryCache memoryCache;
 
-        public GenreController(IMediator mediator, IMapper mapper)
+        public GenreController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache)
         {
             this.mediator = mediator;
             this.mapper = mapper;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -35,7 +38,13 @@ namespace Api.Controllers
         {
             try
             {
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+                IEnumerable<ListGenreModel> genres = await memoryCache.GetOrCreateAsync(CacheKeyConstants.GENRES, async (entry) =>
+                {
+                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+
+                    return await mediator.Send(new GetAllGenresQuery());
+                });
+
                 IEnumerable<ListGenreOutputModel> outputModels = mapper.Map<IEnumerable<ListGenreOutputModel>>(genres);
 
                 AttachLinks(outputModels);
@@ -58,6 +67,7 @@ namespace Api.Controllers
             try
             {
                 await mediator.Send(new DeleteGenreCommand(id));
+                memoryCache.Remove(CacheKeyConstants.GENRES);
             }
             catch (ArgumentNullException)
             {
@@ -99,6 +109,7 @@ namespace Api.Controllers
             try
             {
                 await mediator.Send(new EditGenreApiCommand(id, model));
+                memoryCache.Remove(CacheKeyConstants.GENRES);
             }
             catch (ArgumentNullException)
             {
@@ -125,6 +136,7 @@ namespace Api.Controllers
             try
             {
                 ListGenreModel result = await mediator.Send(new CreateGenreApiCommand(model));
+                memoryCache.Remove(CacheKeyConstants.GENRES);
 
                 return Created(nameof(Edit), result);
             }

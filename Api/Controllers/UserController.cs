@@ -17,6 +17,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -33,19 +34,22 @@ namespace Api.Controllers
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
+        private readonly IMemoryCache memoryCache;
 
         public UserController(
             IMediator mediator,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
             IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IMemoryCache memoryCache)
         {
             this.mediator = mediator;
             this.roleManager = roleManager;
             this.configuration = configuration;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.memoryCache = memoryCache;
         }
 
         [HttpPost]
@@ -66,6 +70,8 @@ namespace Api.Controllers
                 {
                     return BadRequest(ErrorMessageConstants.REGISTER_UNEXPECTED);
                 }
+
+                memoryCache.Remove(CacheKeyConstants.USERS);
             }
             catch (ExistingUserRegisterException eur)
             {
@@ -115,7 +121,13 @@ namespace Api.Controllers
         {
             try
             {
-                IEnumerable<ListUserModel> users = await mediator.Send(new GetAllUsersQuery());
+                IEnumerable<ListUserModel> users = await memoryCache.GetOrCreateAsync(CacheKeyConstants.USERS, async (entry) =>
+                {
+                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+
+                    return await mediator.Send(new GetAllUsersQuery());
+                });
+
                 IEnumerable<ListUserOutputModel> outputModels = mapper.Map<IEnumerable<ListUserOutputModel>>(users);
 
                 AttachLinks(outputModels);

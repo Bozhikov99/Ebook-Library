@@ -7,5 +7,9 @@
 
         public const string BOOKS = "Books";
         public const string READ = "Read {0}";
+
+        public const string GENRES = "Genres";
+
+        public const string USERS = "Users";
     }
 }
