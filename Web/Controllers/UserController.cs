@@ -7,6 +7,9 @@ using Domain.Exceptions;
 using MediatR;
 using Core.Queries.User;
 using Core.Commands.UserCommands;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Web.EmailService;
 
 namespace Web.Controllers
 {
@@ -14,11 +17,19 @@ namespace Web.Controllers
     {
         private readonly IMediator mediator;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<User> userManager;
+        private readonly EmailSender emailSender;
 
-        public UserController(IMediator mediator, RoleManager<IdentityRole> roleManager)
+        public UserController(
+            IMediator mediator,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<User> userManager,
+            EmailSender emailSender)
         {
             this.mediator = mediator;
             this.roleManager = roleManager;
+            this.userManager = userManager;
+            this.emailSender = emailSender;
         }
 
         public IActionResult Login() => View();
@@ -45,17 +56,22 @@ namespace Web.Controllers
 
             try
             {
-                bool isRegistered = await mediator.Send(new RegisterCommand(model));
-                if (!isRegistered)
-                {
-                    TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.REGISTER_UNEXPECTED;
-                    return View();
-                }
+                User user = await mediator.Send(new RegisterCommand(model));
+
+                string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                string link = $"https://localhost:{Request.Host.Port}{Url.Action(nameof(ConfirmEmail), "User", new { Token = token, Username = user.UserName })}";
+
+                await emailSender.SendConfirmationEmailAsync(user.Email, link, user.UserName);
             }
-            catch (ExistingUserRegisterException ae)
+            catch (ExistingUserRegisterException eu)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
+                TempData[ToastrMessageConstants.ErrorMessage] = eu.Message;
                 return View();
+            }
+            catch (InvalidUserCredentialsException iuc)
+            {
+                TempData[ToastrMessageConstants.ErrorMessage] = iuc.Message;
+                return View(iuc.Message);
             }
             catch (Exception)
             {
@@ -64,6 +80,24 @@ namespace Web.Controllers
 
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
+        {
+            try
+            {
+                await mediator.Send(command);
+            }
+            catch (ArgumentNullException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.INVALID_USER);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.CONFIRM_UNEXPECTED);
+            }
+
+            return View();
         }
 
         [HttpPost]
@@ -81,6 +115,11 @@ namespace Web.Controllers
             catch (InvalidUserCredentialsException ae)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
+                return View();
+            }
+            catch(InvalidOperationException io)
+            {
+                TempData[ToastrMessageConstants.ErrorMessage] = io.Message;
                 return View();
             }
             catch (Exception)

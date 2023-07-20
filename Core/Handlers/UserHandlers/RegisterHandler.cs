@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Common.MessageConstants;
 using Core.Commands.UserCommands;
 using Core.ViewModels.User;
@@ -8,11 +7,10 @@ using Domain.Exceptions;
 using Infrastructure.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Handlers.UserHandlers
 {
-    public class RegisterHandler : IRequestHandler<RegisterCommand, bool>
+    public class RegisterHandler : IRequestHandler<RegisterCommand, User>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
@@ -28,7 +26,7 @@ namespace Core.Handlers.UserHandlers
             this.userManager = userManager;
         }
 
-        public async Task<bool> Handle(
+        public async Task<User> Handle(
             RegisterCommand request,
             CancellationToken cancellationToken)
         {
@@ -51,7 +49,12 @@ namespace Core.Handlers.UserHandlers
 
             IdentityResult? result = await userManager.CreateAsync(user, model.Password);
 
-            return result.Succeeded;
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return user;
         }
     }
 }

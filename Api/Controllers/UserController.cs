@@ -1,4 +1,5 @@
-﻿using Api.Extenstions;
+﻿using Api.EmailService;
+using Api.Extenstions;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
@@ -35,6 +36,7 @@ namespace Api.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
         private readonly IMemoryCache memoryCache;
+        private readonly EmailSender emailSender;
 
         public UserController(
             IMediator mediator,
@@ -42,7 +44,8 @@ namespace Api.Controllers
             UserManager<User> userManager,
             IMapper mapper,
             IConfiguration configuration,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            EmailSender emailSender)
         {
             this.mediator = mediator;
             this.roleManager = roleManager;
@@ -50,6 +53,7 @@ namespace Api.Controllers
             this.userManager = userManager;
             this.mapper = mapper;
             this.memoryCache = memoryCache;
+            this.emailSender = emailSender;
         }
 
         [HttpPost]
@@ -64,14 +68,14 @@ namespace Api.Controllers
 
             try
             {
-                bool isRegistered = await mediator.Send(new RegisterCommand(model));
-
-                if (!isRegistered)
-                {
-                    return BadRequest(ErrorMessageConstants.REGISTER_UNEXPECTED);
-                }
+                User user = await mediator.Send(new RegisterCommand(model));
 
                 memoryCache.Remove(CacheKeyConstants.USERS);
+
+                string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                string link = $"https://localhost:{Request.Host.Port}{Url.Action(nameof(ConfirmEmail), "User", new { Token = token, Username = user.UserName })}";
+
+                await emailSender.SendConfirmationEmailAsync(user.Email, link, user.UserName);
             }
             catch (ExistingUserRegisterException eur)
             {
@@ -89,6 +93,27 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        [HttpGet("Confirm")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
+        {
+            try
+            {
+                await mediator.Send(command);
+            }
+            catch (ArgumentNullException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.INVALID_USER);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessageConstants.CONFIRM_UNEXPECTED);
+            }
+
+            return NoContent();
+        }
+
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,7 +125,11 @@ namespace Api.Controllers
             }
             catch (InvalidUserCredentialsException ae)
             {
-                return BadRequest(ErrorMessageConstants.INVALID_USER);
+                return BadRequest(ae.Message);
+            }
+            catch (InvalidOperationException io)
+            {
+                return BadRequest(io.Message);
             }
             catch (Exception)
             {

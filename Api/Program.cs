@@ -1,8 +1,11 @@
+using Api.EmailService;
 using Api.Extenstions;
 using Domain.Entities;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -19,18 +22,19 @@ namespace Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddTransient<EmailSender>();
             builder.Services.AddDbContexts(builder.Configuration);
             builder.Services.AddValidators();
             builder.Services.AddMediatrFull();
             builder.Services.AddDefaultIdentity<User>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<EbookDbContext>();
-
+            builder.Services.Configure<EmailSenderSettings>(builder.Configuration.GetSection("SendGrid"));
             builder.Services.AddAutomapperProfiles();
             builder.Services.AddApplicationServices();
             builder.Services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);

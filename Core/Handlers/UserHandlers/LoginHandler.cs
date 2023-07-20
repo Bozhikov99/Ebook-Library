@@ -38,7 +38,7 @@ namespace Core.Handlers.UserHandlers
 
             User? user = await userManager.FindByNameAsync(username);
 
-            if (user == null)
+            if (user is null)
             {
                 throw new InvalidUserCredentialsException(ErrorMessageConstants.INVALID_USER);
             }
@@ -48,6 +48,11 @@ namespace Core.Handlers.UserHandlers
             if (!isValidPassword)
             {
                 throw new InvalidUserCredentialsException(ErrorMessageConstants.INVALID_USER);
+            }
+
+            if (!user.EmailConfirmed)
+            {
+                throw new InvalidOperationException(ErrorMessageConstants.EMAIL_NOT_CONFIRMERD);
             }
 
             await signInManager.SignInAsync(user, true);

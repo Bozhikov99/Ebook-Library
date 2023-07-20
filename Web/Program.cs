@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Web.Extensions;
 using Web.ModelBinders.Providers;
+using Web.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,9 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EbookDbContext>();
+
+builder.Services.AddTransient<EmailSender>();
+builder.Services.Configure<EmailSenderSettings>(builder.Configuration.GetSection("SendGrid"));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
