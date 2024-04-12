@@ -8,9 +8,11 @@ using Common.ValidationConstants;
 using Core.ApiModels;
 using Core.ApiModels.InputModels.Books;
 using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.Book;
 using Core.ApiModels.ResponseModels;
-using Core.Commands.BookCommands;
+using Core.Books.Commands.Create;
+using Core.Books.Commands.Delete;
+using Core.Books.Commands.Edit;
+using Core.Books.Queries.Details;
 using Core.Commands.UserCommands;
 using Core.Helpers;
 using Core.Queries.Author;
@@ -55,8 +57,7 @@ namespace Api.Controllers
                     return await mediator.Send(new GetAllBooksApiQuery(search, genres));
                 });
 
-                books
-                    .Books
+                books.Books
                     .ToList()
                     .ForEach(b => AttachLinks(b));
 
@@ -79,7 +80,7 @@ namespace Api.Controllers
 
             try
             {
-                BookDetailsOutputModel model = await mediator.Send(new GetUserBookDetailsApiQuery(id, userId));
+                BookDetailsOutputModel model = await mediator.Send(new GetDetailsQuery(id));
                 AttachLinks(model);
 
                 return Ok(model);

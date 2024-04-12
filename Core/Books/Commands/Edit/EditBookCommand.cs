@@ -1,23 +1,27 @@
-﻿using System;
-using AutoMapper;
-using Core.Commands.BookCommands;
+﻿using AutoMapper;
 using Core.ViewModels.Book;
 using Domain.Entities;
 using Infrastructure.Common;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
-namespace Core.Handlers.BookHandlers
+namespace Core.Books.Commands.Edit
 {
-    public class EditBookHandler: IRequestHandler<EditBookCommand, bool>
+    public class EditBookCommand : IRequest<bool>
+    {
+        public EditBookCommand(EditBookModel model)
+        {
+            Model = model;
+        }
+
+        public EditBookModel Model { get; set; }
+    }
+
+    public class EditBookHandler : IRequestHandler<EditBookCommand, bool>
     {
         private readonly IRepository repository;
-        private readonly IMapper mapper;
 
-        public EditBookHandler(IRepository repository, IMapper mapper)
+        public EditBookHandler(IRepository repository)
         {
             this.repository = repository;
-            this.mapper = mapper;
         }
 
         public async Task<bool> Handle(EditBookCommand request, CancellationToken cancellationToken)

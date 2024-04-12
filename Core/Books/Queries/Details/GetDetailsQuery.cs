@@ -1,27 +1,41 @@
 ﻿using AutoMapper;
 using Core.ApiModels.OutputModels.Review;
-using Core.Books.Queries.Details;
+using Core.Helpers;
 using Domain.Entities;
 using Infrastructure.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Core.Handlers.BookHandlers
+namespace Core.Books.Queries.Details
 {
+    public class GetDetailsQuery : IRequest<BookDetailsOutputModel>
+    {
+        public GetDetailsQuery(string bookId)
+        {
+            BookId = bookId;
+        }
+
+        public string BookId { get; private set; }
+    }
+
     public class GetUserBookDetailsApiHandler : IRequestHandler<GetDetailsQuery, BookDetailsOutputModel>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
+        private readonly UserIdHelper userIdHelper;
 
-        public GetUserBookDetailsApiHandler(IRepository repository, IMapper mapper)
+        public GetUserBookDetailsApiHandler(IRepository repository, IMapper mapper, UserIdHelper userIdHelper)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.userIdHelper = userIdHelper;
         }
 
         public async Task<BookDetailsOutputModel> Handle(GetDetailsQuery request, CancellationToken cancellationToken)
         {
             string bookId = request.BookId;
+            string userId = userIdHelper.GetUserId();
+
             Book book = await repository.AllReadonly<Book>(b => b.Id == bookId)
                 .Include(b => b.Genres)
                 .Include(b => b.Author)
@@ -31,18 +45,18 @@ namespace Core.Handlers.BookHandlers
 
             BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
 
-            if (string.IsNullOrEmpty("x"))
+            if (string.IsNullOrEmpty(userId))
             {
                 return model;
             }
 
-            User user = await repository.GetByIdAsync<User>("x");
+            User user = await repository.GetByIdAsync<User>(userId);
 
             bool isFavourite = book.UsersFavourited
-                .Any(u => u.Id == "x");
+                .Any(u => u.Id == userId);
 
-            Review userReview = await repository.AllReadonly<Review>(r => r.UserId == "x")
-                .FirstOrDefaultAsync(cancellationToken);
+            Review? userReview = await repository.AllReadonly<Review>(r => r.UserId == userId)
+                .FirstOrDefaultAsync();
 
             UserReviewOutputModel userReviewModel = mapper.Map<UserReviewOutputModel>(userReview);
 

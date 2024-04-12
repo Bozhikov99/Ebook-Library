@@ -1,11 +1,18 @@
-﻿using System;
-using Core.Commands.BookCommands;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Infrastructure.Common;
-using MediatR;
 
-namespace Core.Handlers.BookHandlers
+namespace Core.Books.Commands.Delete
 {
+    public class DeleteBookCommand : IRequest<bool>
+    {
+        public DeleteBookCommand(string id)
+        {
+            Id = id;
+        }
+
+        public string Id { get; set; }
+    }
+
     public class DeleteBookHandler : IRequestHandler<DeleteBookCommand, bool>
     {
         private readonly IRepository repository;

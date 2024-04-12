@@ -1,10 +1,9 @@
-﻿using System;
-using Core.ViewModels.Book;
+﻿using Core.ViewModels.Book;
 using MediatR;
 
 namespace Core.Queries.Book
 {
-    public class GetBookDetailsQuery: IRequest<BookDetailsModel>
+    public class GetBookDetailsQuery : IRequest<BookDetailsModel>
     {
         public GetBookDetailsQuery(string id)
         {

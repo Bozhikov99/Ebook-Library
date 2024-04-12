@@ -66,7 +66,7 @@ namespace Api
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("ApiKey"))),
+                            Encoding.UTF8.GetBytes(/*builder.Configuration.GetValue<string>("ApiKey")*/"33bbf072-902d-41ed-8676-eb44c61e16b0")),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

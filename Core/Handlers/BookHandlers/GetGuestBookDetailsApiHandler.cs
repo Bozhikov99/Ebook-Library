@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
 using Core.ApiModels.InputModels.Books;
-using Core.ApiModels.OutputModels.Book;
+using Core.Books.Queries.Details;
 using Core.Queries.Book;
 using Domain.Entities;
 using Infrastructure.Common;

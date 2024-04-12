@@ -1,15 +1,22 @@
-﻿using System;
-using AutoMapper;
-using Core.Commands.BookCommands;
+﻿using AutoMapper;
 using Core.Validators;
 using Core.ViewModels.Book;
 using Domain.Entities;
 using Infrastructure.Common;
-using MediatR;
 
-namespace Core.Handlers.BookHandlers
+namespace Core.Books.Commands.Create
 {
-    public class CreateBookHandler: IRequestHandler<CreateBookCommand, bool>
+    public class CreateBookCommand : IRequest<bool>
+    {
+        public CreateBookCommand(CreateBookModel model)
+        {
+            Model = model;
+        }
+
+        public CreateBookModel Model { get; private set; }
+    }
+
+    public class CreateBookHandler : IRequestHandler<CreateBookCommand, bool>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;

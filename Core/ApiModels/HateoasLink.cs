@@ -2,10 +2,10 @@
 {
     public class HateoasLink
     {
-        public string Url { get; set; }
+        public string Url { get; set; } = null!;
 
-        public string Rel { get; set; }
+        public string Rel { get; set; } = null!;
 
-        public string Method { get; set; }
+        public string Method { get; set; } = null!;
     }
 }

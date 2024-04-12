@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.ApiModels.InputModels.Books;
 using Core.ApiModels.OutputModels.Book;
+using Core.Books.Queries.Details;
 using Core.ViewModels.Book;
 using Domain.Entities;
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -45,11 +45,19 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Authors\Commands\Create\" />
+    <Folder Include="Authors\Commands\Edit\" />
+    <Folder Include="Authors\Commands\Delete\" />
+    <Folder Include="Authors\Queries\" />
+    <Folder Include="Genres\" />
+    <Folder Include="Common\" />
+    <Folder Include="Reviews\" />
+    <Folder Include="Subscriptions\" />
+    <Folder Include="Users\" />
     <Folder Include="Queries\Subscription\" />
     <Folder Include="Validators\" />
     <Folder Include="Commands\SubscriptionCommands\" />
     <Folder Include="Handlers\SubscriptionHandlers\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Commands\BookCommands\" />
   </ItemGroup>
 </Project>
