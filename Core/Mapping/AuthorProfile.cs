@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.ApiModels.InputModels.Author;
-using Core.ApiModels.OutputModels.Author;
+using Core.Authors.Queries.Common;
 using Core.ViewModels.Author;
 using Domain.Entities;
 
@@ -15,14 +15,14 @@ namespace Core.Mapping
             CreateMap<EditAuthorModel, Author>()
                 .ReverseMap();
 
-            CreateMap<Author, ListAuthorModel>();
+            CreateMap<Author, ViewModels.Author.ListAuthorModel>();
 
             CreateMap<Author, UpsertAuthorModel>()
                 .ReverseMap();
 
             #region [Output Models]
 
-            CreateMap<ListAuthorModel, ListAuthorOutputModel>();
+            CreateMap<ListAuthorModel, ListAuthorModel>();
 
             #endregion
         }

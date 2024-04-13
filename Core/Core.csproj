@@ -45,10 +45,7 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Authors\Commands\Create\" />
-    <Folder Include="Authors\Commands\Edit\" />
-    <Folder Include="Authors\Commands\Delete\" />
-    <Folder Include="Authors\Queries\" />
+    <Folder Include="ApiModels\OutputModels\Author\" />
     <Folder Include="Genres\" />
     <Folder Include="Common\" />
     <Folder Include="Reviews\" />
@@ -59,5 +56,6 @@
     <Folder Include="Commands\SubscriptionCommands\" />
     <Folder Include="Handlers\SubscriptionHandlers\" />
     <Folder Include="Helpers\" />
+    <Folder Include="ViewModels\Author\" />
   </ItemGroup>
 </Project>

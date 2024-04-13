@@ -6,10 +6,12 @@ using Common.MessageConstants;
 using Core.ApiModels;
 using Core.ApiModels.InputModels.Author;
 using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.Author;
-using Core.Commands.AuthorCommands;
+using Core.Authors.Commands.Create;
+using Core.Authors.Commands.Delete;
+using Core.Authors.Commands.Edit;
+using Core.Authors.Queries.Common;
+using Core.Authors.Queries.GetAuthors;
 using Core.Queries.Author;
-using Core.ViewModels.Author;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,19 +34,20 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ListAuthorOutputModel>>> All()
+        public async Task<ActionResult<IEnumerable<AuthorModel>>> All([FromQuery] GetAuthorsQuery query)
         {
             try
             {
-                IEnumerable<ListAuthorModel> authors = await memoryCache.GetOrCreateAsync(CacheKeyConstants.AUTHORS, async (entry) =>
-                {
-                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+                //IEnumerable<Core.ViewModels.Author.ListAuthorModel> authors = await memoryCache.GetOrCreateAsync(CacheKeyConstants.AUTHORS, async (entry) =>
+                //{
+                //    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
 
-                    return await mediator.Send(new GetAllAuthorsQuery());
-                });
+                //    return await mediator.Send(new GetAllAuthorsQuery());
+                //});
 
-                IEnumerable<ListAuthorOutputModel> outputModels = mapper.Map<IEnumerable<ListAuthorOutputModel>>(authors);
+                //IEnumerable<Core.ApiModels.OutputModels.Author.ListAuthorModel> outputModels = mapper.Map<IEnumerable<Core.ApiModels.OutputModels.Author.ListAuthorModel>>(authors);
 
+                IEnumerable<AuthorModel> outputModels = await mediator.Send(query);
                 AttachLinks(outputModels);
 
                 return Ok(outputModels);
@@ -63,7 +66,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteAuthorCommand(id));
+                await mediator.Send(new DeleteAuthorCommand { Id = id });
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
             }
             catch (Exception)
@@ -83,7 +86,7 @@ namespace Api.Controllers
         {
             try
             {
-                UpsertAuthorModel model = await mediator.Send(new GetEditAuthorApiQuery(id));
+                AuthorModel model = await mediator.Send(new GetEditAuthorApiQuery { Id = id });
 
                 return Ok(model);
             }
@@ -102,11 +105,11 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpsertAuthorModel model)
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] EditAuthorCommand command)
         {
             try
             {
-                await mediator.Send(new EditAuthorApiCommand(id, model));
+                await mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
                 return NoContent();
@@ -117,7 +120,7 @@ namespace Api.Controllers
             }
             catch (ArgumentException)
             {
-                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{command.FirstName} {command.LastName}"));
             }
             catch (Exception)
             {
@@ -129,18 +132,18 @@ namespace Api.Controllers
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ListAuthorModel>> Add([FromBody] UpsertAuthorModel model)
+        public async Task<ActionResult<AuthorModel>> Add([FromBody] CreateAuthorCommand command)
         {
             try
             {
-                ListAuthorModel result = await mediator.Send(new CreateAuthorApiCommand(model));
+                string result = await Mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
-                return Created(nameof(Edit), result);
+                return CreatedAtAction(nameof(GetEditModel), result);
             }
             catch (ArgumentException)
             {
-                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{command.FirstName} {command.LastName}"));
             }
             catch (Exception)
             {

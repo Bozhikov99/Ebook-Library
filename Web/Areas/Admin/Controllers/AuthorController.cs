@@ -1,4 +1,5 @@
 ﻿using Common.MessageConstants;
+using Core.Authors.Commands.Create;
 using Core.Commands.AuthorCommands;
 using Core.Queries.Author;
 using Core.ViewModels.Author;
@@ -47,7 +48,7 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateAuthorModel model)
+        public async Task<IActionResult> Create([FromBody] CreateAuthorCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +57,7 @@ namespace Web.Areas.Admin.Controllers
 
             try
             {
-                await mediator.Send(new CreateAuthorCommand(model));
+                await mediator.Send(command);
             }
             catch (Exception)
             {
