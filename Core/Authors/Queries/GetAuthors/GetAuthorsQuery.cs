@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Authors.Queries.Common;
+﻿using Core.Authors.Queries.Common;
 using Infrastructure;
 
 namespace Core.Authors.Queries.GetAuthors
@@ -12,7 +11,7 @@ namespace Core.Authors.Queries.GetAuthors
     {
         private readonly EbookDbContext context;
 
-        public GetAllAuthorsQueryHandler(EbookDbContext context, IMapper mapper)
+        public GetAllAuthorsQueryHandler(EbookDbContext context)
         {
             this.context = context;
         }

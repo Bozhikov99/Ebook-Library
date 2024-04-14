@@ -12,11 +12,11 @@ namespace Core.Authors.Commands.Edit
         public string Id { get; set; } = null!;
     }
 
-    public class EditAuthorApiHandler : IRequestHandler<EditAuthorCommand>
+    public class EditAuthorHandler : IRequestHandler<EditAuthorCommand>
     {
         private readonly EbookDbContext context;
 
-        public EditAuthorApiHandler(EbookDbContext context)
+        public EditAuthorHandler(EbookDbContext context)
         {
             this.context = context;
         }

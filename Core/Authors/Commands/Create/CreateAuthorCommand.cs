@@ -11,11 +11,11 @@ namespace Core.Authors.Commands.Create
         public string LastName { get; set; } = null!;
     }
 
-    public class CreateAuthorApiHandler : IRequestHandler<CreateAuthorCommand, string>
+    public class CreateAuthorHandler : IRequestHandler<CreateAuthorCommand, string>
     {
         private readonly IRepository repository;
 
-        public CreateAuthorApiHandler(IRepository repository)
+        public CreateAuthorHandler(IRepository repository)
         {
             this.repository = repository;
         }
