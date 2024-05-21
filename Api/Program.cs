@@ -1,7 +1,7 @@
 using Api.EmailService;
 using Api.Extenstions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

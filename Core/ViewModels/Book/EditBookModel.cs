@@ -29,6 +29,6 @@ namespace Core.ViewModels.Book
         [Required]
         public string AuthorId { get; set; }
 
-        public string[] GenreIds { get; set; }
+        public IEnumerable<string> GenreIds { get; set; } = new List<string>();
     }
 }

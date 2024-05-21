@@ -1,12 +1,14 @@
-﻿using System;
-using Common.MessageConstants;
-using Core.Queries.Book;
+﻿using Common.MessageConstants;
 using Domain.Entities;
 using Infrastructure.Common;
-using MediatR;
 
-namespace Core.Handlers.BookHandlers
+namespace Core.Books.Queries.GetContent
 {
+    public class GetContentQuery : IRequest<byte[]>
+    {
+        public string Id { get; set; } = null!;
+    }
+
     public class GetContentHandler : IRequestHandler<GetContentQuery, byte[]>
     {
         private readonly IRepository repository;

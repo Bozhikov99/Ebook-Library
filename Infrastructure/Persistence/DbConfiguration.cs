@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Infrastructure
+namespace Infrastructure.Persistance
 {
     public class DbConfiguration : IdentityDbContext<User>
     {

@@ -1,5 +1,5 @@
 ﻿using Core.Authors.Queries.Common;
-using Infrastructure;
+using Infrastructure.Persistance;
 
 namespace Core.Authors.Queries.GetEditModel
 {

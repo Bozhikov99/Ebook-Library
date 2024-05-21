@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistance;
 
 namespace Core.Authors.Commands.Delete
 {

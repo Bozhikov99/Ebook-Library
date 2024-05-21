@@ -3,37 +3,30 @@ using Core.ApiModels.OutputModels.Review;
 using Core.Helpers;
 using Domain.Entities;
 using Infrastructure.Common;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Books.Queries.Details
 {
-    public class GetDetailsQuery : IRequest<BookDetailsOutputModel>
+    public class GetBookDetailsQuery : IRequest<BookDetailsOutputModel>
     {
-        public GetDetailsQuery(string bookId)
-        {
-            BookId = bookId;
-        }
-
-        public string BookId { get; private set; }
+        public string Id { get; set; } = null!;
     }
 
-    public class GetUserBookDetailsApiHandler : IRequestHandler<GetDetailsQuery, BookDetailsOutputModel>
+    public class GetDetailsHandler : IRequestHandler<GetBookDetailsQuery, BookDetailsOutputModel>
     {
         private readonly IRepository repository;
         private readonly IMapper mapper;
         private readonly UserIdHelper userIdHelper;
 
-        public GetUserBookDetailsApiHandler(IRepository repository, IMapper mapper, UserIdHelper userIdHelper)
+        public GetDetailsHandler(IRepository repository, IMapper mapper, UserIdHelper userIdHelper)
         {
             this.repository = repository;
             this.mapper = mapper;
             this.userIdHelper = userIdHelper;
         }
 
-        public async Task<BookDetailsOutputModel> Handle(GetDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<BookDetailsOutputModel> Handle(GetBookDetailsQuery request, CancellationToken cancellationToken)
         {
-            string bookId = request.BookId;
+            string bookId = request.Id;
             string userId = userIdHelper.GetUserId();
 
             Book book = await repository.AllReadonly<Book>(b => b.Id == bookId)
@@ -41,7 +34,6 @@ namespace Core.Books.Queries.Details
                 .Include(b => b.Author)
                 .Include(b => b.Reviews)
                 .FirstAsync();
-
 
             BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
 

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure
+namespace Infrastructure.Persistance
 {
     public class EbookDbContext : IdentityDbContext<User>
     {

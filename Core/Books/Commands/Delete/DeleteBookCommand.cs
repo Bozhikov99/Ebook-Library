@@ -1,37 +1,42 @@
 ﻿using Domain.Entities;
-using Infrastructure.Common;
+using Infrastructure.Persistance;
 
 namespace Core.Books.Commands.Delete
 {
-    public class DeleteBookCommand : IRequest<bool>
+    public class DeleteBookCommand : IRequest
     {
-        public DeleteBookCommand(string id)
-        {
-            Id = id;
-        }
-
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     }
 
-    public class DeleteBookHandler : IRequestHandler<DeleteBookCommand, bool>
+    public class DeleteBookHandler : IRequestHandler<DeleteBookCommand>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
 
-        public DeleteBookHandler(IRepository repository)
+        public DeleteBookHandler(EbookDbContext context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
-        public async Task<bool> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+        //TODO: Implement handling of a single query book deletion
+        public async Task<Unit> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-            bool isDelete = false;
+            string id = request.Id;
 
-            await repository.DeleteAsync<Book>(request.Id);
-            await repository.SaveChangesAsync();
+            bool isExisting = await context.Books
+                .AnyAsync(b => b.Id == id);
 
-            isDelete = true;
+            if (!isExisting)
+            {
+                throw new ArgumentNullException(nameof(Book), id);
+            }
 
-            return isDelete;
+
+            context.Books
+                .Remove(new Book { Id = id });
+
+            await context.SaveChangesAsync();
+
+            return Unit.Value;
         }
     }
 }

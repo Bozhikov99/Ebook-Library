@@ -1,11 +1,9 @@
-﻿using Core.ApiModels.OutputModels.Book;
+﻿using Core.Books.Queries.GetBooks;
 
 namespace Core.ApiModels.ResponseModels
 {
     public class BookBrowsingModel
     {
-        public IEnumerable<ListBookOutputModel> Books { get; set; }
-
-        public string[] Genres { get; set; }
+        public IEnumerable<BookModel> Books { get; set; }
     }
 }

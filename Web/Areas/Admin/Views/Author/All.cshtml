@@ -1,5 +1,5 @@
-﻿@using Core.ViewModels.Author
-@model IEnumerable<ListAuthorModel>
+﻿@using Core.Authors.Queries.Common
+@model IEnumerable<AuthorModel>
 
 @{
     ViewData["Title"] = "All";
@@ -21,7 +21,7 @@
     </div>
 
     <ul>
-        @foreach (ListAuthorModel a in Model)
+        @foreach (AuthorModel a in Model)
         {
             <li>
                 @a.FirstName @a.LastName

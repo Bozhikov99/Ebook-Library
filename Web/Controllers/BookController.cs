@@ -1,9 +1,11 @@
 ﻿using Common.MessageConstants;
 using Common.ValidationConstants;
+using Core.Books.Queries.Details;
+using Core.Books.Queries.GetBooks;
+using Core.Books.Queries.GetContent;
 using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
 using Core.Helpers;
-using Core.Queries.Book;
 using Core.Queries.Review;
 using Core.Queries.User;
 using Core.ViewModels.Book;
@@ -26,22 +28,18 @@ namespace Web.Controllers
             this.mediator = mediator;
             this.helper = helper;
         }
-        
-        public async Task<IActionResult> All(
-            int p = 1,
-            int s = BookConstants.PAGE_SIZE,
-            string search = null,
-            string[] genres = null)
+
+        public async Task<IActionResult> All(GetBooksQuery query)
         {
-            IEnumerable<ListBookModel> books = await mediator.Send(new GetAllBooksQuery(search, genres));
+            IEnumerable<BookModel> books = await mediator.Send(query);
 
-            ViewBag.PageNo = p;
-            ViewBag.PageSize = s;
-            ViewBag.Genres = genres;
-            TempData["Search"] = search;
+            //ViewBag.PageNo = p;
+            //ViewBag.PageSize = s;
+            //ViewBag.Genres = genres;
+            //TempData["Search"] = search;
 
-            int starterBook = (p - 1) * s;
-            ViewBag.StarterBook = starterBook;
+            //int starterBook = (p - 1) * s;
+            //ViewBag.StarterBook = starterBook;
 
             return View(books);
         }
@@ -57,28 +55,29 @@ namespace Web.Controllers
                 return RedirectToAction("Subscribe", "Subscription");
             }
 
-            byte[] content = await mediator.Send(new GetContentQuery(id));
+            byte[] content = await mediator.Send(new GetContentQuery { Id = id });
 
             return File(content, BookConstants.AllowedContentType);
         }
 
         public async Task<IActionResult> Details(string id)
         {
-            string userId = helper.GetUserId();
-            BookDetailsModel model = await mediator.Send(new GetBookDetailsQuery(id));
-            IEnumerable<ListReviewModel> reviews = await mediator.Send(new GetAllReviewsQuery(id, userId));
+            BookDetailsOutputModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
+            //string userId = helper.GetUserId();
+            //BookDetailsModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
+            //IEnumerable<ListReviewModel> reviews = await mediator.Send(new GetAllReviewsQuery(id, userId));
 
-            ViewBag.UserId = userId;
-            ViewBag.Reviews = reviews;
+            //ViewBag.UserId = userId;
+            //ViewBag.Reviews = reviews;
 
-            if (userId != null)
-            {
-                bool isFavouriteBook = await mediator.Send(new IsBookFavouriteQuery(id));
-                ViewBag.IsFavourite = isFavouriteBook;
+            //if (userId != null)
+            //{
+            //    bool isFavouriteBook = await mediator.Send(new IsBookFavouriteQuery(id));
+            //    ViewBag.IsFavourite = isFavouriteBook;
 
-                UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery(userId, id));
-                ViewBag.UserReview = userReview;
-            }
+            //    UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery(userId, id));
+            //    ViewBag.UserReview = userReview;
+            //}
 
             return View(model);
         }

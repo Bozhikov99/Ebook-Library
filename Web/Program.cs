@@ -1,11 +1,12 @@
 using Common;
-using Infrastructure;
 using Domain.Entities;
+using Infrastructure.Persistance;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Web.EmailService;
 using Web.Extensions;
 using Web.ModelBinders.Providers;
-using Web.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,8 +47,29 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddAutomapperProfiles();
 builder.Services.AddApplicationServices();
 
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+//var host = Host.CreateDefaultBuilder(args)
+//    .Build();
+
+
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    AccountSettings accountSettings = new AccountSettings();
+    configuration.Bind("AdministratorAccount", accountSettings);
+
+    await EbookDbContextSeed.SeedAdministratorRoleAsync(roleManager);
+    await EbookDbContextSeed.SeedAdministratorAsync(accountSettings, userManager);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

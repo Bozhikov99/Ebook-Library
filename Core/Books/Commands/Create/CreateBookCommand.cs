@@ -1,58 +1,78 @@
-﻿using AutoMapper;
-using Core.Validators;
-using Core.ViewModels.Book;
-using Domain.Entities;
-using Infrastructure.Common;
+﻿using Domain.Entities;
+using Infrastructure.Persistance;
 
 namespace Core.Books.Commands.Create
 {
-    public class CreateBookCommand : IRequest<bool>
+    public class CreateBookCommand : IRequest
     {
-        public CreateBookCommand(CreateBookModel model)
-        {
-            Model = model;
-        }
+        public string Title { get; set; } = null!;
 
-        public CreateBookModel Model { get; private set; }
+        public string Description { get; set; } = null!;
+
+        public int ReleaseYear { get; set; }
+
+        public int Pages { get; set; }
+
+        public string AuthorId { get; set; } = null!;
+
+        public byte[] Cover { get; set; } = null!;
+
+        public byte[] Content { get; set; } = null!;
+
+        public IEnumerable<string> GenreIds { get; set; } = new List<string>();
     }
 
-    public class CreateBookHandler : IRequestHandler<CreateBookCommand, bool>
+    public class CreateBookHandler : IRequestHandler<CreateBookCommand>
     {
-        private readonly IRepository repository;
-        private readonly IMapper mapper;
-        private readonly BookValidator validator;
+        private readonly EbookDbContext context;
 
-        public CreateBookHandler(IRepository repository, IMapper mapper, BookValidator validator)
+        public CreateBookHandler(EbookDbContext context)
         {
-            this.repository = repository;
-            this.mapper = mapper;
-            this.validator = validator;
+            this.context = context;
         }
 
-        public async Task<bool> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
-            bool isCreated = false;
-            CreateBookModel model = request.Model;
+            bool isExistingTitle = await context.Books
+                .AnyAsync(x => x.Title == request.Title, cancellationToken);
 
-            await validator.ValidateTitle(model.Title);
-
-            Book book = mapper.Map<Book>(model);
-            List<Genre> genres = new List<Genre>();
-
-            foreach (var g in model.GenreIds)
+            if (isExistingTitle)
             {
-                Genre currentGenre = await repository.GetByIdAsync<Genre>(g);
-                genres.Add(currentGenre);
+                throw new ArgumentException();
             }
 
-            book.Genres = genres;
+            bool isExistingAuthor = await context.Authors
+                .AnyAsync(x => x.Id == request.AuthorId, cancellationToken);
 
-            await repository.AddAsync(book);
-            await repository.SaveChangesAsync();
+            if (!isExistingAuthor)
+            {
+                throw new ArgumentException();
+            }
 
-            isCreated = true;
+            IEnumerable<string> genreIds = request.GenreIds;
 
-            return isCreated;
+            ICollection<Genre> genres = await context.Genres
+                .Select(g => new Genre { Id = g.Id })
+                .Where(g => genreIds.Contains(g.Id))
+                .ToListAsync(cancellationToken);
+
+            //TODO: Add validation
+            Book book = new()
+            {
+                Title = request.Title,
+                Description = request.Description,
+                ReleaseYear = request.ReleaseYear,
+                Pages = request.Pages,
+                AuthorId = request.AuthorId,
+                Cover = request.Cover,
+                Content = request.Content,
+                Genres = genres
+            };
+
+            await context.AddAsync(book);
+            await context.SaveChangesAsync();
+
+            return Unit.Value;
         }
     }
 }
