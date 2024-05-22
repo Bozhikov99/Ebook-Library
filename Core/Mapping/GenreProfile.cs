@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Core.ApiModels.InputModels.Genre;
-using Core.ApiModels.OutputModels.Genre;
+using Core.Genres.Queries.Common;
 using Core.ViewModels.Genre;
 using Domain.Entities;
 
@@ -17,12 +16,9 @@ namespace Core.Mapping
 
             CreateMap<Genre, ListGenreModel>();
 
-            CreateMap<Genre, UpsertGenreModel>()
-                .ReverseMap();
-
             #region [Output Models]
 
-            CreateMap<ListGenreModel, ListGenreOutputModel>();
+            CreateMap<ListGenreModel, GenreModel>();
 
             #endregion
         }

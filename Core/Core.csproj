@@ -45,7 +45,7 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Genres\" />
+    <Folder Include="ApiModels\InputModels\Genre\" />
     <Folder Include="Common\" />
     <Folder Include="Reviews\" />
     <Folder Include="Subscriptions\" />

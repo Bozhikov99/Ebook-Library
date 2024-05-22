@@ -46,7 +46,6 @@ namespace Api.Extenstions
         {
             services.AddTransient<GenreValidator>();
             services.AddTransient<AuthorValidator>();
-            services.AddTransient<BookValidator>();
 
             return services;
         }
