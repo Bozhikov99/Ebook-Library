@@ -50,7 +50,7 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAuthorCommand command)
+        public async Task<IActionResult> Create(CreateAuthorCommand command)
         {
             if (!ModelState.IsValid)
             {
