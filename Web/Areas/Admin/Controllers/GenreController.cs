@@ -1,7 +1,11 @@
 ﻿using Common;
 using Common.MessageConstants;
-using Core.Commands.GenreCommands;
-using Core.Queries.Genre;
+using Core.Genres.Commands.Create;
+using Core.Genres.Commands.Delete;
+using Core.Genres.Commands.Edit;
+using Core.Genres.Queries.Common;
+using Core.Genres.Queries.GetEditModelQuery;
+using Core.Genres.Queries.GetGenres;
 using Core.ViewModels.Genre;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +21,18 @@ namespace Web.Areas.Admin.Controllers
             this.mediator = mediator;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(GetGenresQuery query)
         {
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+            IEnumerable<ListGenreModel> genres = await mediator.Send(query);
 
             return View(genres);
         }
 
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(DeleteGenreCommand command)
         {
             try
             {
-                await mediator.Send(new DeleteGenreCommand(id));
+                await mediator.Send(command);
                 TempData[ToastrMessageConstants.SuccessMessage] = SuccessMessageConstants.GENRE_DELETED;
             }
             catch (Exception)
@@ -42,7 +46,7 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            EditGenreModel model = await mediator.Send(new GetEditModelQuery(id));
+            GenreModel model = await mediator.Send(new GetEditModelQuery { Id = id });
 
             return View(model);
         }
@@ -50,7 +54,7 @@ namespace Web.Areas.Admin.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateGenreModel model)
+        public async Task<IActionResult> Create(CreateGenreCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -59,13 +63,13 @@ namespace Web.Areas.Admin.Controllers
 
             try
             {
-                await mediator.Send(new CreateGenreCommand(model));
+                await mediator.Send(command);
 
-                TempData[ToastrMessageConstants.SuccessMessage] = string.Format(SuccessMessageConstants.GENRE_CREATED, model.Name);
+                TempData[ToastrMessageConstants.SuccessMessage] = string.Format(SuccessMessageConstants.GENRE_CREATED, command.Name);
             }
             catch (ArgumentException ae)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, command.Name);
 
                 return View();
             }
@@ -80,30 +84,30 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditGenreModel model)
+        public async Task<IActionResult> Edit(EditGenreCommand command)
         {
             if (!ModelState.IsValid)
             {
-                EditGenreModel originalModel = await mediator.Send(new GetEditModelQuery(model.Id));
+                GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
                 return View(originalModel);
             }
 
             try
             {
-                await mediator.Send(new EditGenreCommand(model));
+                await mediator.Send(command);
             }
             catch (ArgumentException ae)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, model.Name);
+                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, command.Name);
 
-                EditGenreModel originalModel = await mediator.Send(new GetEditModelQuery(model.Id));
+                GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
                 return View(originalModel);
             }
             catch (Exception)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
 
-                EditGenreModel originalModel = await mediator.Send(new GetEditModelQuery(model.Id));
+                GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
                 return View(originalModel);
             }
 
