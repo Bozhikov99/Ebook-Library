@@ -2,20 +2,15 @@
 using Common.ValidationConstants;
 using Core.Authors.Queries.Common;
 using Core.Authors.Queries.GetAuthors;
-using Core.Books.Commands.Create;
 using Core.Books.Commands.Delete;
-using Core.Books.Commands.Edit;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
 using Core.Commands.ReviewCommands;
+using Core.Genres.Queries.GetGenres;
 using Core.Helpers;
-using Core.Queries.Genre;
-using Core.Queries.Review;
-using Core.Queries.User;
 using Core.ViewModels.Book;
 using Core.ViewModels.Genre;
-using Core.ViewModels.Review;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using GetEditModelQuery = Core.Books.Queries.GetBookEditModel.GetBookEditModelQuery;
@@ -80,7 +75,7 @@ namespace Web.Areas.Admin.Controllers
         {
             EditBookModel model = await mediator.Send(new GetEditModelQuery { Id = id });
             IEnumerable<AuthorModel> authors = await mediator.Send(new GetAuthorsQuery());
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetGenresQuery());
             ViewBag.Authors = authors;
             ViewBag.Genres = genres;
 
@@ -90,7 +85,7 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             IEnumerable<AuthorModel> authors = await mediator.Send(new GetAuthorsQuery());
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetGenresQuery());
             ViewBag.Authors = authors;
             ViewBag.Genres = genres;
 

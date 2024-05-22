@@ -33,13 +33,13 @@ namespace Web.Controllers
         {
             IEnumerable<BookModel> books = await mediator.Send(query);
 
-            //ViewBag.PageNo = p;
-            //ViewBag.PageSize = s;
-            //ViewBag.Genres = genres;
-            //TempData["Search"] = search;
+            ViewBag.PageNo = query.PageNumber;
+            ViewBag.PageSize = query.PageSize;
+            ViewBag.Genres = query.GenreIds;
+            TempData["Search"] = query.Search;
 
-            //int starterBook = (p - 1) * s;
-            //ViewBag.StarterBook = starterBook;
+            int starterBook = (query.PageNumber - 1) * query.PageSize;
+            ViewBag.StarterBook = starterBook;
 
             return View(books);
         }
