@@ -1,12 +1,10 @@
 ﻿using Core;
 using Core.Helpers;
 using Core.Mapping;
-using Core.Validators;
 using Infrastructure.Common;
 using Infrastructure.Persistance;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Extenstions
 {
@@ -33,19 +31,6 @@ namespace Api.Extenstions
 
             services.AddDbContext<EbookDbContext>(options =>
                 options.UseSqlServer(connectionString));
-
-            return services;
-        }
-
-        //public static IServiceCollection AddJwtProvider(this IServiceCollection services, IConfiguration config)
-        //{
-        //    services.AddTransient<>
-        //}
-
-        public static IServiceCollection AddValidators(this IServiceCollection services)
-        {
-            services.AddTransient<GenreValidator>();
-            services.AddTransient<AuthorValidator>();
 
             return services;
         }

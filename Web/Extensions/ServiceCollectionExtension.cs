@@ -37,14 +37,6 @@ namespace Web.Extensions
             return services;
         }
 
-        public static IServiceCollection AddValidators(this IServiceCollection services)
-        {
-            services.AddTransient<GenreValidator>();
-            services.AddTransient<AuthorValidator>();
-
-            return services;
-        }
-
         public static IServiceCollection AddAutomapperProfiles(this IServiceCollection services)
         {
             services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());

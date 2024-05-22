@@ -45,10 +45,10 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ApiModels\InputModels\Genre\" />
     <Folder Include="Common\" />
     <Folder Include="Reviews\" />
-    <Folder Include="Subscriptions\" />
+    <Folder Include="Subscriptions\Commands\" />
+    <Folder Include="Subscriptions\Queries\" />
     <Folder Include="Users\" />
     <Folder Include="Queries\Subscription\" />
     <Folder Include="Validators\" />
