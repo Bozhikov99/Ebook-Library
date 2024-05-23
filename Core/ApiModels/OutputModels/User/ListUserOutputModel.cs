@@ -1,9 +1,15 @@
-﻿namespace Core.ApiModels.OutputModels.User
-{
-    public class ListUserOutputModel : OutputBaseModel
-    {
-        public string UserName { get; set; }
+﻿using Core.Common.Interfaces;
 
-        public string Email { get; set; }
+namespace Core.ApiModels.OutputModels.User
+{
+    public class ListUserOutputModel : IHypermediaResource
+    {
+        public string Id { get; set; } = null!;
+
+        public string UserName { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public IEnumerable<ILink> Links { get; set; } = new List<ILink>();
     }
 }

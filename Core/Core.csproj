@@ -51,7 +51,6 @@
     <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Users\" />
     <Folder Include="Helpers\" />
     <Folder Include="ViewModels\Author\" />

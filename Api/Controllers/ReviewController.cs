@@ -1,10 +1,10 @@
 ﻿using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
 using Core.ApiModels.OutputModels.Review;
+using Core.Common.Interfaces;
 using Core.Helpers;
 using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
@@ -106,22 +106,22 @@ namespace Api.Controllers
             }
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
             if (model is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(GetReview), new {model.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(DeleteReview), new {model.Id}),
                     Rel = LinkConstants.DELETE,

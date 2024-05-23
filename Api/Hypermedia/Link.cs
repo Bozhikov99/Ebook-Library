@@ -1,6 +1,8 @@
-﻿namespace Core.ApiModels
+﻿using Core.Common.Interfaces;
+
+namespace Api.Hypermedia
 {
-    public class HateoasLink
+    public class Link : ILink
     {
         public string Url { get; set; } = null!;
 

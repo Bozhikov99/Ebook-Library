@@ -1,10 +1,12 @@
-﻿using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.Review;
+﻿using Core.ApiModels.OutputModels.Review;
+using Core.Common.Interfaces;
 
 namespace Core.Books.Queries.Details
 {
-    public class BookDetailsOutputModel : OutputBaseModel
+    public class BookDetailsOutputModel : IHypermediaResource
     {
+        public string Id { get; set; } = null!;
+
         public string Title { get; set; } = null!;
 
         public string? Description { get; set; }
@@ -28,5 +30,7 @@ namespace Core.Books.Queries.Details
         public UserReviewOutputModel? UserReview { get; set; }
 
         public IEnumerable<ListReviewOutputModel> Reviews { get; set; } = new List<ListReviewOutputModel>();
+
+        public IEnumerable<ILink> Links { get; set; } = new List<ILink>();
     }
 }

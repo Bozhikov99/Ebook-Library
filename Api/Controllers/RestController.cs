@@ -1,12 +1,12 @@
 ﻿using Api.Extenstions;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
+using Api.Hypermedia;
+using Core.Common.Interfaces;
 
 namespace Api.Controllers
 {
     public abstract class RestController : ApiBaseController
     {
-        protected void AttachLinks(OutputBaseModel outputModel)
+        protected void AttachLinks(IHypermediaResource outputModel)
         {
             if (this.IsHateoasRequired())
             {
@@ -14,17 +14,17 @@ namespace Api.Controllers
             }
         }
 
-        protected void AttachLinks(IEnumerable<OutputBaseModel> outputModels)
+        protected void AttachLinks(IEnumerable<IHypermediaResource> outputModels)
         {
             if (this.IsHateoasRequired())
             {
-                foreach (OutputBaseModel o in outputModels)
+                foreach (IHypermediaResource resource in outputModels)
                 {
-                    o.Links = GetLinks(o);
+                    resource.Links = GetLinks(resource);
                 }
             }
         }
 
-        protected abstract IEnumerable<HateoasLink> GetLinks(OutputBaseModel model);
+        protected abstract IEnumerable<Link> GetLinks(IHypermediaResource model);
     }
 }
