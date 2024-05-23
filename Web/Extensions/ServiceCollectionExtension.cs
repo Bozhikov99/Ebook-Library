@@ -1,7 +1,6 @@
 ﻿using Core;
 using Core.Helpers;
 using Core.Mapping;
-using Core.Validators;
 using Infrastructure.Common;
 using Infrastructure.Persistance;
 using MediatR;

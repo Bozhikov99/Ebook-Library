@@ -6,9 +6,9 @@ using Core.Books.Commands.Delete;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
-using Core.Commands.ReviewCommands;
 using Core.Genres.Queries.GetGenres;
 using Core.Helpers;
+using Core.Reviews.Commands.Delete;
 using Core.ViewModels.Book;
 using Core.ViewModels.Genre;
 using MediatR;
@@ -273,7 +273,7 @@ namespace Web.Areas.Admin.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteReviewCommand(id));
+                await mediator.Send(new DeleteReviewCommand { Id = id });
             }
             catch (Exception)
             {

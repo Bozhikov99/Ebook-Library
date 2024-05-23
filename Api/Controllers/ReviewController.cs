@@ -3,14 +3,13 @@ using AutoMapper;
 using Common.ApiConstants;
 using Common.MessageConstants;
 using Core.ApiModels;
-using Core.ApiModels.InputModels.Review;
 using Core.ApiModels.OutputModels;
 using Core.ApiModels.OutputModels.Review;
-using Core.Commands.ReviewCommands;
 using Core.Helpers;
-using Core.Queries.Review;
-using Core.Queries.User;
-using Core.ViewModels.Review;
+using Core.Reviews.Commands.Create;
+using Core.Reviews.Commands.Delete;
+using Core.Reviews.Common;
+using Core.Reviews.Queries.GetReviewDetails;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +39,7 @@ namespace Api.Controllers
         {
             try
             {
-                ListReviewModel model = await mediator.Send(new GetReviewQuery(id));
+                ReviewModel model = await mediator.Send(new GetReviewDetailsQuery { Id = id });
                 ListReviewOutputModel outputModel = mapper.Map<ListReviewOutputModel>(model);
                 AttachLinks(outputModel);
 
@@ -65,12 +64,7 @@ namespace Api.Controllers
         {
             try
             {
-                string userId = helper.GetUserId();
-
-                bool isAdmin = await mediator.Send(new IsUserAdminQuery());
-                IRequest request = isAdmin ? new DeleteReviewCommand(id) : new DeleteReviewApiCommand(id, userId);
-
-                await mediator.Send(request);
+                await mediator.Send(new DeleteReviewCommand { Id = id });
             }
             catch (NullReferenceException)
             {
@@ -93,7 +87,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ListReviewModel>> AddReview([FromRoute] string bookId, [FromBody] ReviewInputModel model)
+        public async Task<ActionResult<BaseReviewModel>> AddReview([FromRoute] string bookId, [FromBody] CreateReviewCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -102,7 +96,7 @@ namespace Api.Controllers
 
             try
             {
-                ListReviewModel review = await mediator.Send(new CreateReviewApiCommand(bookId, model));
+                BaseReviewModel review = await mediator.Send(command);
 
                 return Created(nameof(GetReview), review);
             }

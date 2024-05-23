@@ -3,12 +3,12 @@ using Common.ValidationConstants;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
-using Core.Commands.ReviewCommands;
 using Core.Commands.UserCommands;
 using Core.Helpers;
-using Core.Queries.Review;
 using Core.Queries.User;
-using Core.ViewModels.Book;
+using Core.Reviews.Commands.Create;
+using Core.Reviews.Commands.Delete;
+using Core.Reviews.Queries.GetUserReview;
 using Core.ViewModels.Review;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -116,17 +116,17 @@ namespace Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateReview(CreateReviewModel model)
+        public async Task<IActionResult> CreateReview(CreateReviewCommand command)
         {
             try
             {
-                await mediator.Send(new CreateReviewCommand(model));
+                await mediator.Send(command);
             }
             catch (Exception)
             {
             }
 
-            UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery(model.UserId, model.BookId));
+            UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery { UserId = command.UserId, BookId = command.BookId });
 
             return Ok(userReview);
         }
@@ -137,7 +137,7 @@ namespace Web.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteReviewCommand(id));
+                await mediator.Send(new DeleteReviewCommand { Id = id });
             }
             catch (Exception)
             {

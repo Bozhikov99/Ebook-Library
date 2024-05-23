@@ -1,6 +1,5 @@
 ﻿using Common.MessageConstants;
-using Core.Commands.SubscriptionCommands;
-using Core.ViewModels.Subscription;
+using Core.Subscriptions.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +28,11 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Subscribe(CreateSubscriptionModel model)
+        public async Task<IActionResult> Subscribe(CreateSubscriptionCommand command)
         {
             try
             {
-                await mediator.Send(new CreateSubscriptionCommand(model));
+                await mediator.Send(command);
             }
             catch (Exception)
             {

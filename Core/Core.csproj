@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Queries\Subscription\**" />
+    <EmbeddedResource Remove="Queries\Subscription\**" />
+    <None Remove="Queries\Subscription\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
@@ -46,14 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Reviews\" />
-    <Folder Include="Subscriptions\Commands\" />
-    <Folder Include="Subscriptions\Queries\" />
     <Folder Include="Users\" />
-    <Folder Include="Queries\Subscription\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Commands\SubscriptionCommands\" />
-    <Folder Include="Handlers\SubscriptionHandlers\" />
     <Folder Include="Helpers\" />
     <Folder Include="ViewModels\Author\" />
   </ItemGroup>
