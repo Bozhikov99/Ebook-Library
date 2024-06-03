@@ -1,6 +1,6 @@
-﻿using Core.Queries.Users;
-using Core.Users.Commands.EditUserRoles;
+﻿using Core.Users.Commands.EditUserRoles;
 using Core.Users.Queries.GetAllUsers;
+using Core.Users.Queries.IsUserAdmin;
 using Core.ViewModels.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

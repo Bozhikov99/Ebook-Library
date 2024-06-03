@@ -98,7 +98,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUserModel model)
+        public async Task<IActionResult> Login(LoginCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace Web.Controllers
 
             try
             {
-                await mediator.Send(new LoginCommand(model));
+                await mediator.Send(command);
             }
             catch (InvalidUserCredentialsException ae)
             {

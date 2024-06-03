@@ -7,7 +7,6 @@ using Common.ApiConstants;
 using Common.MessageConstants;
 using Core.ApiModels.OutputModels.User;
 using Core.Common.Interfaces;
-using Core.Queries.Users;
 using Core.Users.Commands.ConfirmEmail;
 using Core.Users.Commands.EditUserRoles;
 using Core.Users.Commands.Login;
@@ -22,10 +21,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Api.Controllers
 {
@@ -120,11 +115,15 @@ namespace Api.Controllers
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] LoginUserModel model)
+        public async Task<ActionResult<AuthResponseModel>> Login([FromBody] LoginCommand command)
         {
             try
             {
-                await mediator.Send(new LoginCommand(model));
+                AuthResponseModel model = await mediator.Send(command);
+
+                //string token = await CreateToken(command);
+
+                return Ok(model);
             }
             catch (InvalidUserCredentialsException ae)
             {
@@ -134,14 +133,10 @@ namespace Api.Controllers
             {
                 return BadRequest(io.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(ErrorMessageConstants.LOGIN_UNEXPECTED);
             }
-
-            string token = await CreateToken(model);
-
-            return Ok(token);
         }
 
         [HttpGet]
@@ -281,44 +276,6 @@ namespace Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        //move this in Core
-        private async Task<string> CreateToken(LoginUserModel model)
-        {
-            string userId = await mediator.Send(new GetUserIdByUsernameQuery(model.UserName));
-            User user = await userManager.FindByIdAsync(userId);
-
-            IEnumerable<string> roles = await userManager.GetRolesAsync(user);
-
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, model.UserName),
-                new Claim(ClaimTypes.NameIdentifier, userId)
-            };
-
-            foreach (string r in roles)
-            {
-                Claim current = new Claim(ClaimTypes.Role, r);
-                claims.Add(current);
-            }
-
-            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                configuration.GetValue<string>(apiKey)));
-
-            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            DateTime expiration = DateTime.Now.AddDays(1);
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                claims: claims,
-                expires: expiration,
-                signingCredentials: credentials);
-
-            string jwt = new JwtSecurityTokenHandler()
-                .WriteToken(token);
-
-            return jwt;
         }
 
         protected override IEnumerable<Link> GetLinks(IHypermediaResource model)

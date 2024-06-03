@@ -1,10 +1,8 @@
-﻿using Common.MessageConstants;
-using Common.ValidationConstants;
+﻿using Common.ValidationConstants;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
 using Core.Helpers;
-using Core.Queries.Users;
 using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
 using Core.Reviews.Queries.GetUserReview;

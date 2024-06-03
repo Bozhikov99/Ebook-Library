@@ -11,10 +11,6 @@ namespace Core.Mapping
         {
             CreateMap<RegisterUserModel, User>();
 
-            CreateMap<LoginUserModel, User>();
-
-            CreateMap<RegisterUserModel, LoginUserModel>();
-
             CreateMap<User, UserProfileModel>();
 
             CreateMap<User, ListUserModel>();

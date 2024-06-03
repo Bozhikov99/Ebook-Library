@@ -1,4 +1,4 @@
-﻿using Core.Queries.Users;
+﻿using Core.Users.Queries.IsUserAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
