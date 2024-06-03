@@ -44,7 +44,7 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Read(string id)
         {
-            byte[] content = await mediator.Send(new GetContentQuery { Id = id });
+            byte[] content = await mediator.Send(new GetContentQuery { BookId = id });
 
             return File(content, BookConstants.AllowedContentType);
         }

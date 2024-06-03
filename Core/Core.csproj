@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Queries\Subscription\**" />
-    <EmbeddedResource Remove="Queries\Subscription\**" />
-    <None Remove="Queries\Subscription\**" />
+    <Compile Remove="Users\Queries\GetUserProfile\**" />
+    <EmbeddedResource Remove="Users\Queries\GetUserProfile\**" />
+    <None Remove="Users\Queries\GetUserProfile\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,28 +31,10 @@
     <None Remove="Commands\" />
     <None Remove="Queries\" />
     <None Remove="Handlers\" />
-    <None Remove="Queries\Author\" />
-    <None Remove="Queries\Book\" />
-    <None Remove="Queries\Genre\" />
-    <None Remove="Queries\Review\" />
-    <None Remove="Queries\Subscription\" />
-    <None Remove="Queries\User\" />
-    <None Remove="Commands\GenreCommands\" />
     <None Remove="Validators\" />
-    <None Remove="Commands\AuthorCommands\" />
-    <None Remove="Commands\SubscriptionCommands\" />
-    <None Remove="Handlers\SubscriptionHandlers\" />
-    <None Remove="Handlers\UserHandlers\" />
     <None Remove="Helpers\" />
-    <None Remove="Commands\UserCommands\" />
-    <None Remove="Handlers\ReviewHandlers\" />
-    <None Remove="Commands\ReviewCommands\" />
-    <None Remove="Handlers\BookHandlers\" />
-    <None Remove="Commands\BookCommands\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Users\" />
     <Folder Include="Helpers\" />
-    <Folder Include="ViewModels\Author\" />
   </ItemGroup>
 </Project>

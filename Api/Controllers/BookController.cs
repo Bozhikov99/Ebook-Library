@@ -1,11 +1,10 @@
 ﻿using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
 using Common.ValidationConstants;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
 using Core.Books.Commands.Create;
 using Core.Books.Commands.Delete;
 using Core.Books.Commands.Edit;
@@ -13,9 +12,10 @@ using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBookEditModel;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
-using Core.Commands.UserCommands;
+using Core.Common.Interfaces;
 using Core.Helpers;
-using Core.Queries.User;
+using Core.Users.Commands.AddBookToFavourites;
+using Core.Users.Commands.RemoveBookFromFavourites;
 using Core.ViewModels.Book;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -169,18 +169,18 @@ namespace Api.Controllers
         {
             try
             {
-                bool isSubscribed = await mediator.Send(new IsUserSubscribedQuery());
+                //bool isSubscribed = await mediator.Send(new IsUserSubscribedQuery());
 
-                if (!isSubscribed)
-                {
-                    return StatusCode(StatusCodes.Status402PaymentRequired);
-                }
+                //if (!isSubscribed)
+                //{
+                //    return StatusCode(StatusCodes.Status402PaymentRequired);
+                //}
 
                 byte[] content = await memoryCache.GetOrCreateAsync(string.Format(CacheKeyConstants.READ, id), async (entry) =>
                 {
                     entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
 
-                    return await mediator.Send(new GetContentQuery { Id = id });
+                    return await mediator.Send(new GetContentQuery { BookId = id });
                 });
 
                 return File(content, BookConstants.AllowedContentType);
@@ -227,7 +227,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new AddBookToFavouritesCommand(id));
+                await mediator.Send(new AddBookToFavouritesCommand { BookId = id });
             }
             catch (ArgumentNullException)
             {
@@ -250,7 +250,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new RemoveBookFromFavouritesCommand(id));
+                await mediator.Send(new RemoveBookFromFavouritesCommand { BookId = id });
             }
             catch (ArgumentNullException)
             {
@@ -276,52 +276,52 @@ namespace Api.Controllers
         //    return model;
         //}
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
             if (model is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(DetailsUser), new {model.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(DetailGuest), new {model.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Read), new {model.Id}),
                     Rel = LinkConstants.READ,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(AddToFavourites), null),
                     Rel = LinkConstants.FOLLOW,
                     Method = HttpMethods.Put
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(RemoveFromFavourites), null),
                     Rel = LinkConstants.UNFOLLOW,
                     Method = HttpMethods.Put
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
                     Rel = LinkConstants.UPDATE,

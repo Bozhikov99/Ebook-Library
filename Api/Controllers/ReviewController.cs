@@ -106,9 +106,9 @@ namespace Api.Controllers
             }
         }
 
-        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource resource)
         {
-            if (model is null)
+            if (resource is null)
             {
                 return Enumerable.Empty<Link>();
             }
@@ -117,13 +117,13 @@ namespace Api.Controllers
             {
                 new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(GetReview), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(GetReview), new {resource.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
                 new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(DeleteReview), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(DeleteReview), new {resource.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 }

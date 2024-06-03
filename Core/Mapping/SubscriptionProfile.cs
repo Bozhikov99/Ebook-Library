@@ -9,8 +9,6 @@ namespace Core.Mapping
         public SubscriptionProfile()
         {
             CreateMap<CreateSubscriptionModel, Subscription>();
-
-            CreateMap<Subscription, ListSubscriptionModel>();
         }
     }
 }

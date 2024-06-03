@@ -1,4 +1,4 @@
-﻿using Core.Queries.User;
+﻿using Core.Queries.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

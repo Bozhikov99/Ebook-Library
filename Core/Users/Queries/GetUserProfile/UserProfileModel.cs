@@ -1,7 +1,6 @@
 ﻿using Core.Common.Interfaces;
-using Core.Users.Queries.GetProfile;
 
-namespace Core.ViewModels.User
+namespace Core.Users.Queries.GetUserProfile
 {
     public class UserProfileModel : IHypermediaResource
     {
@@ -13,7 +12,7 @@ namespace Core.ViewModels.User
 
         public DateTime RegisterDate { get; set; }
 
-        public DateTime? SubscribedDueDate { get; set; }
+        public ActiveSubscriptionDto? Subscription { get; set; }
 
         public IEnumerable<FavouriteBookDto> FavouriteBooks { get; set; } = new List<FavouriteBookDto>();
 

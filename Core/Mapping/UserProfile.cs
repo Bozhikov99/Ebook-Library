@@ -2,7 +2,6 @@
 using Core.ApiModels.OutputModels.User;
 using Core.ViewModels.User;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Core.Mapping
 {
@@ -20,13 +19,9 @@ namespace Core.Mapping
 
             CreateMap<User, ListUserModel>();
 
-            CreateMap<IdentityRole, RoleInfoModel>();
-
             #region [Output Model]
 
-            CreateMap<UserProfileModel, UserProfileOutputModel>();
-
-            CreateMap<User, UserProfileOutputModel>();
+            CreateMap<UserProfileModel, UserProfileModel>();
 
             CreateMap<ListUserModel, ListUserOutputModel>();
 

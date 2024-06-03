@@ -1,4 +1,5 @@
 ﻿using Api.Extenstions;
+using Api.Hypermedia;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
@@ -10,6 +11,7 @@ using Core.Authors.Commands.Edit;
 using Core.Authors.Queries.Common;
 using Core.Authors.Queries.GetAuthors;
 using Core.Authors.Queries.GetEditModel;
+using Core.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -139,24 +141,24 @@ namespace Api.Controllers
             }
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource resource)
         {
-            if (model is null)
+            if (resource is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Delete), new {resource.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Edit), new {resource.Id}),
                     Rel = LinkConstants.UPDATE,
                     Method = HttpMethods.Put
                 }

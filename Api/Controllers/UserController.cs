@@ -1,16 +1,19 @@
 ﻿using Api.EmailService;
 using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
 using Core.ApiModels.OutputModels.User;
-using Core.Commands.UserCommands;
-using Core.Queries.User;
-using Core.ViewModels.Book;
-using Core.ViewModels.Subscription;
+using Core.Common.Interfaces;
+using Core.Queries.Users;
+using Core.Users.Commands.ConfirmEmail;
+using Core.Users.Commands.EditUserRoles;
+using Core.Users.Commands.Login;
+using Core.Users.Commands.Register;
+using Core.Users.Queries.GetAllUsers;
+using Core.Users.Queries.GetProfile;
 using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -184,7 +187,7 @@ namespace Api.Controllers
 
             try
             {
-                await mediator.Send(new EditRolesCommand(id, roles));
+                await mediator.Send(new EditUserRolesCommand(id, roles));
 
                 return NoContent();
             }
@@ -209,22 +212,16 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UserProfileOutputModel>> Profile([FromRoute] string id)
+        public async Task<ActionResult<UserProfileModel>> Profile([FromRoute] string id)
         {
             try
             {
-                UserProfileOutputModel profile = await mediator.Send(new GetProfileQuery(id));
+                UserProfileModel profile = await mediator.Send(new GetProfileQuery { Id = id });
 
                 if (profile is null)
                 {
                     return NotFound();
                 }
-
-                IEnumerable<ListBookModel> books = await mediator.Send(new GetFavouriteBooksQuery());
-                ListSubscriptionModel subscriptions = await mediator.Send(new GetActiveSubscriptionQuery());
-
-                profile.Books = books;
-                profile.Subscription = subscriptions;
 
                 AttachLinks(profile);
 
@@ -236,24 +233,7 @@ namespace Api.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("Roles/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<RoleInfoModel>>> GetRole([FromRoute] string id)
-        {
-            try
-            {
-                RoleInfoModel role = await mediator.Send(new GetRoleQuery(id));
-
-                return Ok(role);
-            }
-            catch (ArgumentNullException an)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, an.Message);
-            }
-        }
-
+        //To be deprecated
         [HttpPost("Roles")]
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -274,7 +254,7 @@ namespace Api.Controllers
             {
                 await roleManager.CreateAsync(role);
 
-                return Created(nameof(GetRole), role);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -282,6 +262,7 @@ namespace Api.Controllers
             }
         }
 
+        //To be deprecated
         [HttpPost("Roles/Administrator")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -294,7 +275,7 @@ namespace Api.Controllers
             {
                 await roleManager.CreateAsync(role);
 
-                return Created(nameof(GetRole), role);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -340,26 +321,26 @@ namespace Api.Controllers
             return jwt;
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
-            IEnumerable<HateoasLink> links = GetUserLinks(model);
+            IEnumerable<Link> links = GetUserLinks(model);
 
             return links;
         }
 
-        private IEnumerable<HateoasLink> GetUserLinks(OutputBaseModel model)
+        private IEnumerable<Link> GetUserLinks(IHypermediaResource resource)
         {
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Profile), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Profile), new {resource.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(EditUserRoles), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(EditUserRoles), new {resource.Id}),
                     Rel = LinkConstants.UPDATE_ROLES,
                     Method = HttpMethods.Put
                 }

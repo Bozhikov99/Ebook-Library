@@ -1,10 +1,10 @@
 ﻿using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
+using Core.Common.Interfaces;
 using Core.Genres.Commands.Create;
 using Core.Genres.Commands.Delete;
 using Core.Genres.Commands.Edit;
@@ -153,22 +153,22 @@ namespace Api.Controllers
 
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
             if (model is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
                     Rel = LinkConstants.UPDATE,

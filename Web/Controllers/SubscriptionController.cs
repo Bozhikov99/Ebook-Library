@@ -28,7 +28,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Subscribe(CreateSubscriptionCommand command)
+        public async Task<IActionResult> Subscribe(SubscribeCommand command)
         {
             try
             {

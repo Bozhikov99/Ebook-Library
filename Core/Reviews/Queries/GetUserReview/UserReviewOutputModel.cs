@@ -1,16 +1,11 @@
 ﻿using Core.Common.Interfaces;
+using Core.Reviews.Common;
 
 namespace Core.ApiModels.OutputModels.Review
 {
-    public class UserReviewOutputModel : IHypermediaResource
+    public class UserReviewOutputModel : BaseReviewModel, IHypermediaResource
     {
         public string Id { get; set; } = null!;
-
-        public double Value { get; set; }
-
-        public string Comment { get; set; }
-
-        public string BookId { get; set; }
 
         public IEnumerable<ILink> Links { get; set; } = new List<ILink>();
     }
