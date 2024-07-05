@@ -43,7 +43,7 @@ namespace Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<BookModel>>> All([FromQuery] string? search, [FromQuery] GetBooksQuery query)
+        public async Task<ActionResult<IEnumerable<BookModel>>> All([FromQuery] GetBooksQuery query)
         {
             try
             {
