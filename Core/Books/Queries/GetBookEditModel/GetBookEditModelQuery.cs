@@ -27,8 +27,8 @@ namespace Core.Books.Queries.GetBookEditModel
                     Title = b.Title,
                     AuthorId = b.AuthorId,
                     Description = b.Description,
-                    GenreIds = b.Genres
-                        .Select(g => g.Id),
+                    GenreIds = b.BookGenres
+                        .Select(bg => bg.GenreId),
                     Cover = b.Cover,
                     Content = b.Content,
                     ReleaseYear = b.ReleaseYear,

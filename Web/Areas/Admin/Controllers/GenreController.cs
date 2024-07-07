@@ -91,26 +91,8 @@ namespace Web.Areas.Admin.Controllers
                 GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
                 return View(originalModel);
             }
-
-            try
-            {
                 await mediator.Send(command);
-            }
-            catch (ArgumentException ae)
-            {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, command.Name);
-
-                GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
-                return View(originalModel);
-            }
-            catch (Exception)
-            {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_GENRE_UNEXPECTED;
-
-                GenreModel originalModel = await mediator.Send(new GetEditModelQuery { Id = command.Id });
-                return View(originalModel);
-            }
-
+            
             return RedirectToAction(nameof(All));
         }
     }

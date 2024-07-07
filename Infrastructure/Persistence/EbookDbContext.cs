@@ -21,6 +21,8 @@ namespace Infrastructure.Persistance
 
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<BookGenre> BookGenres { get; set; }
+
         public DbSet<Author> Authors { get; set; }
 
         public DbSet<User> Users { get; set; }
@@ -41,6 +43,8 @@ namespace Infrastructure.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(EbookDbContext).Assembly);
+
             base.OnModelCreating(modelBuilder);
         }
     }

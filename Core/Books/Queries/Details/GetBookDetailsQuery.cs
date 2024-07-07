@@ -30,7 +30,7 @@ namespace Core.Books.Queries.Details
             string userId = userIdHelper.GetUserId();
 
             Book book = await repository.AllReadonly<Book>(b => b.Id == bookId)
-                .Include(b => b.Genres)
+                .Include(b => b.BookGenres)
                 .Include(b => b.Author)
                 .Include(b => b.Reviews)
                 .FirstAsync();

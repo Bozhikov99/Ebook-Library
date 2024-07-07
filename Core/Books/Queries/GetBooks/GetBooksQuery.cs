@@ -11,7 +11,7 @@ namespace Core.Books.Queries.GetBooks
 
         public int PageNumber { get; set; }
 
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 4;
     }
 
     public class GetAllBooksApiHandler : IRequestHandler<GetBooksQuery, IEnumerable<BookModel>>
@@ -39,7 +39,7 @@ namespace Core.Books.Queries.GetBooks
 
             if (genreIds.Count > 0)
             {
-                books = books.Where(b => b.Genres.Any(g => genreIds.Contains(g.Id)));
+                books = books.Where(b => b.BookGenres.Any(bg => genreIds.Contains(bg.GenreId)));
             }
 
             IEnumerable<BookModel> dtos = await books.Select(b => new BookModel
@@ -50,7 +50,7 @@ namespace Core.Books.Queries.GetBooks
                 Rating = b.Reviews.Count == 0 ? 0 :
                          b.Reviews.Select(r => r.Value)
                          .Sum() / b.Reviews.Count,
-                Genres = b.Genres.Select(g => g.Name),
+                Genres = b.BookGenres.Select(bg => bg.Genre.Name),
                 Author = $"{b.Author.FirstName} {b.Author.LastName}"
             })
                 .Skip(request.PageNumber * (request.PageSize - 1))

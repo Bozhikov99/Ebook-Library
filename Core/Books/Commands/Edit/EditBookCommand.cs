@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Infrastructure.Common;
+using Infrastructure.Persistance;
 
 namespace Core.Books.Commands.Edit
 {
@@ -26,11 +27,11 @@ namespace Core.Books.Commands.Edit
 
     public class EditBookHandler : IRequestHandler<EditBookCommand>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
 
-        public EditBookHandler(IRepository repository)
+        public EditBookHandler(EbookDbContext context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
         public async Task<Unit> Handle(EditBookCommand request, CancellationToken cancellationToken)
@@ -38,32 +39,41 @@ namespace Core.Books.Commands.Edit
             string id = request.Id;
 
             //TODO: Select this
-            Book book = await repository.All<Book>(b => string.Equals(b.Id, id))
-                .Include(b => b.Genres)
-                .FirstAsync();
+            Book? book = await context.Books
+                .FirstOrDefaultAsync(b => string.Equals(b.Id, id), cancellationToken);
 
-            book.Genres.Clear();
+            if (book is null)
+            {
+                throw new ArgumentException();
+            }
 
-            List<Genre> genres = new List<Genre>();
+            byte[] cover = request.Cover ?? book.Cover;
+            byte[] content = request.Content ?? book.Content;
 
             IEnumerable<string> genreIds = request.GenreIds;
 
-            foreach (string gId in genreIds)
-            {
-                //To be fixed
-                Genre currentGenre = await repository.GetByIdAsync<Genre>(gId);
-                genres.Add(currentGenre);
-            }
+            ICollection<Genre> genres = await context.Genres
+                .Select(g => new Genre { Id = g.Id })
+                .Where(g => genreIds.Contains(g.Id))
+                .ToListAsync(cancellationToken);
 
-            book.Genres = genres;
+            List<BookGenre> bookGenres = genres
+                .Select(g => new BookGenre
+                {
+                    GenreId = g.Id,
+                    BookId = book.Id
+                })
+                .ToList();
+
+            book.BookGenres = bookGenres;
             book.Title = request.Title;
-            book.Content = request.Content == null ? book.Content : request.Content;
-            book.Cover = request.Cover == null ? book.Cover : request.Cover;
+            book.Content = content;
+            book.Cover = cover;
             book.AuthorId = request.AuthorId;
             book.ReleaseYear = request.ReleaseYear;
             book.Pages = request.Pages;
 
-            await repository.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

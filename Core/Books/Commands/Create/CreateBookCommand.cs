@@ -15,8 +15,10 @@ namespace Core.Books.Commands.Create
 
         public string AuthorId { get; set; } = null!;
 
+        //To be validated in a validator
         public byte[] Cover { get; set; } = null!;
 
+        //To be validated in a validator
         public byte[] Content { get; set; } = null!;
 
         public IEnumerable<string> GenreIds { get; set; } = new List<string>();
@@ -55,7 +57,6 @@ namespace Core.Books.Commands.Create
                 .Select(g => new Genre { Id = g.Id })
                 .Where(g => genreIds.Contains(g.Id))
                 .ToListAsync(cancellationToken);
-
             //TODO: Add validation
             Book book = new()
             {
@@ -65,9 +66,18 @@ namespace Core.Books.Commands.Create
                 Pages = request.Pages,
                 AuthorId = request.AuthorId,
                 Cover = request.Cover,
-                Content = request.Content,
-                Genres = genres
+                Content = request.Content
             };
+
+            ICollection<BookGenre> bookGenres = genres
+                .Select(g => new BookGenre
+                {
+                    GenreId = g.Id,
+                    Book = book
+                })
+                .ToList();
+
+            book.BookGenres = bookGenres;
 
             await context.AddAsync(book);
             await context.SaveChangesAsync();

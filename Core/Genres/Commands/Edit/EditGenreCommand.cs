@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Common.MessageConstants;
+using Domain.Entities;
 using Infrastructure.Persistance;
 
 namespace Core.Genres.Commands.Edit
@@ -21,6 +22,14 @@ namespace Core.Genres.Commands.Edit
 
         public async Task<Unit> Handle(EditGenreCommand request, CancellationToken cancellationToken)
         {
+            bool isExistingGenre = await context.Genres
+                .AnyAsync(g => string.Equals(g.Name, request.Name), cancellationToken);
+
+            if (isExistingGenre)
+            {
+                throw new ArgumentException(ErrorMessageConstants.BOOK_EXISTS);
+            }
+
             Genre? genre = await context.Genres
                 .FirstOrDefaultAsync(g => string.Equals(g.Id, request.Id), cancellationToken);
 

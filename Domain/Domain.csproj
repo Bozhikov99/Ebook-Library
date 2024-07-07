@@ -13,7 +13,6 @@
     <None Remove="Microsoft.AspNetCore.Http.Features" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
