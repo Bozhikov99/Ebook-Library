@@ -39,7 +39,7 @@ namespace Web.Areas.Admin.Controllers
             ViewBag.Genres = query.GenreIds;
             TempData["Search"] = query.Search;
 
-            int starterBook = (query.PageNumber - 1) * query.PageSize;
+            int starterBook = query.PageNumber * query.PageSize;
             ViewBag.StarterBook = starterBook;
 
             return View(books);
