@@ -124,7 +124,7 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit([FromBody] EditBookCommand command)
+        public async Task<IActionResult> Edit([FromForm] EditBookCommand command)
         {
             await mediator.Send(command);
 

@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Infrastructure.Common;
 using Infrastructure.Persistance;
 
 namespace Core.Books.Commands.Edit
@@ -40,6 +39,18 @@ namespace Core.Books.Commands.Edit
 
             //TODO: Select this
             Book? book = await context.Books
+                .Select(b => new Book
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Description = b.Description,
+                    Cover = b.Cover,
+                    ReleaseYear = b.ReleaseYear,
+                    Pages = b.Pages,
+                    AuthorId = b.AuthorId,
+                    BookGenres = b.BookGenres,
+                    Author = b.Author
+                })
                 .FirstOrDefaultAsync(b => string.Equals(b.Id, id), cancellationToken);
 
             if (book is null)
@@ -57,7 +68,10 @@ namespace Core.Books.Commands.Edit
                 .Where(g => genreIds.Contains(g.Id))
                 .ToListAsync(cancellationToken);
 
-            List<BookGenre> bookGenres = genres
+            context.BookGenres
+                .RemoveRange(book.BookGenres);
+
+            List<BookGenre> newGenres = genres
                 .Select(g => new BookGenre
                 {
                     GenreId = g.Id,
@@ -65,7 +79,9 @@ namespace Core.Books.Commands.Edit
                 })
                 .ToList();
 
-            book.BookGenres = bookGenres;
+            await context.BookGenres
+                .AddRangeAsync(newGenres, cancellationToken);
+
             book.Title = request.Title;
             book.Content = content;
             book.Cover = cover;
