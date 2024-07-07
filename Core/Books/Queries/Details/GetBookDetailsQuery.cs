@@ -3,6 +3,7 @@ using Core.ApiModels.OutputModels.Review;
 using Core.Helpers;
 using Domain.Entities;
 using Infrastructure.Common;
+using Infrastructure.Persistance;
 
 namespace Core.Books.Queries.Details
 {
@@ -13,13 +14,13 @@ namespace Core.Books.Queries.Details
 
     public class GetDetailsHandler : IRequestHandler<GetBookDetailsQuery, BookDetailsOutputModel>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
         private readonly IMapper mapper;
         private readonly UserIdHelper userIdHelper;
 
-        public GetDetailsHandler(IRepository repository, IMapper mapper, UserIdHelper userIdHelper)
+        public GetDetailsHandler(EbookDbContext context, IMapper mapper, UserIdHelper userIdHelper)
         {
-            this.repository = repository;
+            this.context = context;
             this.mapper = mapper;
             this.userIdHelper = userIdHelper;
         }
@@ -27,28 +28,67 @@ namespace Core.Books.Queries.Details
         public async Task<BookDetailsOutputModel> Handle(GetBookDetailsQuery request, CancellationToken cancellationToken)
         {
             string bookId = request.Id;
-            string userId = userIdHelper.GetUserId();
+            string currentUserId = userIdHelper.GetUserId();
 
-            Book book = await repository.AllReadonly<Book>(b => b.Id == bookId)
-                .Include(b => b.BookGenres)
-                .Include(b => b.Author)
-                .Include(b => b.Reviews)
-                .FirstAsync();
+            Book? book = await context.Books
+                .Select(b => new Book
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Description = b.Description,
+                    Cover = b.Cover,
+                    ReleaseYear = b.ReleaseYear,
+                    Pages = b.Pages,
+                    Author = b.Author,
+                    BookGenres = b.BookGenres
+                        .Select(bg => new BookGenre
+                        {
+                            BookId = bg.BookId,
+                            Genre = bg.Genre,
+                            GenreId = bg.GenreId,
+                            Book = bg.Book
+                        })
+                        .ToArray(),
+                    Reviews = b.Reviews,
+                    UsersFavourited = b.UsersFavourited
+                })
+                .FirstOrDefaultAsync();
 
-            BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
+            BookDetailsOutputModel model = new BookDetailsOutputModel
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Description = book.Description,
+                Cover = book.Cover,
+                ReleaseYear = book.ReleaseYear,
+                Pages = book.Pages,
+                Author = $"{book.Author.FirstName} {book.Author.LastName}",
+                Genres = book.BookGenres.Select(bg => bg.Genre.Name),
+                Rating = book.Reviews.Count == 0 ? 0 :
+                         book.Reviews.Select(r => r.Value)
+                         .Sum() / book.Reviews.Count,
 
-            if (string.IsNullOrEmpty(userId))
+            };
+            //BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
+
+            if (string.IsNullOrEmpty(currentUserId))
             {
                 return model;
             }
 
-            User user = await repository.GetByIdAsync<User>(userId);
+            User? user = await context.Users
+                .FirstOrDefaultAsync(u => string.Equals(u.Id, currentUserId));
+
+            if (user is null)
+            {
+                throw new ArgumentException();
+            }
 
             bool isFavourite = book.UsersFavourited
-                .Any(u => u.Id == userId);
+                .Any(u => u.Id == currentUserId);
 
-            Review? userReview = await repository.AllReadonly<Review>(r => r.UserId == userId)
-                .FirstOrDefaultAsync();
+            Review? userReview = await context.Reviews
+                .FirstOrDefaultAsync(r => string.Equals(r.UserId, currentUserId));
 
             UserReviewOutputModel userReviewModel = mapper.Map<UserReviewOutputModel>(userReview);
 

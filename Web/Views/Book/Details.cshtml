@@ -1,5 +1,5 @@
-﻿@using Core.ViewModels.Book
-@model BookDetailsModel
+﻿@using Core.Books.Queries.Details;
+@model BookDetailsOutputModel;
 
 @{
     ViewData["Title"] = "Details";
@@ -52,7 +52,7 @@
     <partial name="_ReviewPartial" />
 
     <!-- Created Review -->
-    @foreach (var r in ViewBag.Reviews)
+    @foreach (var r in Model.Reviews)
     {
         <section style="background-color: rgb(243, 194, 166)">
             <div class="col text-center" style="background-color: #212529">

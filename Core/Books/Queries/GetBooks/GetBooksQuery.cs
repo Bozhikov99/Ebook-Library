@@ -44,6 +44,7 @@ namespace Core.Books.Queries.GetBooks
 
             IEnumerable<BookModel> dtos = await books.Select(b => new BookModel
             {
+                Id = b.Id,
                 Title = b.Title,
                 Cover = b.Cover,
                 ReleaseYear = b.ReleaseYear,

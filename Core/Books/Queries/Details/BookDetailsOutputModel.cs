@@ -23,8 +23,6 @@ namespace Core.Books.Queries.Details
 
         public double Rating { get; set; }
 
-        public string UserId { get; set; } = null!;
-
         public bool IsFavourite { get; set; }
 
         public UserReviewOutputModel? UserReview { get; set; }
