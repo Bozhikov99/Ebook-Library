@@ -52,7 +52,7 @@ namespace Core.Books.Queries.Details
                     Reviews = b.Reviews,
                     UsersFavourited = b.UsersFavourited
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(b => string.Equals(b.Id, bookId));
 
             BookDetailsOutputModel model = new BookDetailsOutputModel
             {
