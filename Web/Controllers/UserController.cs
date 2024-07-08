@@ -3,7 +3,6 @@ using Core.Users.Commands.ConfirmEmail;
 using Core.Users.Commands.Login;
 using Core.Users.Commands.Register;
 using Core.Users.Queries.GetProfile;
-using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
@@ -44,7 +43,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserModel model)
+        public async Task<IActionResult> Register(RegisterCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +52,7 @@ namespace Web.Controllers
 
             try
             {
-                User user = await mediator.Send(new RegisterCommand(model));
+                User user = await mediator.Send(command);
 
                 string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 string link = $"https://localhost:{Request.Host.Port}{Url.Action(nameof(ConfirmEmail), "User", new { Token = token, Username = user.UserName })}";

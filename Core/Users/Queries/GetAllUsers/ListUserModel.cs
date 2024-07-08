@@ -1,4 +1,4 @@
-﻿namespace Core.ViewModels.User
+﻿namespace Core.Users.Queries.GetAllUsers
 {
     public class ListUserModel
     {

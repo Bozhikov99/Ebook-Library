@@ -1,4 +1,5 @@
 ﻿using Common.ValidationConstants;
+using Core.ApiModels.OutputModels.Review;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
@@ -8,7 +9,6 @@ using Core.Reviews.Commands.Delete;
 using Core.Reviews.Queries.GetUserReview;
 using Core.Users.Commands.AddBookToFavourites;
 using Core.Users.Commands.RemoveBookFromFavourites;
-using Core.ViewModels.Review;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -90,7 +90,7 @@ namespace Web.Controllers
         {
             await mediator.Send(command);
 
-            UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery { UserId = command.UserId, BookId = command.BookId });
+            UserReviewOutputModel userReview = await mediator.Send(new GetUserReviewQuery { UserId = command.UserId, BookId = command.BookId });
 
             return Ok(userReview);
         }

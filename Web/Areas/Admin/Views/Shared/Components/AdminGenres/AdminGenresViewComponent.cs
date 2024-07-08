@@ -1,5 +1,5 @@
-﻿using Core.Genres.Queries.GetGenres;
-using Core.ViewModels.Genre;
+﻿using Core.Genres.Queries.Common;
+using Core.Genres.Queries.GetGenres;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace Web.Areas.Admin.Views.Shared.Components.AdminGenresViewComponent
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetGenresQuery());
+            IEnumerable<GenreModel> genres = await mediator.Send(new GetGenresQuery());
             return View(genres);
         }
 

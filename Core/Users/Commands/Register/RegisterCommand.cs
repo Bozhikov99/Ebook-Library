@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Common.MessageConstants;
-using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Common;
 using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,39 +9,44 @@ namespace Core.Users.Commands.Register
 {
     public class RegisterCommand : IRequest<User>
     {
-        public RegisterCommand(RegisterUserModel model)
-        {
-            Model = model;
-        }
+        public string Username { get; set; } = null!;
 
-        public RegisterUserModel Model { get; private set; }
+        public string Password { get; set; } = null!;
+
+        public string ConfirmPassword { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
     }
 
     public class RegisterHandler : IRequestHandler<RegisterCommand, User>
     {
         private readonly EbookDbContext context;
-        private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
 
-        public RegisterHandler(EbookDbContext context, IMapper mapper, UserManager<User> userManager)
+        public RegisterHandler(EbookDbContext context, UserManager<User> userManager)
         {
             this.context = context;
-            this.mapper = mapper;
             this.userManager = userManager;
         }
 
         public async Task<User> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            RegisterUserModel model = request.Model;
+            string username = request.Username;
+            string email = request.Email;
 
-            User user = mapper.Map<User>(model);
+            User user = new User
+            {
+                UserName = username,
+                Email = email
+            };
+
             user.RegisterDate = DateTime.Now;
 
             bool isExistingName = await context.Users
-                .AnyAsync(u => u.UserName == model.UserName);
+                .AnyAsync(u => string.Equals(u.UserName, username));
 
             bool isExistingEmail = await context.Users
-                .AnyAsync(u => u.Email == model.Email);
+                .AnyAsync(u => string.Equals(u.Email, email));
 
             if (isExistingName)
             {
@@ -54,7 +57,7 @@ namespace Core.Users.Commands.Register
                 throw new ExistingUserRegisterException(ErrorMessageConstants.EMAIL_EXISTS);
             }
 
-            IdentityResult? result = await userManager.CreateAsync(user, model.Password);
+            IdentityResult? result = await userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
             {

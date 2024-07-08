@@ -16,7 +16,6 @@ using Core.Common.Interfaces;
 using Core.Helpers;
 using Core.Users.Commands.AddBookToFavourites;
 using Core.Users.Commands.RemoveBookFromFavourites;
-using Core.ViewModels.Book;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

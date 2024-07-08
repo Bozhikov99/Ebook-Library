@@ -1,5 +1,4 @@
-﻿using Core.ViewModels.User;
-using Infrastructure.Persistance;
+﻿using Infrastructure.Persistance;
 
 namespace Core.Users.Queries.GetAllUsers
 {

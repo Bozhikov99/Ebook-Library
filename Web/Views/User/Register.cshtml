@@ -1,5 +1,5 @@
-﻿@using Core.ViewModels.User
-@model RegisterUserModel
+﻿@using Core.Users.Commands.Register;
+@model RegisterCommand
 
 @{
     ViewData["Title"] = "Register";
@@ -19,9 +19,9 @@
     <form method="post" asp-action="Register" style="margin-bottom: 4rem">
         <div asp-validation-summary="ModelOnly" class="danger"></div>
         <div class="mb-3">
-            <label asp-for="UserName" class="form-label">Username</label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
+            <label asp-for="Username" class="form-label">Username</label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="Email" class="form-label">Email address</label>

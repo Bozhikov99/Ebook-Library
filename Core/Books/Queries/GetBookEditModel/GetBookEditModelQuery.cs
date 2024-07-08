@@ -1,5 +1,4 @@
-﻿using Core.ViewModels.Book;
-using Infrastructure.Persistance;
+﻿using Infrastructure.Persistance;
 
 namespace Core.Books.Queries.GetBookEditModel
 {

@@ -1,5 +1,4 @@
-﻿using Core.ViewModels.User;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Infrastructure.Persistance;
 
 namespace Core.Users.Queries.GetProfile

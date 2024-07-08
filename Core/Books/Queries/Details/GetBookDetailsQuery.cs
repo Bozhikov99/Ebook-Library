@@ -2,7 +2,6 @@
 using Core.ApiModels.OutputModels.Review;
 using Core.Helpers;
 using Domain.Entities;
-using Infrastructure.Common;
 using Infrastructure.Persistance;
 
 namespace Core.Books.Queries.Details
@@ -66,10 +65,8 @@ namespace Core.Books.Queries.Details
                 Genres = book.BookGenres.Select(bg => bg.Genre.Name),
                 Rating = book.Reviews.Count == 0 ? 0 :
                          book.Reviews.Select(r => r.Value)
-                         .Sum() / book.Reviews.Count,
-
+                         .Sum() / book.Reviews.Count
             };
-            //BookDetailsOutputModel model = mapper.Map<BookDetailsOutputModel>(book);
 
             if (string.IsNullOrEmpty(currentUserId))
             {

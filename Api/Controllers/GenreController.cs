@@ -11,7 +11,6 @@ using Core.Genres.Commands.Edit;
 using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetEditModelQuery;
 using Core.Genres.Queries.GetGenres;
-using Core.ViewModels.Genre;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,18 +39,20 @@ namespace Api.Controllers
         {
             try
             {
-                IEnumerable<ListGenreModel> genres = await memoryCache.GetOrCreateAsync(CacheKeyConstants.GENRES, async (entry) =>
-                {
-                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+                //IEnumerable<ListGenreModel> genres = await memoryCache.GetOrCreateAsync(CacheKeyConstants.GENRES, async (entry) =>
+                //{
+                //    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
 
-                    return await mediator.Send(query);
-                });
+                //    return await mediator.Send(query);
+                //});
 
-                IEnumerable<GenreModel> outputModels = mapper.Map<IEnumerable<GenreModel>>(genres);
+                //IEnumerable<GenreModel> outputModels = mapper.Map<IEnumerable<GenreModel>>(genres);
 
-                AttachLinks(outputModels);
+                IEnumerable<GenreModel> result = await mediator.Send(query);
 
-                return Ok(outputModels);
+                AttachLinks(result);
+
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -133,7 +134,7 @@ namespace Api.Controllers
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ListGenreModel>> Create([FromBody] CreateGenreCommand command)
+        public async Task<ActionResult<GenreModel>> Create([FromBody] CreateGenreCommand command)
         {
             try
             {

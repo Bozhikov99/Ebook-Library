@@ -1,7 +1,6 @@
 ﻿using Core.Common.Interfaces;
-using Core.Users.Queries.GetProfile;
 
-namespace Core.ViewModels.User
+namespace Core.Users.Queries.GetProfile
 {
     public class UserProfileModel : IHypermediaResource
     {

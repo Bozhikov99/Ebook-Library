@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.ApiModels.OutputModels.User;
-using Core.ViewModels.User;
+using Core.Users.Queries.GetAllUsers;
+using Core.Users.Queries.GetProfile;
 using Domain.Entities;
 
 namespace Core.Mapping
@@ -9,8 +10,6 @@ namespace Core.Mapping
     {
         public UserProfile()
         {
-            CreateMap<RegisterUserModel, User>();
-
             CreateMap<User, UserProfileModel>();
 
             CreateMap<User, ListUserModel>();

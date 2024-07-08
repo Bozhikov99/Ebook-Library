@@ -1,12 +1,13 @@
-﻿using Core.ViewModels.Genre;
+﻿using Core.Genres.Queries.Common;
 using Infrastructure.Persistance;
 
 namespace Core.Genres.Queries.GetGenres
 {
-    public class GetGenresQuery : IRequest<IEnumerable<ListGenreModel>>
+    public class GetGenresQuery : IRequest<IEnumerable<GenreModel>>
     {
     }
-    public class GetAllGenresHandler : IRequestHandler<GetGenresQuery, IEnumerable<ListGenreModel>>
+
+    public class GetAllGenresHandler : IRequestHandler<GetGenresQuery, IEnumerable<GenreModel>>
     {
         private readonly EbookDbContext context;
 
@@ -15,12 +16,12 @@ namespace Core.Genres.Queries.GetGenres
             this.context = context;
         }
 
-        public async Task<IEnumerable<ListGenreModel>> Handle(
+        public async Task<IEnumerable<GenreModel>> Handle(
             GetGenresQuery request,
             CancellationToken cancellationToken)
         {
-            IEnumerable<ListGenreModel> genres = await context.Genres
-                .Select(g => new ListGenreModel
+            IEnumerable<GenreModel> genres = await context.Genres
+                .Select(g => new GenreModel
                 {
                     Id = g.Id,
                     Name = g.Name

@@ -13,7 +13,6 @@ using Core.Users.Commands.Login;
 using Core.Users.Commands.Register;
 using Core.Users.Queries.GetAllUsers;
 using Core.Users.Queries.GetProfile;
-using Core.ViewModels.User;
 using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
@@ -57,7 +56,7 @@ namespace Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register([FromBody] RegisterUserModel model)
+        public async Task<ActionResult> Register([FromBody] RegisterCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +65,7 @@ namespace Api.Controllers
 
             try
             {
-                User user = await mediator.Send(new RegisterCommand(model));
+                User user = await mediator.Send(command);
 
                 memoryCache.Remove(CacheKeyConstants.USERS);
 

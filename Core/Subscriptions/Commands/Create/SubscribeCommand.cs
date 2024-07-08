@@ -13,11 +13,11 @@ namespace Core.Subscriptions.Commands.Create
         public string UserId { get; set; } = null!;
     }
 
-    public class CreateSubscriptionCommandHandler : IRequestHandler<SubscribeCommand>
+    public class SubscribeCommandHandler : IRequestHandler<SubscribeCommand>
     {
         private readonly EbookDbContext context;
 
-        public CreateSubscriptionCommandHandler(EbookDbContext context)
+        public SubscribeCommandHandler(EbookDbContext context)
         {
             this.context = context;
         }

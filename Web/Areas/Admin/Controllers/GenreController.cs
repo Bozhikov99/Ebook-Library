@@ -6,7 +6,6 @@ using Core.Genres.Commands.Edit;
 using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetEditModelQuery;
 using Core.Genres.Queries.GetGenres;
-using Core.ViewModels.Genre;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +22,7 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> All(GetGenresQuery query)
         {
-            IEnumerable<ListGenreModel> genres = await mediator.Send(query);
+            IEnumerable<GenreModel> genres = await mediator.Send(query);
 
             return View(genres);
         }

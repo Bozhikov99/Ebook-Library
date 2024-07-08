@@ -1,5 +1,5 @@
-﻿@using Core.ViewModels.Genre
-@model IEnumerable<ListGenreModel>
+﻿@using Core.Genres.Queries.Common;
+@model IEnumerable<GenreModel>
 
 @{
     ViewData["Title"] = "Genres";
@@ -18,7 +18,7 @@
         </div>
     </div>
     <ul>
-        @foreach (ListGenreModel g in Model)
+        @foreach (GenreModel g in Model)
         {
             <li>
                 @g.Name

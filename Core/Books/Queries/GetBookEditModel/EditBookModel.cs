@@ -2,7 +2,7 @@
 using Common.ValidationConstants;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.ViewModels.Book
+namespace Core.Books.Queries.GetBookEditModel
 {
     public class EditBookModel
     {
