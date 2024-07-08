@@ -37,11 +37,9 @@ namespace Api.Extenstions
 
         public static IServiceCollection AddAutomapperProfiles(this IServiceCollection services)
         {
-            services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthorProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<BookProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<UserProfile>());
-            services.AddAutoMapper(cfg => cfg.AddProfile<SubscriptionProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<ReviewProfile>());
 
             return services;
