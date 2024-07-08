@@ -5,7 +5,6 @@ using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels.OutputModels.User;
 using Core.Common.Interfaces;
 using Core.Users.Commands.ConfirmEmail;
 using Core.Users.Commands.EditUserRoles;
@@ -143,7 +142,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ListUserOutputModel>>> List()
+        public async Task<ActionResult<IEnumerable<ListUserModel>>> List()
         {
             try
             {
@@ -154,7 +153,7 @@ namespace Api.Controllers
                     return await mediator.Send(new GetAllUsersQuery());
                 });
 
-                IEnumerable<ListUserOutputModel> outputModels = mapper.Map<IEnumerable<ListUserOutputModel>>(users);
+                IEnumerable<ListUserModel> outputModels = mapper.Map<IEnumerable<ListUserModel>>(users);
 
                 AttachLinks(outputModels);
 

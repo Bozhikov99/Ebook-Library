@@ -35,15 +35,14 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ListReviewOutputModel>> GetReview([FromRoute] string id)
+        public async Task<ActionResult<ReviewModel>> GetReview([FromRoute] string id)
         {
             try
             {
                 ReviewModel model = await mediator.Send(new GetReviewDetailsQuery { Id = id });
-                ListReviewOutputModel outputModel = mapper.Map<ListReviewOutputModel>(model);
-                AttachLinks(outputModel);
+                AttachLinks(model);
 
-                return Ok(outputModel);
+                return Ok(model);
             }
             catch (ArgumentNullException an)
             {

@@ -1,5 +1,6 @@
 ﻿using Core.ApiModels.OutputModels.Review;
 using Core.Common.Interfaces;
+using Core.Reviews.Common;
 
 namespace Core.Books.Queries.Details
 {
@@ -27,7 +28,7 @@ namespace Core.Books.Queries.Details
 
         public UserReviewOutputModel? UserReview { get; set; }
 
-        public IEnumerable<ListReviewOutputModel> Reviews { get; set; } = new List<ListReviewOutputModel>();
+        public IEnumerable<ReviewModel> Reviews { get; set; } = new List<ReviewModel>();
 
         public IEnumerable<ILink> Links { get; set; } = new List<ILink>();
     }

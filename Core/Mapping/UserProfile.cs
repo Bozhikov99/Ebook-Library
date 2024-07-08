@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.ApiModels.OutputModels.User;
 using Core.Users.Queries.GetAllUsers;
 using Core.Users.Queries.GetProfile;
 using Domain.Entities;
@@ -18,7 +17,7 @@ namespace Core.Mapping
 
             CreateMap<UserProfileModel, UserProfileModel>();
 
-            CreateMap<ListUserModel, ListUserOutputModel>();
+            CreateMap<ListUserModel, ListUserModel>();
 
             #endregion
         }
