@@ -55,21 +55,6 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> Details(string id)
         {
             BookDetailsOutputModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
-            //string userId = helper.GetUserId();
-            //BookDetailsModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
-            //IEnumerable<ListReviewModel> reviews = await mediator.Send(new GetAllReviewsQuery(id, userId));
-
-            //ViewBag.UserId = userId;
-            //ViewBag.Reviews = reviews;
-
-            //if (userId != null)
-            //{
-            //    bool isFavouriteBook = await mediator.Send(new IsBookFavouriteQuery(id));
-            //    ViewBag.IsFavourite = isFavouriteBook;
-
-            //    UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery(userId, id));
-            //    ViewBag.UserReview = userReview;
-            //}
 
             return View(model);
         }
@@ -118,7 +103,16 @@ namespace Web.Areas.Admin.Controllers
                 command.Content = contentBytes;
             }
 
-            await mediator.Send(command);
+            try
+            {
+                await mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                TempData[ToastrMessageConstants.ErrorMessage] = ex.Message;
+
+                return View();
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -126,7 +120,36 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] EditBookCommand command)
         {
-            await mediator.Send(command);
+            var cover = Request.Form
+                .Files
+                .FirstOrDefault();
+
+            var content = Request.Form
+                .Files
+                .LastOrDefault();
+
+            if (cover is not null)
+            {
+                byte[]? coverBytes = await cover.GetBytesAsync();
+                command.Cover = coverBytes;
+            }
+
+            if (content is not null)
+            {
+                byte[]? contentBytes = await content.GetBytesAsync();
+                command.Content = contentBytes;
+            }
+
+            try
+            {
+                await mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                TempData[ToastrMessageConstants.ErrorMessage] = ex.Message;
+
+                return View();
+            }
 
             return RedirectToAction("All");
         }

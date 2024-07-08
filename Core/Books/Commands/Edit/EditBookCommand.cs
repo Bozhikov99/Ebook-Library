@@ -37,30 +37,14 @@ namespace Core.Books.Commands.Edit
         {
             string id = request.Id;
 
-            //TODO: Select this
             Book? book = await context.Books
-                .Select(b => new Book
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Description = b.Description,
-                    Cover = b.Cover,
-                    ReleaseYear = b.ReleaseYear,
-                    Pages = b.Pages,
-                    AuthorId = b.AuthorId,
-                    BookGenres = b.BookGenres,
-                    Author = b.Author
-                })
-                .FirstOrDefaultAsync(b => string.Equals(b.Id, id), cancellationToken);
+                .Include(b => b.BookGenres)
+                .FirstOrDefaultAsync(b => b.Id == request.Id, cancellationToken);
 
             if (book is null)
             {
                 throw new ArgumentException();
             }
-
-            byte[] cover = request.Cover ?? book.Cover;
-            byte[] content = request.Content ?? book.Content;
-
             IEnumerable<string> genreIds = request.GenreIds;
 
             ICollection<Genre> genres = await context.Genres
@@ -82,9 +66,17 @@ namespace Core.Books.Commands.Edit
             await context.BookGenres
                 .AddRangeAsync(newGenres, cancellationToken);
 
+            if (request.Cover is not null)
+            {
+                book.Cover = request.Cover;
+            }
+            
+            if (request.Content is not null)
+            {
+                book.Content = request.Content;
+            }
+
             book.Title = request.Title;
-            book.Content = content;
-            book.Cover = cover;
             book.AuthorId = request.AuthorId;
             book.ReleaseYear = request.ReleaseYear;
             book.Pages = request.Pages;
