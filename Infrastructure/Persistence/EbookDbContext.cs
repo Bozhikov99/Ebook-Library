@@ -23,6 +23,8 @@ namespace Infrastructure.Persistance
 
         public DbSet<BookGenre> BookGenres { get; set; }
 
+        public DbSet<BookUser> BookUsers { get; set; }
+
         public DbSet<Author> Authors { get; set; }
 
         public DbSet<User> Users { get; set; }

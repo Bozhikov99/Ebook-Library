@@ -13,7 +13,7 @@ namespace Domain.Entities
 
             BookGenres = new HashSet<BookGenre>();
 
-            UsersFavourited = new HashSet<User>();
+            BookUsers = new HashSet<BookUser>();
 
             Reviews = new HashSet<Review>();
         }
@@ -43,7 +43,7 @@ namespace Domain.Entities
 
         public virtual ICollection<BookGenre> BookGenres { get; set; }
 
-        public virtual ICollection<User> UsersFavourited { get; set; }
+        public virtual ICollection<BookUser> BookUsers { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
     }

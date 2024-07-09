@@ -36,8 +36,14 @@ namespace Core.Users.Commands.AddBookToFavourites
 
             ArgumentNullException.ThrowIfNull(book);
 
+            BookUser bookUser = new BookUser
+            {
+                Book = book,
+                User = user
+            };
+
             user.FavouriteBooks
-                .Add(book);
+                .Add(bookUser);
 
             await context.SaveChangesAsync(cancellationToken);
 

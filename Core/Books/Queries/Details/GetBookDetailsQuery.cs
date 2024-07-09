@@ -49,7 +49,7 @@ namespace Core.Books.Queries.Details
                         })
                         .ToArray(),
                     Reviews = b.Reviews,
-                    UsersFavourited = b.UsersFavourited
+                    BookUsers = b.BookUsers
                 })
                 .FirstOrDefaultAsync(b => string.Equals(b.Id, bookId));
 
@@ -81,8 +81,10 @@ namespace Core.Books.Queries.Details
                 throw new ArgumentException();
             }
 
-            bool isFavourite = book.UsersFavourited
-                .Any(u => u.Id == currentUserId);
+            model.UserId = user.Id;
+
+            bool isFavourite = book.BookUsers
+                .Any(bu => string.Equals(bu.UserId, currentUserId));
 
             Review? userReview = await context.Reviews
                 .FirstOrDefaultAsync(r => string.Equals(r.UserId, currentUserId));

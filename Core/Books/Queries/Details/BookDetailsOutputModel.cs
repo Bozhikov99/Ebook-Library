@@ -20,6 +20,8 @@ namespace Core.Books.Queries.Details
 
         public string Author { get; set; } = null!;
 
+        public string? UserId { get; set; }
+
         public IEnumerable<string> Genres { get; set; } = new List<string>();
 
         public double Rating { get; set; }

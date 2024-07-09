@@ -1,6 +1,6 @@
-﻿@if (ViewBag.UserId != null)
+﻿@if (Model.UserId != null)
 {
-    @if (ViewBag.IsFavourite)
+    @if (Model.IsFavourite)
     {
         <button id="favButton" class="btn navbutton"
             style="font-size: 1.5rem; width: 40%; max-width: 200px">Unfavorite</button>
@@ -21,13 +21,13 @@
      $.ajax({
          type: "POST",
          url: "@Url.Action("AddToFavourites")",
-         data: { id: '@ViewBag.BookId' }
+         data: { id: '@Model.Id' }
      })
         } else{
             $.ajax({
             type: "POST",
             url: "@Url.Action("RemoveFromFavourites")",
-            data: { id: '@ViewBag.BookId' }
+            data: { id: '@Model.Id' }
             })
         }
     })

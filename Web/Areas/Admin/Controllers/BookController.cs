@@ -14,7 +14,10 @@ using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetGenres;
 using Core.Helpers;
 using Core.Reviews.Commands.Delete;
+using Core.Users.Commands.AddBookToFavourites;
+using Core.Users.Commands.RemoveBookFromFavourites;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GetEditModelQuery = Core.Books.Queries.GetBookEditModel.GetBookEditModelQuery;
 
@@ -180,6 +183,24 @@ namespace Web.Areas.Admin.Controllers
 
                 throw;
             }
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddToFavourites(string id)
+        {
+            await mediator.Send(new AddBookToFavouritesCommand { BookId = id });
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromFavourites(string id)
+        {
+            await mediator.Send(new RemoveBookFromFavouritesCommand { BookId = id });
 
             return Ok();
         }

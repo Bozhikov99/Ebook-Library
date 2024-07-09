@@ -27,17 +27,22 @@ namespace Core.Users.Commands.RemoveBookFromFavourites
             string userId = userIdHelper.GetUserId();
 
             User? user = await context.Users
+                .Select(u => new User
+                {
+                    Id = u.Id,
+                    FavouriteBooks = u.FavouriteBooks
+                })
                 .FirstOrDefaultAsync(u => string.Equals(u.Id, userId), cancellationToken);
 
             ArgumentNullException.ThrowIfNull(user, ErrorMessageConstants.INVALID_USER);
 
-            Book? book = await context.Books
-                .FirstOrDefaultAsync(b => string.Equals(b.Id, bookId), cancellationToken);
+            BookUser? bookUser = user.FavouriteBooks
+                .FirstOrDefault(bu => string.Equals(bu.BookId, bookId));
 
-            ArgumentNullException.ThrowIfNull(book);
+            ArgumentNullException.ThrowIfNull(bookUser);
 
-            user.FavouriteBooks
-                .Remove(book);
+            context.BookUsers
+                .Remove(bookUser);
 
             await context.SaveChangesAsync(cancellationToken);
 

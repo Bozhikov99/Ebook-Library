@@ -28,7 +28,12 @@ namespace Core.Users.Queries.GetProfile
                     UserName = u.UserName,
                     Email = u.Email,
                     RegisterDate = u.RegisterDate,
-                    FavouriteBooks = u.FavouriteBooks,
+                    FavouriteBooks = u.FavouriteBooks
+                        .Select(bu => new BookUser
+                        {
+                            Book = bu.Book,
+                        })
+                        .ToArray(),
                     Subscriptions = u.Subscriptions
                 })
                 .FirstOrDefaultAsync(u => string.Equals(u.Id, userId), cancellationToken);
@@ -45,10 +50,10 @@ namespace Core.Users.Queries.GetProfile
                 .FirstOrDefault();
 
             IEnumerable<FavouriteBookDto> favouriteBooks = user.FavouriteBooks
-                .Select(b => new FavouriteBookDto
+                .Select(bu => new FavouriteBookDto
                 {
-                    Id = b.Id,
-                    Cover = b.Cover
+                    Id = bu.Book.Id,
+                    Cover = bu.Book.Cover
                 });
 
             UserProfileModel profile = new UserProfileModel
