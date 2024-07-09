@@ -58,8 +58,8 @@ namespace Core.Subscriptions.Commands.Create
                 subscription.Price += request.Price;
             }
 
-            user.Subscriptions
-                .Add(subscription);
+            await context.Subscriptions
+                .AddAsync(subscription, cancellationToken);
 
             await context.SaveChangesAsync(cancellationToken);
 
