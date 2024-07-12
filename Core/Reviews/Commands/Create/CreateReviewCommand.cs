@@ -46,7 +46,6 @@ namespace Core.Reviews.Commands.Create
                     .Remove(existingReview);
             }
 
-
             Review review = new Review
             {
                 BookId = bookId,

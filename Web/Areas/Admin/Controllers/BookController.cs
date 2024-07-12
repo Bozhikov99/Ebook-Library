@@ -1,5 +1,6 @@
 ﻿using Common.MessageConstants;
 using Common.ValidationConstants;
+using Core.ApiModels.OutputModels.Review;
 using Core.Authors.Queries.Common;
 using Core.Authors.Queries.GetAuthors;
 using Core.Books.Commands.Create;
@@ -13,7 +14,9 @@ using Core.Extensions;
 using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetGenres;
 using Core.Helpers;
+using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
+using Core.Reviews.Queries.GetUserReview;
 using Core.Users.Commands.AddBookToFavourites;
 using Core.Users.Commands.RemoveBookFromFavourites;
 using MediatR;
@@ -118,6 +121,17 @@ namespace Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateReview(CreateReviewCommand command)
+        {
+            await mediator.Send(command);
+
+            UserReviewOutputModel userReview = await mediator.Send(new GetUserReviewQuery { UserId = command.UserId, BookId = command.BookId });
+
+            return Ok(userReview);
         }
 
         [HttpPost]

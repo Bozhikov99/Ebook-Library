@@ -39,11 +39,11 @@ namespace Core.Reviews.Commands.Delete
             string userId = userIdHelper.GetUserId();
 
             User? user = await context.Users
-                .FindAsync(userId, cancellationToken);
+                .FirstOrDefaultAsync(u => string.Equals(u.Id, userId));
 
             bool isAdmin = await userManager.IsInRoleAsync(user, RoleConstants.Administrator);
             bool isAuthor = string.Equals(review.UserId, userId);
-            
+
             if (!isAdmin && !isAuthor)
             {
                 throw new UnauthorizedAccessException();
