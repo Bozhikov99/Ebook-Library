@@ -3,6 +3,7 @@ using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Infrastructure.Persistance
 {
@@ -29,6 +30,12 @@ namespace Infrastructure.Persistance
                 await userManager.AddToRoleAsync(user, RoleConstants.Administrator);
             }
         }
+
+        //TODO:
+        //public static async Task SeedDefaultUserAsync()
+        //{
+
+        //}
 
         public static async Task SeedAdministratorRoleAsync(RoleManager<IdentityRole> roleManager)
         {

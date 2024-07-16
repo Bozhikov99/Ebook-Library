@@ -10,7 +10,7 @@ using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBookEditModel;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
-using Core.Extensions;
+using Core.Common.Extensions;
 using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetGenres;
 using Core.Helpers;
