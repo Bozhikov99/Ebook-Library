@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.ApiModels.OutputModels.Review;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Infrastructure.Persistance;
 
@@ -15,19 +15,19 @@ namespace Core.Books.Queries.Details
     {
         private readonly EbookDbContext context;
         private readonly IMapper mapper;
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
 
-        public GetDetailsHandler(EbookDbContext context, IMapper mapper, UserIdHelper userIdHelper)
+        public GetDetailsHandler(EbookDbContext context, IMapper mapper, CurrentUserService userService)
         {
             this.context = context;
             this.mapper = mapper;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         public async Task<BookDetailsOutputModel> Handle(GetBookDetailsQuery request, CancellationToken cancellationToken)
         {
             string bookId = request.Id;
-            string currentUserId = userIdHelper.GetUserId();
+            string currentUserId = userService.UserId!;
 
             Book? book = await context.Books
                 .Select(b => new Book

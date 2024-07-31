@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.MessageConstants;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +9,18 @@ namespace Web.Views.Shared.Components.AdminCheckMobile
 {
     public class AdminCheckMobileViewComponent : ViewComponent
     {
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
         private readonly UserManager<User> userManager;
 
-        public AdminCheckMobileViewComponent(UserManager<User> userManager, UserIdHelper userIdHelper)
+        public AdminCheckMobileViewComponent(UserManager<User> userManager, CurrentUserService userService)
         {
             this.userManager = userManager;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             User? user = await userManager.FindByIdAsync(userId);
 

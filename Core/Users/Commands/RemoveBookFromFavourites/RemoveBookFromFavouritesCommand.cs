@@ -1,5 +1,5 @@
 ﻿using Common.MessageConstants;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Infrastructure.Persistance;
 
@@ -13,18 +13,18 @@ namespace Core.Users.Commands.RemoveBookFromFavourites
     public class RemoveBookFromFavouritesCommandHandler : IRequestHandler<RemoveBookFromFavouritesCommand>
     {
         private readonly EbookDbContext context;
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
 
-        public RemoveBookFromFavouritesCommandHandler(EbookDbContext context, UserIdHelper userIdHelper)
+        public RemoveBookFromFavouritesCommandHandler(EbookDbContext context, CurrentUserService userService)
         {
             this.context = context;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         public async Task<Unit> Handle(RemoveBookFromFavouritesCommand request, CancellationToken cancellationToken)
         {
             string bookId = request.BookId;
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             User? user = await context.Users
                 .Select(u => new User

@@ -3,7 +3,7 @@ using Core.ApiModels.OutputModels.Review;
 using Core.Books.Queries.Details;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
 using Core.Reviews.Queries.GetUserReview;
@@ -18,11 +18,11 @@ namespace Web.Controllers
     public class BookController : Controller
     {
         private readonly IMediator mediator;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService helper;
 
         public BookController(
             IMediator mediator,
-            UserIdHelper helper)
+            CurrentUserService helper)
         {
             this.mediator = mediator;
             this.helper = helper;

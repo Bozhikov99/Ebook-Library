@@ -1,5 +1,5 @@
 ﻿using Common.MessageConstants;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Infrastructure.Persistance;
 
@@ -12,19 +12,19 @@ namespace Core.Users.Commands.AddBookToFavourites
 
     public class AddBookToFavouritesCommandHandler : IRequestHandler<AddBookToFavouritesCommand>
     {
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
         private readonly EbookDbContext context;
 
-        public AddBookToFavouritesCommandHandler(EbookDbContext context, UserIdHelper userIdHelper)
+        public AddBookToFavouritesCommandHandler(EbookDbContext context, CurrentUserService userService)
         {
             this.context = context;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         public async Task<Unit> Handle(AddBookToFavouritesCommand request, CancellationToken cancellationToken)
         {
             string bookId = request.BookId;
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             User? user = await context.Users
                 .FirstOrDefaultAsync(u => string.Equals(u.Id, userId), cancellationToken);

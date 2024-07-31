@@ -11,9 +11,9 @@ using Core.Books.Queries.GetBookEditModel;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
 using Core.Common.Extensions;
+using Core.Common.Services;
 using Core.Genres.Queries.Common;
 using Core.Genres.Queries.GetGenres;
-using Core.Helpers;
 using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
 using Core.Reviews.Queries.GetUserReview;
@@ -29,9 +29,9 @@ namespace Web.Areas.Admin.Controllers
     public class BookController : BaseController
     {
         private readonly IMediator mediator;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService helper;
 
-        public BookController(IMediator mediator, UserIdHelper helper)
+        public BookController(IMediator mediator, CurrentUserService helper)
         {
             this.mediator = mediator;
             this.helper = helper;

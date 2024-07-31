@@ -1,5 +1,5 @@
 ﻿using Common;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
@@ -14,13 +14,13 @@ namespace Core.Reviews.Commands.Delete
     public class DeleteReviewHandler : IRequestHandler<DeleteReviewCommand>
     {
         private readonly UserManager<User> userManager;
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
         private readonly EbookDbContext context;
 
-        public DeleteReviewHandler(EbookDbContext context, UserIdHelper userIdHelper, UserManager<User> userManager)
+        public DeleteReviewHandler(EbookDbContext context, CurrentUserService userService, UserManager<User> userManager)
         {
             this.userManager = userManager;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
             this.context = context;
         }
 
@@ -36,7 +36,7 @@ namespace Core.Reviews.Commands.Delete
                 throw new ArgumentNullException(nameof(Review), id);
             }
 
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             User? user = await context.Users
                 .FirstOrDefaultAsync(u => string.Equals(u.Id, userId));

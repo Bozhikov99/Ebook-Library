@@ -34,7 +34,4 @@
     <None Remove="Validators\" />
     <None Remove="Helpers\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
 </Project>

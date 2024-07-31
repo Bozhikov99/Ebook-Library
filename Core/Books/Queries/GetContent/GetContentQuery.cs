@@ -1,5 +1,5 @@
 ﻿using Common.MessageConstants;
-using Core.Helpers;
+using Core.Common.Services;
 using Domain.Entities;
 using Infrastructure.Persistance;
 
@@ -12,18 +12,18 @@ namespace Core.Books.Queries.GetContent
 
     public class GetContentHandler : IRequestHandler<GetContentQuery, byte[]>
     {
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService userService;
         private readonly EbookDbContext context;
 
-        public GetContentHandler(EbookDbContext context, UserIdHelper helper)
+        public GetContentHandler(EbookDbContext context, CurrentUserService helper)
         {
-            this.helper = helper;
+            this.userService = helper;
             this.context = context;
         }
 
         public async Task<byte[]> Handle(GetContentQuery request, CancellationToken cancellationToken)
         {
-            string userId = helper.GetUserId();
+            string userId = userService.UserId!;
 
             bool isSubscribed = await context.Subscriptions
                 .AnyAsync(s => string.Equals(s.UserId, userId) && s.Deadline > DateTime.Now);

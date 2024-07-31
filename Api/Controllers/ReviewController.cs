@@ -5,7 +5,7 @@ using Common.ApiConstants;
 using Common.MessageConstants;
 using Core.ApiModels.OutputModels.Review;
 using Core.Common.Interfaces;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Reviews.Commands.Create;
 using Core.Reviews.Commands.Delete;
 using Core.Reviews.Common;
@@ -21,9 +21,9 @@ namespace Api.Controllers
     {
         private readonly IMapper mapper;
         private readonly IMediator mediator;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService helper;
 
-        public ReviewController(IMediator mediator, IMapper mapper, UserIdHelper helper)
+        public ReviewController(IMediator mediator, IMapper mapper, CurrentUserService helper)
         {
             this.mediator = mediator;
             this.mapper = mapper;

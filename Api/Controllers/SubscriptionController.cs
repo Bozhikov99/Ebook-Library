@@ -1,5 +1,5 @@
 ﻿using Common.MessageConstants;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Subscriptions.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +12,12 @@ namespace Api.Controllers
     public class SubscriptionController : ApiBaseController
     {
         private readonly IMediator mediator;
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
 
-        public SubscriptionController(IMediator mediator, UserIdHelper userIdHelper)
+        public SubscriptionController(IMediator mediator, CurrentUserService userService)
         {
             this.mediator = mediator;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<string> Subscribe()
         {
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             if (string.IsNullOrEmpty(userId))
             {

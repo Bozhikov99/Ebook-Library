@@ -1,5 +1,5 @@
 ﻿using Core;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Mapping;
 using Infrastructure.Persistance;
 using MediatR;
@@ -11,7 +11,7 @@ namespace Web.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddTransient<UserIdHelper>();
+            services.AddTransient<CurrentUserService>();
 
             return services;
         }

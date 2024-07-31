@@ -13,7 +13,7 @@ using Core.Books.Queries.GetBookEditModel;
 using Core.Books.Queries.GetBooks;
 using Core.Books.Queries.GetContent;
 using Core.Common.Interfaces;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Users.Commands.AddBookToFavourites;
 using Core.Users.Commands.RemoveBookFromFavourites;
 using MediatR;
@@ -28,14 +28,14 @@ namespace Api.Controllers
     {
         private readonly IMediator mediator;
         private readonly IMapper mapper;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService userService;
         private readonly IMemoryCache memoryCache;
 
-        public BookController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache, UserIdHelper helper)
+        public BookController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache, CurrentUserService helper)
         {
             this.memoryCache = memoryCache;
             this.mediator = mediator;
-            this.helper = helper;
+            this.userService = helper;
             this.mapper = mapper;
         }
 
@@ -63,7 +63,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BookDetailsOutputModel>> DetailsUser([FromRoute] string id)
         {
-            string userId = helper.GetUserId();
+            string userId = userService.UserId!;
 
             try
             {
