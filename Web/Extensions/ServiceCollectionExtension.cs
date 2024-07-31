@@ -1,9 +1,7 @@
 ﻿using Core;
-using Core.Helpers;
+using Core.Common.Services;
 using Core.Mapping;
-using Core.Validators;
-using Infrastructure;
-using Infrastructure.Common;
+using Infrastructure.Persistance;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +11,7 @@ namespace Web.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IRepository, Repository>();
-            services.AddTransient<UserIdHelper>();
+            services.AddTransient<CurrentUserService>();
 
             return services;
         }
@@ -37,22 +34,11 @@ namespace Web.Extensions
             return services;
         }
 
-        public static IServiceCollection AddValidators(this IServiceCollection services)
-        {
-            services.AddTransient<GenreValidator>();
-            services.AddTransient<AuthorValidator>();
-            services.AddTransient<BookValidator>();
-
-            return services;
-        }
-
         public static IServiceCollection AddAutomapperProfiles(this IServiceCollection services)
         {
-            services.AddAutoMapper(cfg => cfg.AddProfile<GenreProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<AuthorProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<BookProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<UserProfile>());
-            services.AddAutoMapper(cfg => cfg.AddProfile<SubscriptionProfile>());
             services.AddAutoMapper(cfg => cfg.AddProfile<ReviewProfile>());
 
             return services;

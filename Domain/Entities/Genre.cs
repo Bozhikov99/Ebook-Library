@@ -10,7 +10,7 @@ namespace Domain.Entities
             Id = Guid.NewGuid()
                 .ToString();
 
-            Books = new HashSet<Book>();
+            BookGenres = new HashSet<BookGenre>();
         }
 
         [Key]
@@ -20,6 +20,6 @@ namespace Domain.Entities
         [MaxLength(GenreConstants.NAME_MAX_LENGTH)]
         public string Name { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual ICollection<BookGenre> BookGenres { get; set; }
     }
 }

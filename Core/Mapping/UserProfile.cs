@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Core.ApiModels.OutputModels.User;
-using Core.ViewModels.User;
+using Core.Users.Queries.GetAllUsers;
+using Core.Users.Queries.GetProfile;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Core.Mapping
 {
@@ -10,25 +9,15 @@ namespace Core.Mapping
     {
         public UserProfile()
         {
-            CreateMap<RegisterUserModel, User>();
-
-            CreateMap<LoginUserModel, User>();
-
-            CreateMap<RegisterUserModel, LoginUserModel>();
-
             CreateMap<User, UserProfileModel>();
 
             CreateMap<User, ListUserModel>();
 
-            CreateMap<IdentityRole, RoleInfoModel>();
-
             #region [Output Model]
 
-            CreateMap<UserProfileModel, UserProfileOutputModel>();
+            CreateMap<UserProfileModel, UserProfileModel>();
 
-            CreateMap<User, UserProfileOutputModel>();
-
-            CreateMap<ListUserModel, ListUserOutputModel>();
+            CreateMap<ListUserModel, ListUserModel>();
 
             #endregion
         }

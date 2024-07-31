@@ -1,5 +1,5 @@
-﻿@using Core.ViewModels.User
-@model LoginUserModel
+﻿@using Core.Users.Commands.Login;
+@model LoginCommand
 
 @{
     ViewData["Title"] = "Login";
@@ -19,7 +19,7 @@
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Username</label>
-            <input asp-for="UserName" class="form-control" />
+            <input asp-for="Username" class="form-control" />
         </div>
 
         <div class="mb-3">

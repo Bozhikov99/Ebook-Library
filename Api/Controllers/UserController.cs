@@ -1,17 +1,17 @@
 ﻿using Api.EmailService;
 using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels;
-using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.User;
-using Core.Commands.UserCommands;
-using Core.Queries.User;
-using Core.ViewModels.Book;
-using Core.ViewModels.Subscription;
-using Core.ViewModels.User;
+using Core.Common.Interfaces;
+using Core.Users.Commands.ConfirmEmail;
+using Core.Users.Commands.EditUserRoles;
+using Core.Users.Commands.Login;
+using Core.Users.Commands.Register;
+using Core.Users.Queries.GetAllUsers;
+using Core.Users.Queries.GetProfile;
 using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
@@ -19,10 +19,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Api.Controllers
 {
@@ -59,7 +55,7 @@ namespace Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register([FromBody] RegisterUserModel model)
+        public async Task<ActionResult> Register([FromBody] RegisterCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -68,7 +64,7 @@ namespace Api.Controllers
 
             try
             {
-                User user = await mediator.Send(new RegisterCommand(model));
+                User user = await mediator.Send(command);
 
                 memoryCache.Remove(CacheKeyConstants.USERS);
 
@@ -117,11 +113,15 @@ namespace Api.Controllers
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] LoginUserModel model)
+        public async Task<ActionResult<AuthResponseModel>> Login([FromBody] LoginCommand command)
         {
             try
             {
-                await mediator.Send(new LoginCommand(model));
+                AuthResponseModel model = await mediator.Send(command);
+
+                //string token = await CreateToken(command);
+
+                return Ok(model);
             }
             catch (InvalidUserCredentialsException ae)
             {
@@ -131,14 +131,10 @@ namespace Api.Controllers
             {
                 return BadRequest(io.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest(ErrorMessageConstants.LOGIN_UNEXPECTED);
             }
-
-            string token = await CreateToken(model);
-
-            return Ok(token);
         }
 
         [HttpGet]
@@ -146,7 +142,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ListUserOutputModel>>> List()
+        public async Task<ActionResult<IEnumerable<ListUserModel>>> List()
         {
             try
             {
@@ -157,7 +153,7 @@ namespace Api.Controllers
                     return await mediator.Send(new GetAllUsersQuery());
                 });
 
-                IEnumerable<ListUserOutputModel> outputModels = mapper.Map<IEnumerable<ListUserOutputModel>>(users);
+                IEnumerable<ListUserModel> outputModels = mapper.Map<IEnumerable<ListUserModel>>(users);
 
                 AttachLinks(outputModels);
 
@@ -184,7 +180,7 @@ namespace Api.Controllers
 
             try
             {
-                await mediator.Send(new EditRolesCommand(id, roles));
+                await mediator.Send(new EditUserRolesCommand(id, roles));
 
                 return NoContent();
             }
@@ -209,22 +205,16 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UserProfileOutputModel>> Profile([FromRoute] string id)
+        public async Task<ActionResult<UserProfileModel>> Profile([FromRoute] string id)
         {
             try
             {
-                UserProfileOutputModel profile = await mediator.Send(new GetProfileQuery(id));
+                UserProfileModel profile = await mediator.Send(new GetProfileQuery { Id = id });
 
                 if (profile is null)
                 {
                     return NotFound();
                 }
-
-                IEnumerable<ListBookModel> books = await mediator.Send(new GetFavouriteBooksQuery());
-                ListSubscriptionModel subscriptions = await mediator.Send(new GetActiveSubscriptionQuery());
-
-                profile.Books = books;
-                profile.Subscription = subscriptions;
 
                 AttachLinks(profile);
 
@@ -236,24 +226,7 @@ namespace Api.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("Roles/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<RoleInfoModel>>> GetRole([FromRoute] string id)
-        {
-            try
-            {
-                RoleInfoModel role = await mediator.Send(new GetRoleQuery(id));
-
-                return Ok(role);
-            }
-            catch (ArgumentNullException an)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, an.Message);
-            }
-        }
-
+        //To be deprecated
         [HttpPost("Roles")]
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -274,7 +247,7 @@ namespace Api.Controllers
             {
                 await roleManager.CreateAsync(role);
 
-                return Created(nameof(GetRole), role);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -282,6 +255,7 @@ namespace Api.Controllers
             }
         }
 
+        //To be deprecated
         [HttpPost("Roles/Administrator")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -294,7 +268,7 @@ namespace Api.Controllers
             {
                 await roleManager.CreateAsync(role);
 
-                return Created(nameof(GetRole), role);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -302,64 +276,26 @@ namespace Api.Controllers
             }
         }
 
-        //move this in Core
-        private async Task<string> CreateToken(LoginUserModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
-            string userId = await mediator.Send(new GetUserIdByUsernameQuery(model.UserName));
-            User user = await userManager.FindByIdAsync(userId);
-
-            IEnumerable<string> roles = await userManager.GetRolesAsync(user);
-
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, model.UserName),
-                new Claim(ClaimTypes.NameIdentifier, userId)
-            };
-
-            foreach (string r in roles)
-            {
-                Claim current = new Claim(ClaimTypes.Role, r);
-                claims.Add(current);
-            }
-
-            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                configuration.GetValue<string>(apiKey)));
-
-            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            DateTime expiration = DateTime.Now.AddDays(1);
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                claims: claims,
-                expires: expiration,
-                signingCredentials: credentials);
-
-            string jwt = new JwtSecurityTokenHandler()
-                .WriteToken(token);
-
-            return jwt;
-        }
-
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
-        {
-            IEnumerable<HateoasLink> links = GetUserLinks(model);
+            IEnumerable<Link> links = GetUserLinks(model);
 
             return links;
         }
 
-        private IEnumerable<HateoasLink> GetUserLinks(OutputBaseModel model)
+        private IEnumerable<Link> GetUserLinks(IHypermediaResource resource)
         {
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Profile), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Profile), new {resource.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(EditUserRoles), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(EditUserRoles), new {resource.Id}),
                     Rel = LinkConstants.UPDATE_ROLES,
                     Method = HttpMethods.Put
                 }

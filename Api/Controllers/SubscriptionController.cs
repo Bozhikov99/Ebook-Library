@@ -1,7 +1,6 @@
 ﻿using Common.MessageConstants;
-using Core.Commands.SubscriptionCommands;
-using Core.Helpers;
-using Core.ViewModels.Subscription;
+using Core.Common.Services;
+using Core.Subscriptions.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,12 @@ namespace Api.Controllers
     public class SubscriptionController : ApiBaseController
     {
         private readonly IMediator mediator;
-        private readonly UserIdHelper userIdHelper;
+        private readonly CurrentUserService userService;
 
-        public SubscriptionController(IMediator mediator, UserIdHelper userIdHelper)
+        public SubscriptionController(IMediator mediator, CurrentUserService userService)
         {
             this.mediator = mediator;
-            this.userIdHelper = userIdHelper;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -26,7 +25,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<string> Subscribe()
         {
-            string userId = userIdHelper.GetUserId();
+            string userId = userService.UserId!;
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -40,11 +39,11 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> Subscribe([FromBody] CreateSubscriptionModel model)
+        public async Task<ActionResult> Subscribe([FromBody] SubscribeCommand commend)
         {
             try
             {
-                await mediator.Send(new CreateSubscriptionCommand(model));
+                await mediator.Send(commend);
             }
             catch (Exception)
             {

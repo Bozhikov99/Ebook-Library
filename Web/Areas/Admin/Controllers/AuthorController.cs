@@ -1,7 +1,10 @@
 ﻿using Common.MessageConstants;
-using Core.Commands.AuthorCommands;
-using Core.Queries.Author;
-using Core.ViewModels.Author;
+using Core.Authors.Commands.Create;
+using Core.Authors.Commands.Delete;
+using Core.Authors.Commands.Edit;
+using Core.Authors.Queries.Common;
+using Core.Authors.Queries.GetAuthors;
+using Core.Authors.Queries.GetEditModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +19,9 @@ namespace Web.Areas.Admin.Controllers
             this.mediator = mediator;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] GetAuthorsQuery query)
         {
-            IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
+            IEnumerable<AuthorModel> authors = await mediator.Send(query);
 
             return View(authors);
         }
@@ -27,7 +30,7 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            EditAuthorModel model = await mediator.Send(new GetEditModelQuery(id));
+            AuthorModel model = await mediator.Send(new GetEditAuthorModelQuery { Id = id });
 
             return View(model);
         }
@@ -36,7 +39,7 @@ namespace Web.Areas.Admin.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteAuthorCommand(id));
+                await mediator.Send(new DeleteAuthorCommand { Id = id });
             }
             catch (Exception)
             {
@@ -47,7 +50,7 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateAuthorModel model)
+        public async Task<IActionResult> Create(CreateAuthorCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +59,7 @@ namespace Web.Areas.Admin.Controllers
 
             try
             {
-                await mediator.Send(new CreateAuthorCommand(model));
+                await mediator.Send(command);
             }
             catch (Exception)
             {
@@ -68,15 +71,15 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditAuthorModel model)
+        public async Task<IActionResult> Edit(EditAuthorCommand command)
         {
             try
             {
-                await mediator.Send(new EditAuthorCommand(model));
+                await mediator.Send(command);
             }
             catch (ArgumentException ae)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ae.Message, $"{model.FirstName} {model.LastName}");
+                TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
                 return RedirectToAction(nameof(Edit));
             }
             catch (Exception)

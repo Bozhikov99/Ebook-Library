@@ -1,50 +1,51 @@
 ﻿using Common.MessageConstants;
 using Common.ValidationConstants;
+using Core.ApiModels.OutputModels.Review;
+using Core.Authors.Queries.Common;
+using Core.Authors.Queries.GetAuthors;
 using Core.Books.Commands.Create;
 using Core.Books.Commands.Delete;
 using Core.Books.Commands.Edit;
-using Core.Commands.ReviewCommands;
-using Core.Helpers;
-using Core.Queries.Author;
-using Core.Queries.Book;
-using Core.Queries.Genre;
-using Core.Queries.Review;
-using Core.Queries.User;
-using Core.ViewModels.Author;
-using Core.ViewModels.Book;
-using Core.ViewModels.Genre;
-using Core.ViewModels.Review;
+using Core.Books.Queries.Details;
+using Core.Books.Queries.GetBookEditModel;
+using Core.Books.Queries.GetBooks;
+using Core.Books.Queries.GetContent;
+using Core.Common.Extensions;
+using Core.Common.Services;
+using Core.Genres.Queries.Common;
+using Core.Genres.Queries.GetGenres;
+using Core.Reviews.Commands.Create;
+using Core.Reviews.Commands.Delete;
+using Core.Reviews.Queries.GetUserReview;
+using Core.Users.Commands.AddBookToFavourites;
+using Core.Users.Commands.RemoveBookFromFavourites;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using GetEditModelQuery = Core.Queries.Book.GetEditModelQuery;
+using GetEditModelQuery = Core.Books.Queries.GetBookEditModel.GetBookEditModelQuery;
 
 namespace Web.Areas.Admin.Controllers
 {
     public class BookController : BaseController
     {
         private readonly IMediator mediator;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService helper;
 
-        public BookController(IMediator mediator, UserIdHelper helper)
+        public BookController(IMediator mediator, CurrentUserService helper)
         {
             this.mediator = mediator;
             this.helper = helper;
         }
 
-        public async Task<IActionResult> All(
-            int p = 1,
-            int s = BookConstants.PAGE_SIZE,
-            string search = null,
-            string[] genres = null)
+        public async Task<IActionResult> All(GetBooksQuery query)
         {
-            IEnumerable<ListBookModel> books = await mediator.Send(new GetAllBooksQuery(search, genres));
+            IEnumerable<BookModel> books = await mediator.Send(query);
+            ViewBag.PageNo = query.PageNumber;
+            ViewBag.PageSize = query.PageSize;
+            ViewBag.Genres = query.GenreIds;
+            TempData["Search"] = query.Search;
 
-            ViewBag.PageNo = p;
-            ViewBag.PageSize = s;
-            ViewBag.Genres = genres;
-            TempData["Search"] = search;
-
-            int starterBook = (p - 1) * s;
+            int starterBook = query.PageNumber * query.PageSize;
             ViewBag.StarterBook = starterBook;
 
             return View(books);
@@ -52,37 +53,23 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Read(string id)
         {
-            byte[] content = await mediator.Send(new GetContentQuery(id));
+            byte[] content = await mediator.Send(new GetContentQuery { BookId = id });
 
             return File(content, BookConstants.AllowedContentType);
         }
 
         public async Task<IActionResult> Details(string id)
         {
-            string userId = helper.GetUserId();
-            BookDetailsModel model = await mediator.Send(new GetBookDetailsQuery(id));
-            IEnumerable<ListReviewModel> reviews = await mediator.Send(new GetAllReviewsQuery(id, userId));
-
-            ViewBag.UserId = userId;
-            ViewBag.Reviews = reviews;
-
-            if (userId != null)
-            {
-                bool isFavouriteBook = await mediator.Send(new IsBookFavouriteQuery(id));
-                ViewBag.IsFavourite = isFavouriteBook;
-
-                UserReviewModel userReview = await mediator.Send(new GetUserReviewQuery(userId, id));
-                ViewBag.UserReview = userReview;
-            }
+            BookDetailsOutputModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
 
             return View(model);
         }
 
         public async Task<IActionResult> Edit(string id)
         {
-            EditBookModel model = await mediator.Send(new GetEditModelQuery(id));
-            IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+            EditBookModel model = await mediator.Send(new GetEditModelQuery { Id = id });
+            IEnumerable<AuthorModel> authors = await mediator.Send(new GetAuthorsQuery());
+            IEnumerable<GenreModel> genres = await mediator.Send(new GetGenresQuery());
             ViewBag.Authors = authors;
             ViewBag.Genres = genres;
 
@@ -91,8 +78,8 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-            IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
+            IEnumerable<AuthorModel> authors = await mediator.Send(new GetAuthorsQuery());
+            IEnumerable<GenreModel> genres = await mediator.Send(new GetGenresQuery());
             ViewBag.Authors = authors;
             ViewBag.Genres = genres;
 
@@ -100,90 +87,35 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBookModel model, IFormFile cover, IFormFile content)
+        public async Task<IActionResult> Create([FromForm] CreateBookCommand command)
         {
-            string coverContentType = cover.ContentType;
-            string contentType = content.ContentType;
+            var cover = Request.Form
+                .Files
+                .FirstOrDefault();
 
-            if (cover == null || cover.Length == 0)
+            var content = Request.Form
+                .Files
+                .LastOrDefault();
+
+            if (cover is not null)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View();
-            }
-            if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
-            {
-                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View();
+                byte[]? coverBytes = await cover.GetBytesAsync();
+                command.Cover = coverBytes;
             }
 
-            if (content == null || content.Length == 0)
+            if (content is not null)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_ISNULL;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View();
+                byte[]? contentBytes = await content.GetBytesAsync();
+                command.Content = contentBytes;
             }
-            if (contentType != BookConstants.AllowedContentType)
-            {
-                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.CONTENT_ALLOWED_FORMATS;
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CONTENT_INVALID_FORMAT;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View();
-            }
-
-            //Converting the cover to byte[]
-            using MemoryStream coverStream = new MemoryStream();
-            await cover.CopyToAsync(coverStream);
-            model.Cover = coverStream.ToArray();
-
-            //Converting the content to byte[] 
-            using MemoryStream contentStream = new MemoryStream();
-            await content.CopyToAsync(contentStream);
-            model.Content = contentStream.ToArray();
 
             try
             {
-                await mediator.Send(new CreateBookCommand(model));
+                await mediator.Send(command);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View();
-            }
-            catch (Exception)
-            {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.CREATE_BOOK_UNEXPECTED;
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
+                TempData[ToastrMessageConstants.ErrorMessage] = ex.Message;
 
                 return View();
             }
@@ -191,71 +123,49 @@ namespace Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(EditBookModel model, IFormFile cover, IFormFile content)
+        public async Task<IActionResult> CreateReview(CreateReviewCommand command)
         {
-            EditBookModel bookModel = await mediator.Send(new GetEditModelQuery(model.Id));
+            await mediator.Send(command);
 
-            if (cover == null || cover.Length == 0)
+            UserReviewOutputModel userReview = await mediator.Send(new GetUserReviewQuery { UserId = command.UserId, BookId = command.BookId });
+
+            return Ok(userReview);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] EditBookCommand command)
+        {
+            var cover = Request.Form
+                .Files
+                .FirstOrDefault();
+
+            var content = Request.Form
+                .Files
+                .LastOrDefault();
+
+            if (cover is not null)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_ISNULL;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View(bookModel);
+                byte[]? coverBytes = await cover.GetBytesAsync();
+                command.Cover = coverBytes;
             }
 
-            string coverContentType = cover.ContentType;
-
-            if (!BookConstants.AllowedImageTypes.Contains(coverContentType))
+            if (content is not null)
             {
-                TempData[ToastrMessageConstants.WarningMessage] = ErrorMessageConstants.COVER_ALLOWED_FORMATS;
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.COVER_INVALID_FORMAT;
-
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View(bookModel);
+                byte[]? contentBytes = await content.GetBytesAsync();
+                command.Content = contentBytes;
             }
-
-            //Converting the cover to byte[]
-            using MemoryStream coverStream = new MemoryStream();
-            await cover.CopyToAsync(coverStream);
-            model.Cover = coverStream.ToArray();
-
-            //Converting the content to byte[] 
-            using MemoryStream contentStream = new MemoryStream();
-            await content.CopyToAsync(contentStream);
-            model.Content = contentStream.ToArray();
 
             try
             {
-                await mediator.Send(new EditBookCommand(model));
+                await mediator.Send(command);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                TempData[ToastrMessageConstants.ErrorMessage] = string.Format(ex.Message, model.Title);
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
+                TempData[ToastrMessageConstants.ErrorMessage] = ex.Message;
 
-                return View(bookModel);
-            }
-            catch (Exception)
-            {
-                TempData[ToastrMessageConstants.ErrorMessage] = ErrorMessageConstants.EDIT_BOOK_UNEXPECTED;
-                IEnumerable<ListAuthorModel> authors = await mediator.Send(new GetAllAuthorsQuery());
-                IEnumerable<ListGenreModel> genres = await mediator.Send(new GetAllGenresQuery());
-                ViewBag.Authors = authors;
-                ViewBag.Genres = genres;
-
-                return View(bookModel);
+                return View();
             }
 
             return RedirectToAction("All");
@@ -265,7 +175,7 @@ namespace Web.Areas.Admin.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteBookCommand(id));
+                await mediator.Send(new DeleteBookCommand { Id = id });
             }
             catch (Exception)
             {
@@ -280,13 +190,31 @@ namespace Web.Areas.Admin.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteReviewCommand(id));
+                await mediator.Send(new DeleteReviewCommand { Id = id });
             }
             catch (Exception)
             {
 
                 throw;
             }
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddToFavourites(string id)
+        {
+            await mediator.Send(new AddBookToFavouritesCommand { BookId = id });
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromFavourites(string id)
+        {
+            await mediator.Send(new RemoveBookFromFavouritesCommand { BookId = id });
 
             return Ok();
         }

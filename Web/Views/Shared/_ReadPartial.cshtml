@@ -1,7 +1,7 @@
-﻿@using Core.ViewModels.Book
-@model BookDetailsModel
+﻿@using Core.Books.Queries.Details
+@model BookDetailsOutputModel;
 
-@if (ViewBag.UserId != null)
+@if (Model.UserId != null)
 {
 
     <a asp-action="Read"

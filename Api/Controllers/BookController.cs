@@ -1,25 +1,21 @@
 ﻿using Api.Extenstions;
-using Api.Helpers;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
 using Common.ValidationConstants;
-using Core.ApiModels;
-using Core.ApiModels.InputModels.Books;
-using Core.ApiModels.OutputModels;
-using Core.ApiModels.ResponseModels;
 using Core.Books.Commands.Create;
 using Core.Books.Commands.Delete;
 using Core.Books.Commands.Edit;
 using Core.Books.Queries.Details;
-using Core.Commands.UserCommands;
-using Core.Helpers;
-using Core.Queries.Author;
-using Core.Queries.Book;
-using Core.Queries.Genre;
-using Core.Queries.User;
-using Core.ViewModels.Book;
+using Core.Books.Queries.GetBookEditModel;
+using Core.Books.Queries.GetBooks;
+using Core.Books.Queries.GetContent;
+using Core.Common.Interfaces;
+using Core.Common.Services;
+using Core.Users.Commands.AddBookToFavourites;
+using Core.Users.Commands.RemoveBookFromFavourites;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,36 +28,27 @@ namespace Api.Controllers
     {
         private readonly IMediator mediator;
         private readonly IMapper mapper;
-        private readonly UserIdHelper helper;
+        private readonly CurrentUserService userService;
         private readonly IMemoryCache memoryCache;
 
-        public BookController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache, UserIdHelper helper)
+        public BookController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache, CurrentUserService helper)
         {
             this.memoryCache = memoryCache;
             this.mediator = mediator;
-            this.helper = helper;
+            this.userService = helper;
             this.mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BookBrowsingModel>> All([FromQuery] string? search, [FromQuery] string[]? genres)
+        public async Task<ActionResult<IEnumerable<BookModel>>> All([FromQuery] GetBooksQuery query)
         {
             try
             {
-                BookBrowsingModel books = await memoryCache.GetOrCreateAsync(CacheKeyConstants.BOOKS, async (entry) =>
-                {
-                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+                IEnumerable<BookModel> result = await mediator.Send(query);
 
-                    return await mediator.Send(new GetAllBooksApiQuery(search, genres));
-                });
-
-                books.Books
-                    .ToList()
-                    .ForEach(b => AttachLinks(b));
-
-                return Ok(books);
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -76,11 +63,11 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BookDetailsOutputModel>> DetailsUser([FromRoute] string id)
         {
-            string userId = helper.GetUserId();
+            string userId = userService.UserId!;
 
             try
             {
-                BookDetailsOutputModel model = await mediator.Send(new GetDetailsQuery(id));
+                BookDetailsOutputModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
                 AttachLinks(model);
 
                 return Ok(model);
@@ -95,59 +82,33 @@ namespace Api.Controllers
             }
         }
 
-        [Authorize(Roles = RoleConstants.Administrator)]
-        [HttpGet("Add")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<BookInputDataModel>> Add()
-        {
-            BookInputDataModel model = await LoadBookInputData();
-
-            return Ok(model);
-        }
-
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Add([FromBody] BookInputModel model)
+        public async Task<ActionResult> Add([FromBody] CreateBookCommand command)
         {
             if (ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            IEnumerable<string> errors = BookInputValidationHelper.Validate(model);
-
-            if (errors.Any())
-            {
-                return BadRequest(errors);
-            }
-
-            CreateBookModel createBookModel = mapper.Map<CreateBookModel>(model);
-            await mediator.Send(new CreateBookCommand(createBookModel));
+            await Mediator.Send(command);
             memoryCache.Remove(CacheKeyConstants.BOOKS);
 
-            return Created(nameof(DetailsUser), model);
+            return Created(nameof(DetailsUser), command);
         }
 
-        [Authorize(Roles = RoleConstants.Administrator)]
         [HttpGet("{id}/Edit")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EditBookResponseModel>> GetEditModel([FromRoute] string id)
+        public async Task<ActionResult<EditBookModel>> GetEditModel([FromRoute] string id)
         {
-            BookInputDataModel bookData = await LoadBookInputData();
             try
             {
-                BookInputModel model = await mediator.Send(new GetBookInputModelQuery(id));
+                EditBookModel result = await Mediator.Send(new GetBookEditModelQuery { Id = id });
 
-                EditBookResponseModel response = new EditBookResponseModel
-                {
-                    Id = id,
-                    BookData = bookData,
-                    Model = model
-                };
-
-                return Ok(response);
+                return Ok(result);
             }
             catch (ArgumentNullException)
             {
@@ -155,28 +116,19 @@ namespace Api.Controllers
             }
         }
 
-        [Authorize(Roles = RoleConstants.Administrator)]
         [HttpPut("{id}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] BookInputModel model)
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] EditBookCommand command)
         {
-            if (!ModelState.IsValid)
+            if (id != command.Id)
             {
                 return BadRequest();
             }
 
-            IEnumerable<string> errors = BookInputValidationHelper.Validate(model);
+            await Mediator.Send(command);
 
-            if (errors.Any())
-            {
-                return BadRequest(errors);
-            }
-
-            EditBookModel editModel = mapper.Map<EditBookModel>(model);
-            editModel.Id = id;
-
-            await mediator.Send(new EditBookCommand(editModel));
             memoryCache.Remove(CacheKeyConstants.BOOKS);
             memoryCache.Remove(string.Format(CacheKeyConstants.READ, id));
 
@@ -192,7 +144,7 @@ namespace Api.Controllers
         {
             try
             {
-                BookDetailsOutputModel model = await mediator.Send(new GetGuestBookDetailsApiQuery(id));
+                BookDetailsOutputModel model = await mediator.Send(new GetBookDetailsQuery { Id = id });
                 AttachLinks(model);
 
                 return Ok(model);
@@ -216,18 +168,18 @@ namespace Api.Controllers
         {
             try
             {
-                bool isSubscribed = await mediator.Send(new IsUserSubscribedQuery());
+                //bool isSubscribed = await mediator.Send(new IsUserSubscribedQuery());
 
-                if (!isSubscribed)
-                {
-                    return StatusCode(StatusCodes.Status402PaymentRequired);
-                }
+                //if (!isSubscribed)
+                //{
+                //    return StatusCode(StatusCodes.Status402PaymentRequired);
+                //}
 
                 byte[] content = await memoryCache.GetOrCreateAsync(string.Format(CacheKeyConstants.READ, id), async (entry) =>
                 {
                     entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
 
-                    return await mediator.Send(new GetContentQuery(id));
+                    return await mediator.Send(new GetContentQuery { BookId = id });
                 });
 
                 return File(content, BookConstants.AllowedContentType);
@@ -247,7 +199,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteBookCommand(id));
+                await mediator.Send(new DeleteBookCommand { Id = id });
                 memoryCache.Remove(CacheKeyConstants.BOOKS);
                 memoryCache.Remove(string.Format(CacheKeyConstants.READ, id));
 
@@ -274,7 +226,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new AddBookToFavouritesCommand(id));
+                await mediator.Send(new AddBookToFavouritesCommand { BookId = id });
             }
             catch (ArgumentNullException)
             {
@@ -297,7 +249,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new RemoveBookFromFavouritesCommand(id));
+                await mediator.Send(new RemoveBookFromFavouritesCommand { BookId = id });
             }
             catch (ArgumentNullException)
             {
@@ -313,62 +265,62 @@ namespace Api.Controllers
 
         #endregion
 
-        private async Task<BookInputDataModel> LoadBookInputData()
-        {
-            BookInputDataModel model = new BookInputDataModel();
+        //private async Task<BookInputDataModel> LoadBookInputData()
+        //{
+        //    BookInputDataModel model = new BookInputDataModel();
 
-            model.Authors = await mediator.Send(new GetAllAuthorsQuery());
-            model.Genres = await mediator.Send(new GetAllGenresQuery());
+        //    model.Authors = await mediator.Send(new GetAuthorsQuery());
+        //    model.Genres = await mediator.Send(new GetAllGenresQuery());
 
-            return model;
-        }
+        //    return model;
+        //}
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
             if (model is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(DetailsUser), new {model.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(DetailGuest), new {model.Id}),
                     Rel = LinkConstants.SELF,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Read), new {model.Id}),
                     Rel = LinkConstants.READ,
                     Method = HttpMethods.Get
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(AddToFavourites), null),
                     Rel = LinkConstants.FOLLOW,
                     Method = HttpMethods.Put
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(RemoveFromFavourites), null),
                     Rel = LinkConstants.UNFOLLOW,
                     Method = HttpMethods.Put
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
                     Rel = LinkConstants.UPDATE,

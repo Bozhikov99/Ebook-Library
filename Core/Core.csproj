@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Users\Queries\GetUserProfile\**" />
+    <EmbeddedResource Remove="Users\Queries\GetUserProfile\**" />
+    <None Remove="Users\Queries\GetUserProfile\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
@@ -25,39 +31,7 @@
     <None Remove="Commands\" />
     <None Remove="Queries\" />
     <None Remove="Handlers\" />
-    <None Remove="Queries\Author\" />
-    <None Remove="Queries\Book\" />
-    <None Remove="Queries\Genre\" />
-    <None Remove="Queries\Review\" />
-    <None Remove="Queries\Subscription\" />
-    <None Remove="Queries\User\" />
-    <None Remove="Commands\GenreCommands\" />
     <None Remove="Validators\" />
-    <None Remove="Commands\AuthorCommands\" />
-    <None Remove="Commands\SubscriptionCommands\" />
-    <None Remove="Handlers\SubscriptionHandlers\" />
-    <None Remove="Handlers\UserHandlers\" />
     <None Remove="Helpers\" />
-    <None Remove="Commands\UserCommands\" />
-    <None Remove="Handlers\ReviewHandlers\" />
-    <None Remove="Commands\ReviewCommands\" />
-    <None Remove="Handlers\BookHandlers\" />
-    <None Remove="Commands\BookCommands\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Authors\Commands\Create\" />
-    <Folder Include="Authors\Commands\Edit\" />
-    <Folder Include="Authors\Commands\Delete\" />
-    <Folder Include="Authors\Queries\" />
-    <Folder Include="Genres\" />
-    <Folder Include="Common\" />
-    <Folder Include="Reviews\" />
-    <Folder Include="Subscriptions\" />
-    <Folder Include="Users\" />
-    <Folder Include="Queries\Subscription\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Commands\SubscriptionCommands\" />
-    <Folder Include="Handlers\SubscriptionHandlers\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

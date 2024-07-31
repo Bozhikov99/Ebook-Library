@@ -1,61 +1,89 @@
-﻿using AutoMapper;
-using Core.ViewModels.Book;
-using Domain.Entities;
-using Infrastructure.Common;
+﻿using Domain.Entities;
+using Infrastructure.Persistance;
 
 namespace Core.Books.Commands.Edit
 {
-    public class EditBookCommand : IRequest<bool>
+    public class EditBookCommand : IRequest
     {
-        public EditBookCommand(EditBookModel model)
-        {
-            Model = model;
-        }
+        public string Id { get; set; } = null!;
 
-        public EditBookModel Model { get; set; }
+        public string Title { get; set; } = null!;
+
+        public string Description { get; set; } = null!;
+
+        public byte[]? Cover { get; set; }
+
+        public byte[]? Content { get; set; }
+
+        public int ReleaseYear { get; set; }
+
+        public int Pages { get; set; }
+
+        public string AuthorId { get; set; } = null!;
+
+        public IEnumerable<string> GenreIds { get; set; } = new List<string>();
     }
 
-    public class EditBookHandler : IRequestHandler<EditBookCommand, bool>
+    public class EditBookHandler : IRequestHandler<EditBookCommand>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
 
-        public EditBookHandler(IRepository repository)
+        public EditBookHandler(EbookDbContext context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
-        public async Task<bool> Handle(EditBookCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(EditBookCommand request, CancellationToken cancellationToken)
         {
-            bool isEdited = false;
-            EditBookModel model = request.Model;
+            string id = request.Id;
 
-            Book book = await repository.All<Book>(b => b.Id == model.Id)
-                .Include(b => b.Genres)
-                .FirstAsync();
+            Book? book = await context.Books
+                .Include(b => b.BookGenres)
+                .FirstOrDefaultAsync(b => b.Id == request.Id, cancellationToken);
 
-            book.Genres.Clear();
-
-            List<Genre> genres = new List<Genre>();
-
-            foreach (string id in model.GenreIds)
+            if (book is null)
             {
-                Genre currentGenre = await repository.GetByIdAsync<Genre>(id);
-                genres.Add(currentGenre);
+                throw new ArgumentException();
+            }
+            IEnumerable<string> genreIds = request.GenreIds;
+
+            ICollection<Genre> genres = await context.Genres
+                .Select(g => new Genre { Id = g.Id })
+                .Where(g => genreIds.Contains(g.Id))
+                .ToListAsync(cancellationToken);
+
+            context.BookGenres
+                .RemoveRange(book.BookGenres);
+
+            List<BookGenre> newGenres = genres
+                .Select(g => new BookGenre
+                {
+                    GenreId = g.Id,
+                    BookId = book.Id
+                })
+                .ToList();
+
+            await context.BookGenres
+                .AddRangeAsync(newGenres, cancellationToken);
+
+            if (request.Cover is not null)
+            {
+                book.Cover = request.Cover;
+            }
+            
+            if (request.Content is not null)
+            {
+                book.Content = request.Content;
             }
 
-            book.Genres = genres;
-            book.Title = model.Title;
-            book.Content = model.Content == null ? book.Content : model.Content;
-            book.Cover = model.Cover == null ? book.Cover : model.Cover;
-            book.AuthorId = model.AuthorId;
-            book.ReleaseYear = model.ReleaseYear;
-            book.Pages = model.Pages;
+            book.Title = request.Title;
+            book.AuthorId = request.AuthorId;
+            book.ReleaseYear = request.ReleaseYear;
+            book.Pages = request.Pages;
 
-            await repository.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
 
-            isEdited = true;
-
-            return isEdited;
+            return Unit.Value;
         }
     }
 }

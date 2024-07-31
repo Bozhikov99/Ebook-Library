@@ -1,15 +1,16 @@
 ﻿using Api.Extenstions;
+using Api.Hypermedia;
 using AutoMapper;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
-using Core.ApiModels;
-using Core.ApiModels.InputModels.Genre;
-using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.Genre;
-using Core.Commands.GenreCommands;
-using Core.Queries.Genre;
-using Core.ViewModels.Genre;
+using Core.Common.Interfaces;
+using Core.Genres.Commands.Create;
+using Core.Genres.Commands.Delete;
+using Core.Genres.Commands.Edit;
+using Core.Genres.Queries.Common;
+using Core.Genres.Queries.GetEditModelQuery;
+using Core.Genres.Queries.GetGenres;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,22 +35,24 @@ namespace Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<ListGenreOutputModel>>> List()
+        public async Task<ActionResult<IEnumerable<GenreModel>>> List([FromQuery] GetGenresQuery query)
         {
             try
             {
-                IEnumerable<ListGenreModel> genres = await memoryCache.GetOrCreateAsync(CacheKeyConstants.GENRES, async (entry) =>
-                {
-                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
+                //IEnumerable<ListGenreModel> genres = await memoryCache.GetOrCreateAsync(CacheKeyConstants.GENRES, async (entry) =>
+                //{
+                //    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
 
-                    return await mediator.Send(new GetAllGenresQuery());
-                });
+                //    return await mediator.Send(query);
+                //});
 
-                IEnumerable<ListGenreOutputModel> outputModels = mapper.Map<IEnumerable<ListGenreOutputModel>>(genres);
+                //IEnumerable<GenreModel> outputModels = mapper.Map<IEnumerable<GenreModel>>(genres);
 
-                AttachLinks(outputModels);
+                IEnumerable<GenreModel> result = await mediator.Send(query);
 
-                return Ok(outputModels);
+                AttachLinks(result);
+
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -66,7 +69,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteGenreCommand(id));
+                await mediator.Send(new DeleteGenreCommand { Id = id });
                 memoryCache.Remove(CacheKeyConstants.GENRES);
             }
             catch (ArgumentNullException)
@@ -85,11 +88,11 @@ namespace Api.Controllers
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UpsertGenreModel>> GetInputModel([FromRoute] string id)
+        public async Task<ActionResult<GenreModel>> GetInputModel([FromRoute] string id)
         {
             try
             {
-                UpsertGenreModel model = await mediator.Send(new GetUpsertModelQuery(id));
+                GenreModel model = await mediator.Send(new GetEditModelQuery { Id = id });
 
                 return Ok(model);
             }
@@ -104,11 +107,11 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpsertGenreModel model)
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] EditGenreCommand command)
         {
             try
             {
-                await mediator.Send(new EditGenreApiCommand(id, model));
+                await mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.GENRES);
             }
             catch (ArgumentNullException)
@@ -131,14 +134,14 @@ namespace Api.Controllers
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ListGenreModel>> Create([FromBody] UpsertGenreModel model)
+        public async Task<ActionResult<GenreModel>> Create([FromBody] CreateGenreCommand command)
         {
             try
             {
-                ListGenreModel result = await mediator.Send(new CreateGenreApiCommand(model));
+                string id = await mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.GENRES);
 
-                return Created(nameof(Edit), result);
+                return Created(nameof(Edit), id);
             }
             catch (ArgumentException)
             {
@@ -151,22 +154,22 @@ namespace Api.Controllers
 
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource model)
         {
             if (model is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
                     Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
                     Rel = LinkConstants.UPDATE,

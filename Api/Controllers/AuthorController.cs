@@ -1,16 +1,17 @@
 ﻿using Api.Extenstions;
-using AutoMapper;
+using Api.Hypermedia;
 using Common;
 using Common.ApiConstants;
 using Common.MessageConstants;
 using Core.ApiModels;
-using Core.ApiModels.InputModels.Author;
 using Core.ApiModels.OutputModels;
-using Core.ApiModels.OutputModels.Author;
-using Core.Commands.AuthorCommands;
-using Core.Queries.Author;
-using Core.ViewModels.Author;
-using MediatR;
+using Core.Authors.Commands.Create;
+using Core.Authors.Commands.Delete;
+using Core.Authors.Commands.Edit;
+using Core.Authors.Queries.Common;
+using Core.Authors.Queries.GetAuthors;
+using Core.Authors.Queries.GetEditModel;
+using Core.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -20,31 +21,19 @@ namespace Api.Controllers
     [Route("[controller]s")]
     public class AuthorController : RestController
     {
-        private readonly IMediator mediator;
-        private readonly IMapper mapper;
         private readonly IMemoryCache memoryCache;
 
-        public AuthorController(IMediator mediator, IMapper mapper, IMemoryCache memoryCache)
+        public AuthorController(IMemoryCache memoryCache)
         {
-            this.mediator = mediator;
-            this.mapper = mapper;
             this.memoryCache = memoryCache;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ListAuthorOutputModel>>> All()
+        public async Task<ActionResult<IEnumerable<AuthorModel>>> All([FromQuery] GetAuthorsQuery query)
         {
             try
             {
-                IEnumerable<ListAuthorModel> authors = await memoryCache.GetOrCreateAsync(CacheKeyConstants.AUTHORS, async (entry) =>
-                {
-                    entry.SetSlidingExpiration(TimeSpan.FromSeconds(30));
-
-                    return await mediator.Send(new GetAllAuthorsQuery());
-                });
-
-                IEnumerable<ListAuthorOutputModel> outputModels = mapper.Map<IEnumerable<ListAuthorOutputModel>>(authors);
-
+                IEnumerable<AuthorModel> outputModels = await Mediator.Send(query);
                 AttachLinks(outputModels);
 
                 return Ok(outputModels);
@@ -63,7 +52,7 @@ namespace Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteAuthorCommand(id));
+                await Mediator.Send(new DeleteAuthorCommand { Id = id });
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
             }
             catch (Exception)
@@ -79,11 +68,11 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UpsertAuthorModel>> GetEditModel([FromRoute] string id)
+        public async Task<ActionResult<AuthorModel>> GetEditModel([FromRoute] string id)
         {
             try
             {
-                UpsertAuthorModel model = await mediator.Send(new GetEditAuthorApiQuery(id));
+                AuthorModel model = await Mediator.Send(new GetEditAuthorModelQuery { Id = id });
 
                 return Ok(model);
             }
@@ -102,11 +91,15 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpsertAuthorModel model)
+        public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] EditAuthorCommand command)
         {
+            if (!string.Equals(id, command.Id))
+            {
+                return BadRequest();
+            }
             try
             {
-                await mediator.Send(new EditAuthorApiCommand(id, model));
+                await Mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
                 return NoContent();
@@ -117,7 +110,7 @@ namespace Api.Controllers
             }
             catch (ArgumentException)
             {
-                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{command.FirstName} {command.LastName}"));
             }
             catch (Exception)
             {
@@ -129,18 +122,18 @@ namespace Api.Controllers
         [Authorize(Roles = RoleConstants.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ListAuthorModel>> Add([FromBody] UpsertAuthorModel model)
+        public async Task<ActionResult<AuthorModel>> Add([FromBody] CreateAuthorCommand command)
         {
             try
             {
-                ListAuthorModel result = await mediator.Send(new CreateAuthorApiCommand(model));
+                string result = await Mediator.Send(command);
                 memoryCache.Remove(CacheKeyConstants.AUTHORS);
 
-                return Created(nameof(Edit), result);
+                return CreatedAtAction(nameof(GetEditModel), result);
             }
             catch (ArgumentException)
             {
-                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{model.FirstName} {model.LastName}"));
+                return BadRequest(string.Format(ErrorMessageConstants.AUTHOR_EXISTS, $"{command.FirstName} {command.LastName}"));
             }
             catch (Exception)
             {
@@ -148,24 +141,24 @@ namespace Api.Controllers
             }
         }
 
-        protected override IEnumerable<HateoasLink> GetLinks(OutputBaseModel model)
+        protected override IEnumerable<Link> GetLinks(IHypermediaResource resource)
         {
-            if (model is null)
+            if (resource is null)
             {
-                return Enumerable.Empty<HateoasLink>();
+                return Enumerable.Empty<Link>();
             }
 
-            IEnumerable<HateoasLink> links = new HashSet<HateoasLink>
+            IEnumerable<Link> links = new HashSet<Link>
             {
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Delete), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Delete), new {resource.Id}),
                     Rel = LinkConstants.DELETE,
                     Method = HttpMethods.Delete
                 },
-                new HateoasLink
+                new Link
                 {
-                    Url = this.GetAbsoluteAction(nameof(Edit), new {model.Id}),
+                    Url = this.GetAbsoluteAction(nameof(Edit), new {resource.Id}),
                     Rel = LinkConstants.UPDATE,
                     Method = HttpMethods.Put
                 }

@@ -1,14 +1,13 @@
 ﻿using Common.MessageConstants;
-using Core.ViewModels.Book;
-using Core.ViewModels.User;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Core.Users.Commands.ConfirmEmail;
+using Core.Users.Commands.Login;
+using Core.Users.Commands.Register;
+using Core.Users.Queries.GetProfile;
+using Domain.Entities;
 using Domain.Exceptions;
 using MediatR;
-using Core.Queries.User;
-using Core.Commands.UserCommands;
-using Domain.Entities;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Web.EmailService;
 
 namespace Web.Controllers
@@ -36,18 +35,15 @@ namespace Web.Controllers
 
         public IActionResult Register() => View();
 
-        public async Task<IActionResult> Profile()
+        public async Task<IActionResult> Profile(string id)
         {
-            UserProfileModel model = await mediator.Send(new GetUserProfileQuery());
-            IEnumerable<ListBookModel> books = await mediator.Send(new GetFavouriteBooksQuery());
-            ViewBag.Books = books;
-            ViewBag.Subscription = await mediator.Send(new GetActiveSubscriptionQuery());
+            UserProfileModel model = await mediator.Send(new GetProfileQuery { Id = id });
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserModel model)
+        public async Task<IActionResult> Register(RegisterCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +52,7 @@ namespace Web.Controllers
 
             try
             {
-                User user = await mediator.Send(new RegisterCommand(model));
+                User user = await mediator.Send(command);
 
                 string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 string link = $"https://localhost:{Request.Host.Port}{Url.Action(nameof(ConfirmEmail), "User", new { Token = token, Username = user.UserName })}";
@@ -101,7 +97,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUserModel model)
+        public async Task<IActionResult> Login(LoginCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -110,14 +106,14 @@ namespace Web.Controllers
 
             try
             {
-                await mediator.Send(new LoginCommand(model));
+                await mediator.Send(command);
             }
             catch (InvalidUserCredentialsException ae)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = ae.Message;
                 return View();
             }
-            catch(InvalidOperationException io)
+            catch (InvalidOperationException io)
             {
                 TempData[ToastrMessageConstants.ErrorMessage] = io.Message;
                 return View();
@@ -129,16 +125,6 @@ namespace Web.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public async Task<IActionResult> CreateRole()
-        {
-            //await roleManager.CreateAsync(new IdentityRole()
-            //{
-            //    Name = "Administrator"
-            //});
-
-            return Ok();
         }
     }
 }

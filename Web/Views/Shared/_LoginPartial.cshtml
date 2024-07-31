@@ -3,13 +3,25 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+@{
+    string? username = User?.Identity?.Name;
+    string id = string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(username))
+    {
+        User? user = UserManager.FindByNameAsync(username)
+            .Result;
+
+        id = user.Id;
+    }
+}
 
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="nav-item px-2 d-none d-lg-block">
         <a class="btn navbutton"
            asp-controller="User"
-           asp-action="Profile"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
+           asp-action="Profile" asp-route-id="@id"><i class="bi bi-person-circle"></i> @User.Identity?.Name</a>
     </div>
     @await Component.InvokeAsync("AdminCheck")
 

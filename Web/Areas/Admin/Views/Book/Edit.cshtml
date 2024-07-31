@@ -1,4 +1,4 @@
-﻿@using Core.ViewModels.Book
+﻿@using Core.Books.Queries.GetBookEditModel;
 @model EditBookModel
 
 @{
@@ -10,6 +10,7 @@
 
 <div class="row-2 d-flex justify-content-center" style="margin-top:1rem;">
     <form asp-action="Edit" enctype="multipart/form-data">
+        <input asp-for="Id" hidden/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="mb-3">
             <input asp-for="Title" placeholder="Title" class="form-control" />

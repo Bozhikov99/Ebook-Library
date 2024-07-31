@@ -1,15 +1,12 @@
 using Api.EmailService;
 using Api.Extenstions;
 using Domain.Entities;
-using Infrastructure;
+using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using System.Reflection.PortableExecutable;
 using System.Security.Principal;
 using System.Text;
 
@@ -24,7 +21,6 @@ namespace Api
             // Add services to the container.
             builder.Services.AddTransient<EmailSender>();
             builder.Services.AddDbContexts(builder.Configuration);
-            builder.Services.AddValidators();
             builder.Services.AddMediatrFull();
             builder.Services.AddDefaultIdentity<User>(options =>
             {

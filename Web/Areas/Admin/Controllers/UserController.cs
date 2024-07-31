@@ -1,6 +1,5 @@
-﻿using Core.Commands.UserCommands;
-using Core.Queries.User;
-using Core.ViewModels.User;
+﻿using Core.Users.Commands.EditUserRoles;
+using Core.Users.Queries.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,10 +23,9 @@ namespace Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> EditRoles(string id, string[] roles)
         {
-            await mediator.Send(new EditRolesCommand(id, roles));
-            bool isUserAdmin = await mediator.Send(new IsUserAdminQuery());
+            await mediator.Send(new EditUserRolesCommand(id, roles));
 
-            return Ok(isUserAdmin);
+            return Ok();
         }
     }
 }

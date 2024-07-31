@@ -1,17 +1,17 @@
-﻿@using Core.ViewModels.Book
-@model IEnumerable<ListBookModel>
+﻿@using Core.Books.Queries.GetBooks
+@model IEnumerable<BookModel>
 
 @{
     ViewData["Title"] = "Browse";
     int rows = Model.Count() < 3 ? 1 : 2;
     int bookCounter = ViewBag.StarterBook;
     bool isEnd = false;
-    ListBookModel[] books = Model.ToArray();
+    BookModel[] books = Model.ToArray();
     string queryGenres = string.Empty;
 
     if (ViewBag.Genres != null)
     {
-        string[] genres = ViewBag.Genres;
+        HashSet<string> genres = ViewBag.Genres;
         queryGenres = $"&genres=";
 
         foreach (string g in genres)
@@ -53,7 +53,7 @@
                 @for (int j = 0; j < 2; j++)
 
                 {
-                    ListBookModel currentBook = books[bookCounter];
+                    BookModel currentBook = books[bookCounter];
                     byte[] cover = currentBook.Cover;
                     string imreBase64Data = Convert.ToBase64String(cover);
                     string imgUrl = string.Format("data:image/png;base64,{0}", imreBase64Data);

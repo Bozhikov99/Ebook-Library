@@ -11,9 +11,9 @@ namespace Domain.Entities
             Id = Guid.NewGuid()
                 .ToString();
 
-            Genres = new HashSet<Genre>();
+            BookGenres = new HashSet<BookGenre>();
 
-            UsersFavourited = new HashSet<User>();
+            BookUsers = new HashSet<BookUser>();
 
             Reviews = new HashSet<Review>();
         }
@@ -41,9 +41,9 @@ namespace Domain.Entities
 
         public virtual Author Author { get; set; }
 
-        public virtual ICollection<Genre> Genres { get; set; }
+        public virtual ICollection<BookGenre> BookGenres { get; set; }
 
-        public virtual ICollection<User> UsersFavourited { get; set; }
+        public virtual ICollection<BookUser> BookUsers { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
     }
