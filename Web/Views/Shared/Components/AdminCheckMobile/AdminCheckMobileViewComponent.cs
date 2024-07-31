@@ -1,21 +1,35 @@
-﻿using Core.Users.Queries.IsUserAdmin;
-using MediatR;
+﻿using Common;
+using Common.MessageConstants;
+using Core.Helpers;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Views.Shared.Components.AdminCheckMobile
 {
     public class AdminCheckMobileViewComponent : ViewComponent
     {
-        private readonly IMediator mediator;
+        private readonly UserIdHelper userIdHelper;
+        private readonly UserManager<User> userManager;
 
-        public AdminCheckMobileViewComponent(IMediator mediator)
+        public AdminCheckMobileViewComponent(UserManager<User> userManager, UserIdHelper userIdHelper)
         {
-            this.mediator = mediator;
+            this.userManager = userManager;
+            this.userIdHelper = userIdHelper;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            bool isAdmin = await mediator.Send(new IsUserAdminQuery());
+            string userId = userIdHelper.GetUserId();
+
+            User? user = await userManager.FindByIdAsync(userId);
+
+            if (user is null)
+            {
+                throw new ArgumentNullException(ErrorMessageConstants.INVALID_USER);
+            }
+
+            bool isAdmin = await userManager.IsInRoleAsync(user, RoleConstants.Administrator);
 
             return View(isAdmin);
         }

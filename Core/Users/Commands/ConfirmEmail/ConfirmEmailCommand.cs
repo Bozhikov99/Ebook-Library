@@ -1,5 +1,6 @@
-﻿using Domain.Entities;
-using Infrastructure.Common;
+﻿using Common.MessageConstants;
+using Domain.Entities;
+using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
 
 namespace Core.Users.Commands.ConfirmEmail
@@ -13,12 +14,12 @@ namespace Core.Users.Commands.ConfirmEmail
 
     public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailCommand>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
         private readonly UserManager<User> userManager;
 
-        public ConfirmEmailHandler(IRepository repository, UserManager<User> userManager)
+        public ConfirmEmailHandler(EbookDbContext context, UserManager<User> userManager)
         {
-            this.repository = repository;
+            this.context = context;
             this.userManager = userManager;
         }
 
@@ -27,7 +28,13 @@ namespace Core.Users.Commands.ConfirmEmail
             string token = request.Token;
             string username = request.Username;
 
-            User user = await repository.FirstAsync<User>(u => u.UserName == username);
+            User? user = await context.Users
+                .FirstOrDefaultAsync(u => u.UserName == username);
+
+            if (user is null)
+            {
+                throw new ArgumentNullException(ErrorMessageConstants.INVALID_USER);
+            }
 
             await userManager.ConfirmEmailAsync(user, token);
 

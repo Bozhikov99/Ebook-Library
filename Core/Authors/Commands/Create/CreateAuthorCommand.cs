@@ -1,6 +1,6 @@
 ﻿using Common.MessageConstants;
 using Domain.Entities;
-using Infrastructure.Common;
+using Infrastructure.Persistance;
 
 namespace Core.Authors.Commands.Create
 {
@@ -13,11 +13,11 @@ namespace Core.Authors.Commands.Create
 
     public class CreateAuthorHandler : IRequestHandler<CreateAuthorCommand, string>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
 
-        public CreateAuthorHandler(IRepository repository)
+        public CreateAuthorHandler(EbookDbContext context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
         public async Task<string> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
@@ -25,8 +25,8 @@ namespace Core.Authors.Commands.Create
             string firstName = request.FirstName;
             string lastName = request.LastName;
 
-            bool isExisting = await repository.All<Author>()
-                .AnyAsync(t => t.FirstName == firstName && t.LastName == lastName);
+            bool isExisting = await context.Authors
+                .AnyAsync(a => a.FirstName == firstName && a.LastName == lastName);
 
             if (isExisting)
             {
@@ -39,8 +39,10 @@ namespace Core.Authors.Commands.Create
                 LastName = lastName
             };
 
-            await repository.AddAsync(author);
-            await repository.SaveChangesAsync();
+            await context.Authors
+                .AddAsync(author, cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
 
             return author.Id;
         }

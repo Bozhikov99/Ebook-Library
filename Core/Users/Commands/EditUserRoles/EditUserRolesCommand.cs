@@ -1,6 +1,6 @@
 ﻿using Common.MessageConstants;
 using Domain.Entities;
-using Infrastructure.Common;
+using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
 
 namespace Core.Users.Commands.EditUserRoles
@@ -19,12 +19,12 @@ namespace Core.Users.Commands.EditUserRoles
 
     public class EditUserRolesHandler : IRequestHandler<EditUserRolesCommand, bool>
     {
-        private readonly IRepository repository;
+        private readonly EbookDbContext context;
         private readonly UserManager<User> userManager;
 
-        public EditUserRolesHandler(IRepository repository, UserManager<User> userManager)
+        public EditUserRolesHandler(EbookDbContext context, UserManager<User> userManager)
         {
-            this.repository = repository;
+            this.context = context;
             this.userManager = userManager;
         }
 
@@ -34,9 +34,13 @@ namespace Core.Users.Commands.EditUserRoles
             string[] roles = request.Roles;
             bool isSuccessful = false;
 
-            User user = await repository.GetByIdAsync<User>(id);
+            User? user = await context.Users
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
-            ArgumentNullException.ThrowIfNull(user, ErrorMessageConstants.INVALID_USER);
+            if (user is null)
+            {
+                throw new ArgumentNullException(ErrorMessageConstants.INVALID_USER);
+            }
 
             IEnumerable<string> userRoles = await userManager.GetRolesAsync(user);
 

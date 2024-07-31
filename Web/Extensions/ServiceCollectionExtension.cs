@@ -1,7 +1,6 @@
 ﻿using Core;
 using Core.Helpers;
 using Core.Mapping;
-using Infrastructure.Common;
 using Infrastructure.Persistance;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ namespace Web.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IRepository, Repository>();
             services.AddTransient<UserIdHelper>();
 
             return services;
